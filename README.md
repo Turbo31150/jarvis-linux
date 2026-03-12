@@ -1,62 +1,68 @@
-# 🤖 JARVIS Turmont — DevOps Multi-Agent Cluster (M1 Linux)
+# 🤖 JARVIS Turmont — Advanced Multi-Agent IA Cluster (M1 Linux)
 
-## 📊 Audit Système Global (12 Mars 2026)
-Le système a été entièrement migré vers une architecture **Root-Centric** ultra-performante sur Ubuntu 22.04. Toutes les barrières de permissions ont été levées pour permettre une orchestration IA sans friction.
+## 📊 État du Système & Audit DevOps (Final - 12 Mars 2026)
 
-### 🏗️ Infrastructure & Hardware
-- **CPU Governance** : AMD Ryzen 7 5700X3D @ Performance Mode (PBO Curve -20).
-- **Memory Stack** : 
-  - 46GB RAM Physique.
-  - **ZRAM** : 12GB compressé (zstd) @ Priorité 100.
-  - **Extension VRAM (emuV)** : Prêt pour le déploiement (MOK Signature générée).
-- **GPU Cluster (6 Nodes)** : 
-  - 1x RTX 3080 | 1x RTX 2060 (12GB) | 4x GTX 1660 SUPER.
-  - **Fix Appliqué** : Désactivation GSP Firmware (`NVreg_EnableGpuFirmware=0`) pour stabiliser le bus PCI 07:00.0.
-  - **Persistence** : Activée sur tous les nœuds.
+Ce dépôt constitue le centre névralgique de l'écosystème **JARVIS Turmont**, migré avec succès de Windows vers un environnement **Ubuntu 22.04 (Kernel 6.17)** ultra-optimisé. L'architecture est conçue pour l'autonomie totale, la résilience et l'exploitation maximale du hardware.
 
 ---
 
-## 🛠️ Stack Logicielle & Intégrations
-
-### 1. Intelligence & Agents (The Brain)
-- **OpenClaw v2026** : Interface Gateway (Port 18790). 
-  - **Auth** : Anthropic Claude 3.5 Sonnet (Claude Max).
-  - **Permissions** : No-Sandbox, Full FS Access, Elevated Tools.
-- **LM Studio (M1/M2)** : Backend local (Port 1234). Modèle actuel : `gpt-oss-20b`.
-- **Auto-Debugger** : Agent autonome surveillant les logs système et appliquant des patchs de code via `qwen2.5-32b` (M2).
-- **Resource Manager** : Monitoring dynamique CPU/RAM/VRAM avec auto-tuning.
-
-### 2. Pipeline Vocal (The Voice)
-- **Voice Engine** : EasySpeak (Wake word : "**Jarvis**").
-- **STT (Speech-to-Text)** : Whisper (Forcé en mode CPU pour résilience totale).
-- **TTS (Text-to-Speech)** : Piper avec la voix française **Denise**.
-- **Interaction** : Réponse personnalisée au réveil ("*Je suis là*").
-- **Computer Control** : Pilotage complet du bureau (fenêtres, souris, clavier) via `xdotool` et `wmctrl`.
-
-### 3. Automation & Data (Domino)
-- **Domino Pipelines** : 405 cascades d'actions migrées de Windows (PowerShell) vers **Linux Bash natif**.
-- **MCP Bridge** : Serveur Flask (Port 8080) exposant les outils système en mode ROOT.
-- **WebSocket Hub** : Bus de communication cluster (Port 9742).
+## 🏗️ Spécifications Matérielles (M1 Node)
+- **CPU** : AMD Ryzen 7 5700X3D (16 Threads) @ **Performance Governor**.
+- **RAM** : 46GB DDR4.
+- **ZRAM** : 12GB compressé (zstd) activé pour la gestion des charges IA massives.
+- **VRAM Extension** : Pilote **emuV** compilé et signé (MOK) pour étendre la mémoire GPU sur la RAM.
+- **GPU Cluster** : 6 Cartes NVIDIA (RTX 3080, RTX 2060 12GB, 4x GTX 1660 SUPER).
+  - **Kernel Patch** : `NVreg_EnableGpuFirmware=0` injecté pour stabiliser le bus PCI et corriger les erreurs de firmware GSP sur l'architecture Turing.
 
 ---
 
-## 🛡️ Sécurité & DevOps
-- **Privilèges** : Utilisateur `turbo` en mode `NOPASSWD: ALL` (Sudoers).
-- **Firewall** : Désactivé (UFW off) pour le cluster local.
-- **Access Control** : AppArmor désactivé, `chmod -R 777` sur les répertoires projets.
-- **Observabilité** : 
-  - `jarvis_ci.sh` : Pipeline de validation qualité.
-  - `jarvis_preflight_check.sh` : Rapport de santé cluster (100% Vert).
-- **Backup Strategy** : Sauvegarde automatique Git Bundles + SQL Dumps dans `/backups`.
+## 🛠️ Stack Logicielle & Intégrations DevOps
+
+### 1. Orchestration & Intelligence (The Brain)
+- **OpenClaw v2026** : Passerelle centrale (Gateway Port 18790/18791).
+  - **Permissions** : Mode **No-Sandbox**, accès FS complet, outils système élevés.
+  - **Engine** : Hybride entre **Anthropic Claude 3.5 Sonnet** (Cloud) et **LM Studio** (Local).
+- **LM Studio (Local Node)** : Backend IA local sur port 1234. Modèle actuel : `gpt-oss-20b`.
+- **MCP Flask Server** : Pont de communication Root (Port 8080) exposant les outils système avancés.
+- **WebSocket Hub** : Bus de messages temps réel (Port 9742) pour la synchronisation des agents.
+
+### 2. Pipeline Interaction (The Voice & Input)
+- **Voice Engine** : **EasySpeak** avec réveil vocal court sur le mot-clé "**Jarvis**".
+- **STT (Speech-to-Text)** : Intégration native avec **WhisperFlow** (Port 9000) utilisant le modèle `large-v3-turbo`.
+- **TTS (Text-to-Speech)** : Moteur **Piper** haute fidélité avec la voix française **Denise**.
+- **Audio Feedback** : Réponse confirmée au réveil ("*Je suis là*") et double bip JARVIS.
+- **Computer Control** : Pilotage physique du bureau (fenêtres, souris, clavier) via `xdotool` et `wmctrl`.
+  - *Action Spéciale* : "**Jarvis, range mon bureau**" -> Tri intelligent des fichiers et suppression automatique des doublons par hash MD5.
+
+### 3. Agents Autonomes & Monitoring
+- **Auto-Debugger** : Agent de maintenance en boucle infinie. Analyse les logs système et auto-corrige le code Python/Systemd via le cluster M2.
+- **Resource Manager** : Script de monitoring dynamique pour l'auto-tuning des priorités CPU/RAM selon la charge IA.
+- **Domino Pipelines** : 405 pipelines complexes portés intégralement en **Bash Linux natif**.
 
 ---
 
-## ⌨️ Commandes Rapides (Quick Start)
-- `jarvis-voice` : Redémarrer le système vocal.
-- `ostatus` : Statut détaillé de l'assistant OpenClaw.
-- `jdictate "[texte]"` : Dictée vocale assistée par clavier.
-- `m1-boost` : Pousser le matériel à son maximum.
-- `jdash` : Dashboard de monitoring tmux.
+## 🛡️ Politique de Sécurité & Permissions
+Le système a été basculé en mode **FULL AUTHORIZER** :
+- **Sudoers** : Utilisateur `turbo` configuré en `NOPASSWD: ALL`.
+- **FS Access** : Permissions `777` sur les répertoires applicatifs.
+- **Security Shields** : AppArmor et UFW désactivés pour une communication fluide entre les nœuds du cluster.
+- **Kernel Tunables** : `dmesg_restrict`, `kptr_restrict` et `perf_event_paranoid` mis à 0.
 
 ---
-*Status : Operational | Engine : Gemini-CLI / Claude Code | Revision : 10.6.2*
+
+## 📂 Gestion des Données & Sauvegardes
+- **Bases de Données** : SQLite unifié dans `data/` avec backups automatiques horodatés dans `/backups/sql/`.
+- **Git Strategy** : Sauvegardes par **Git Bundles** (Snapshots complets de l'historique local) et synchronisation vers GitHub.
+- **Environnement** : Configuration `.env` et `.zshrc` sauvegardée et injectée pour persistance après reboot.
+
+---
+
+## ⌨️ Dashboard & Commandes Utiles
+- `ostatus` : Vérification de la Gateway OpenClaw.
+- `jarvis-voice` : Redémarrage du pipeline vocal.
+- `jdash` : Dashboard tmux temps réel.
+- `jdictate "[msg]"` : Simulation de saisie clavier via voix/cli.
+- `m1-boost` : Activation forcée du hardware au maximum.
+
+---
+*Status : Operational | Architecture : DevOps Multi-Agent | Powered by Gemini CLI*
