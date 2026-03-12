@@ -16,15 +16,25 @@ Ce dépôt constitue le centre névralgique de l'écosystème **JARVIS Turmont**
 
 ---
 
+## 🔐 Logique d'Authentification & Identité
+Le système utilise une gestion centralisée des secrets pour l'orchestration multi-moteur :
+
+1.  **Anthropic Claude Max** : Authentification via Token `sk-ant-oat01...` injecté dans `~/.openclaw/.env` et les profils d'agents. Utilisé pour le raisonnement complexe et l'interface Telegram.
+2.  **MCP Root Security** : Les outils système critiques sont protégés par un **Bearer Token (1202)** configuré dans le serveur MCP Flask (Port 8080).
+3.  **Telegram Identity** : Le bot est lié exclusivement à l'ID utilisateur **2010747443** (Approuvé via pairing code).
+4.  **GitHub Sync** : Authentification persistante via Git Credentials pour la synchronisation automatique du cluster.
+5.  **Local IA Auth** : Accès direct aux modèles LM Studio (Port 1234) et Ollama (Port 11434) sans intermédiaire cloud.
+
+---
+
 ## 🛠️ Stack Logicielle & Intégrations DevOps
 
 ### 1. Orchestration & Intelligence (The Brain)
-- **OpenClaw v2026** : Passerelle centrale (Gateway Port 18790/18791).
+- **OpenClaw v2026** : Passerelle centrale (Gateway Port 18790). 
   - **Permissions** : Mode **No-Sandbox**, accès FS complet, outils système élevés.
-  - **Engine** : Hybride entre **Anthropic Claude 3.5 Sonnet** (Cloud) et **LM Studio** (Local).
-- **LM Studio (Local Node)** : Backend IA local sur port 1234. Modèle actuel : `gpt-oss-20b`.
-- **MCP Flask Server** : Pont de communication Root (Port 8080) exposant les outils système avancés.
-- **WebSocket Hub** : Bus de messages temps réel (Port 9742) pour la synchronisation des agents.
+  - **Engine** : Bascule dynamique entre **Claude 3.5 Sonnet** (Cloud) et **LM Studio** (Local).
+- **Auto-Debugger** : Agent autonome surveillant les logs système et appliquant des patchs de code via `qwen2.5-32b` (M2).
+- **Resource Manager** : Script de monitoring dynamique pour l'auto-tuning des priorités CPU/RAM selon la charge IA.
 
 ### 2. Pipeline Interaction (The Voice & Input)
 - **Voice Engine** : **EasySpeak** avec réveil vocal court sur le mot-clé "**Jarvis**".
@@ -32,28 +42,18 @@ Ce dépôt constitue le centre névralgique de l'écosystème **JARVIS Turmont**
 - **TTS (Text-to-Speech)** : Moteur **Piper** haute fidélité avec la voix française **Denise**.
 - **Audio Feedback** : Réponse confirmée au réveil ("*Je suis là*") et double bip JARVIS.
 - **Computer Control** : Pilotage physique du bureau (fenêtres, souris, clavier) via `xdotool` et `wmctrl`.
-  - *Action Spéciale* : "**Jarvis, range mon bureau**" -> Tri intelligent des fichiers et suppression automatique des doublons par hash MD5.
 
-### 3. Agents Autonomes & Monitoring
-- **Auto-Debugger** : Agent de maintenance en boucle infinie. Analyse les logs système et auto-corrige le code Python/Systemd via le cluster M2.
-- **Resource Manager** : Script de monitoring dynamique pour l'auto-tuning des priorités CPU/RAM selon la charge IA.
-- **Domino Pipelines** : 405 pipelines complexes portés intégralement en **Bash Linux natif**.
+### 3. Automation & Data (Domino)
+- **Domino Pipelines** : 405 cascades d'actions migrées de Windows (PowerShell) vers **Linux Bash natif**.
+- **MCP Bridge** : Serveur Flask (Port 8080) exposant les outils système en mode ROOT.
 
 ---
 
-## 🛡️ Politique de Sécurité & Permissions
-Le système a été basculé en mode **FULL AUTHORIZER** :
-- **Sudoers** : Utilisateur `turbo` configuré en `NOPASSWD: ALL`.
-- **FS Access** : Permissions `777` sur les répertoires applicatifs.
-- **Security Shields** : AppArmor et UFW désactivés pour une communication fluide entre les nœuds du cluster.
+## 🛡️ Sécurité & DevOps
+- **Privilèges** : Utilisateur `turbo` en mode `NOPASSWD: ALL` (Sudoers).
+- **Access Control** : AppArmor désactivé, `chmod -R 777` sur les répertoires projets.
 - **Kernel Tunables** : `dmesg_restrict`, `kptr_restrict` et `perf_event_paranoid` mis à 0.
-
----
-
-## 📂 Gestion des Données & Sauvegardes
-- **Bases de Données** : SQLite unifié dans `data/` avec backups automatiques horodatés dans `/backups/sql/`.
-- **Git Strategy** : Sauvegardes par **Git Bundles** (Snapshots complets de l'historique local) et synchronisation vers GitHub.
-- **Environnement** : Configuration `.env` et `.zshrc` sauvegardée et injectée pour persistance après reboot.
+- **Backup Strategy** : Sauvegarde automatique Git Bundles + SQL Dumps dans `/backups`.
 
 ---
 
