@@ -1,0 +1,14 @@
+[Unit]
+Description=JARVIS WebSocket Server
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/turbo/jarvis
+ExecStart=/home/turbo/jarvis/.venv/bin/python -m python_ws.server
+Restart=always
+RestartSec=5
+Environment=TURBO=/home/turbo/jarvis
+
+[Install]
+WantedBy=default.target

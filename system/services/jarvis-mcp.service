@@ -1,0 +1,14 @@
+[Unit]
+Description=JARVIS Jarvis-mcp
+After=network.target
+
+[Service]
+ExecStart=/home/turbo/jarvis-m1-ops/scripts/jarvis-boot.sh mcp
+WorkingDirectory=/home/turbo/jarvis-m1-ops
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,13 @@
+[Unit]
+Description=JARVIS Auto-Heal Engine
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/turbo/jarvis
+ExecStart=/home/turbo/jarvis/.venv/bin/python scripts/auto_heal.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

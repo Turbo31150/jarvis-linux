@@ -1,0 +1,14 @@
+[Unit]
+Description=JARVIS Resilient Dashboard Monitor
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/turbo/jarvis
+ExecStart=/bin/bash /home/turbo/jarvis/scripts/dashboard_resilient.sh
+Restart=always
+RestartSec=10
+EnvironmentFile=/home/turbo/jarvis/.env
+
+[Install]
+WantedBy=default.target

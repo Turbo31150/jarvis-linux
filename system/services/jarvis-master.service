@@ -1,0 +1,16 @@
+[Unit]
+Description=JARVIS Unified Master Boot & Watchdog
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/turbo/jarvis
+ExecStart=/home/turbo/jarvis/.venv/bin/python scripts/jarvis_unified_boot.py --watch
+Restart=always
+RestartSec=30
+EnvironmentFile=/home/turbo/jarvis/.env
+StandardOutput=append:/home/turbo/jarvis/data/logs/unified_boot.log
+StandardError=append:/home/turbo/jarvis/data/logs/unified_boot.log
+
+[Install]
+WantedBy=default.target

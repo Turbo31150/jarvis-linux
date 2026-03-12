@@ -1,0 +1,735 @@
+"""JARVIS Voice Interface v3 — VAD + Streaming Whisper + OL1 correction + Cache.
+
+Flow:
+1. Wake word 'jarvis/hey jarvis/ok jarvis' or Ctrl PTT → record audio
+2. VAD (Silero) filters silence → speech-only audio
+3. Streaming transcribe via persistent faster-whisper worker (CUDA, beam=1)
+4. Local-first routing: cache → fuzzy match → OL1/qwen3:1.7b correction
+5. Command execution + streaming TTS
+
+v3 changes:
+- Silero VAD integration (60-80% less Whisper load)
+- Multi wake-word support
+- Smart end-of-speech detection
+- Sub-1s latency for cached commands
+"""
+
+from __future__ import annotations
+
+import asyncio
+import json
+import logging
+import subprocess
+import tempfile
+import threading
+import wave
+from pathlib import Path
+
+import numpy as np
+import sounddevice as sd
+
+
+__all__ = [
+    "WhisperWorker",
+    "check_microphone",
+    "get_cached_input_device",
+    "start_whisper",
+    "stop_whisper",
+]
+
+logger = logging.getLogger("jarvis.voice")
+
+try:
+    import keyboard as kb
+    HAS_KEYBOARD = True
+except ImportError:
+    HAS_KEYBOARD = False
+
+# ── Command cache (thread-safe) ─────────────────────────────────────────
+_command_cache: dict[str, dict] = {}
+_cache_lock = threading.Lock()
+_CACHE_MAX = 200
+
+
+def _cache_get(text: str) -> dict | None:
+    with _cache_lock:
+        return _command_cache.get(text.lower().strip())
+
+
+def _cache_set(text: str, result: dict):
+    key = text.lower().strip()
+    with _cache_lock:
+        if len(_command_cache) >= _CACHE_MAX:
+            oldest = next(iter(_command_cache))
+            del _command_cache[oldest]
+        _command_cache[key] = result
+
+
+# Push-to-talk config
+PTT_KEY = "ctrl"
+
+# Audio recording config
+SAMPLE_RATE = 16000
+CHANNELS = 1
+
+# Whisper worker config
+WHISPER_WORKER_SCRIPT = Path(__file__).parent / "whisper_worker.py"
+
+
+def _find_system_python() -> Path:
+    """Find system Python (not venv) — dynamic version detection."""
+    import shutil
+    # 1. Check PATH for python3/python
+    for name in ("python3", "python"):
+        found = shutil.which(name)
+        if found:
+            p = Path(found)
+            # Skip venv pythons — we need the system one for CUDA packages
+            if ".venv" not in str(p) and "envs" not in str(p):
+                return p
+    # 2. Scan AppData for installed Python versions (newest first)
+    base = Path.home() / "AppData" / "Local" / "Programs" / "Python"
+    if base.exists():
+        versions = sorted(base.glob("Python3*/python.exe"), reverse=True)
+        if versions:
+            return versions[0]
+    # 3. Fallback to hardcoded (legacy)
+    return Path.home() / "AppData" / "Local" / "Programs" / "Python" / "Python313" / "python.exe"
+
+
+SYSTEM_PYTHON = _find_system_python()
+
+# OL1 config for voice correction (fast, 192 tok/s, always loaded)
+try:
+    from src.config import config as _cfg
+    _ol_url = _cfg.ollama_nodes[0].url if _cfg.ollama_nodes else "http://127.0.0.1:11434"
+except ImportError:
+    _ol_url = "http://127.0.0.1:11434"
+OLLAMA_URL = f"{_ol_url}/api/chat"
+OLLAMA_MODEL = "qwen3:1.7b"
+
+
+# ── Mic detection ─────────────────────────────────────────────────────────
+
+def _get_input_device() -> int | None:
+    """Find the best available input device by testing each one."""
+    devices = sd.query_devices()
+    default_input = sd.default.device[0]
+    candidates = []
+    for i, d in enumerate(devices):
+        if d['max_input_channels'] > 0:
+            name_lower = d['name'].lower()
+            if i == default_input and default_input >= 0:
+                priority = 0
+            elif 'casque' in name_lower or 'headset' in name_lower:
+                priority = 1
+            elif 'microphone' in name_lower:
+                priority = 2
+            else:
+                priority = 3
+            candidates.append((priority, i, d))
+    candidates.sort()
+    for _, idx, d in candidates:
+        try:
+            with sd.InputStream(device=idx, samplerate=SAMPLE_RATE, channels=1,
+                                dtype='int16', blocksize=1024):
+                return idx
+        except (sd.PortAudioError, OSError):
+            continue
+    return None
+
+
+_mic_cache: dict = {"ok": False, "ts": None, "device": None}
+
+
+def check_microphone() -> bool:
+    """Check if any working microphone is available (cached 30s)."""
+    import time
+    now = time.monotonic()
+    if _mic_cache["ts"] and (now - _mic_cache["ts"]) < 30.0:
+        return _mic_cache["ok"]
+    dev = _get_input_device()
+    _mic_cache["ok"] = dev is not None
+    _mic_cache["ts"] = now
+    _mic_cache["device"] = dev
+    return _mic_cache["ok"]
+
+
+def get_cached_input_device() -> int | None:
+    if _mic_cache["device"] is not None:
+        return _mic_cache["device"]
+    return _get_input_device()
+
+
+HAS_MICROPHONE = check_microphone()
+
+
+# ── Persistent Whisper Worker ─────────────────────────────────────────────
+
+class WhisperWorker:
+    """Manages a persistent faster-whisper subprocess (model loaded once)."""
+
+    def __init__(self):
+        self._process: subprocess.Popen | None = None
+        self._lock = threading.Lock()
+        self._ready = False
+
+    def start(self) -> bool:
+        """Start the whisper worker process. Returns True when model is loaded."""
+        if self._process and self._process.poll() is None:
+            return self._ready
+
+        if not SYSTEM_PYTHON.exists() or not WHISPER_WORKER_SCRIPT.exists():
+            return False
+
+        try:
+            self._process = subprocess.Popen(
+                [str(SYSTEM_PYTHON), str(WHISPER_WORKER_SCRIPT)],
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                encoding="utf-8",
+                errors="replace",
+                bufsize=1,  # Line buffered
+            )
+            # Wait for WHISPER_READY
+            line1 = self._process.stdout.readline().strip()
+            if "WHISPER_READY" in line1:
+                print(f"  [WHISPER] {line1}", flush=True)
+            # Wait for WHISPER_LOADED
+            line2 = self._process.stdout.readline().strip()
+            if "WHISPER_LOADED" in line2:
+                print(f"  [WHISPER] {line2}", flush=True)
+                self._ready = True
+            if not self._ready:
+                # Kill the process if it didn't start properly
+                self._process.kill()
+                self._process = None
+            return self._ready
+        except (OSError, subprocess.SubprocessError) as e:
+            logger.debug("Whisper worker start failed: %s", e)
+            if self._process:
+                try:
+                    self._process.kill()
+                except OSError:
+                    pass
+                self._process = None
+            return False
+
+    def transcribe(self, wav_path: str) -> str | None:
+        """Send a WAV path to the worker and get transcription back."""
+        with self._lock:
+            if not self._process or self._process.poll() is not None:
+                if not self.start():
+                    return None
+
+            try:
+                self._process.stdin.write(wav_path + "\n")
+                self._process.stdin.flush()
+                # Read streaming segments until DONE
+                full_text = ""
+                while True:
+                    line = self._process.stdout.readline().strip()
+                    if line.startswith("DONE:"):
+                        full_text = line[5:].strip()
+                        break
+                    elif line.startswith("SEGMENT:"):
+                        pass  # Future: could be used for early processing
+                    elif line == "":
+                        break  # Empty = error or EOF
+                return full_text if full_text else None
+            except (OSError, BrokenPipeError) as e:
+                logger.debug("Whisper transcribe error: %s", e)
+                self._ready = False
+                return None
+
+    def stop(self):
+        """Shutdown the worker."""
+        if self._process and self._process.poll() is None:
+            try:
+                self._process.stdin.write("QUIT\n")
+                self._process.stdin.flush()
+                self._process.wait(timeout=5)
+            except (OSError, BrokenPipeError):
+                self._process.kill()
+        self._ready = False
+
+
+# Global worker instance
+_whisper_worker = WhisperWorker()
+
+
+# ── OL1 voice correction ─────────────────────────────────────────────────
+
+async def analyze_with_lm(raw_text: str) -> dict:
+    """Ask OL1/qwen3:1.7b to analyze/correct voice transcription.
+
+    Returns: {"corrected": str, "intent": str, "confidence": float}
+    """
+    import httpx
+
+    prompt = (
+        f"Transcription vocale brute: \"{raw_text}\"\n\n"
+        "Tu es un correcteur vocal pour JARVIS (assistant IA). "
+        "Corrige les erreurs de transcription et identifie l'intention.\n"
+        "Reponds UNIQUEMENT en JSON:\n"
+        '{"corrected": "texte corrige", "intent": "commande claire", "confidence": 0.95}\n'
+        "Pas de markdown, pas d'explication."
+    )
+
+    try:
+        async with httpx.AsyncClient(timeout=3.0) as client:
+            resp = await client.post(OLLAMA_URL, json={
+                "model": OLLAMA_MODEL,
+                "messages": [{"role": "user", "content": prompt}],
+                "stream": False,
+                "think": False,
+                "options": {"temperature": 0.1, "num_predict": 150},
+            })
+            if resp.status_code == 200:
+                content = resp.json().get("message", {}).get("content", "").strip()
+                if content.startswith("```"):
+                    content = content.split("\n", 1)[1].rsplit("```", 1)[0].strip()
+                data = json.loads(content)
+                return {
+                    "corrected": data.get("corrected", raw_text),
+                    "intent": data.get("intent", raw_text),
+                    "confidence": float(data.get("confidence", 0.5)),
+                }
+    except (httpx.HTTPError, asyncio.TimeoutError, json.JSONDecodeError, OSError) as exc:
+        logger.debug("analyze_with_lm failed: %s", exc)
+
+    return {"corrected": raw_text, "intent": raw_text, "confidence": 0.5}
+
+
+# ── PTT + Recording ──────────────────────────────────────────────────────
+
+async def wait_for_ptt(key: str = PTT_KEY, timeout: float = 30.0) -> bool:
+    """Wait for push-to-talk key press."""
+    if not HAS_KEYBOARD:
+        return True
+    event = threading.Event()
+
+    def on_press(e):
+        if e.name == key:
+            event.set()
+
+    hook = kb.on_press(on_press)
+    try:
+        return await asyncio.to_thread(event.wait, timeout)
+    finally:
+        kb.unhook(hook)
+
+
+def _record_while_key_held(key: str = PTT_KEY, max_duration: float = 30.0) -> np.ndarray | None:
+    """Record audio while the PTT key is held down."""
+    frames: list[np.ndarray] = []
+    stop_event = threading.Event()
+
+    if HAS_KEYBOARD:
+        def on_release(e):
+            if e.name == key:
+                stop_event.set()
+        hook = kb.on_release(on_release)
+    else:
+        hook = None
+
+    def audio_callback(indata, frame_count, time_info, status):
+        if not stop_event.is_set():
+            frames.append(indata.copy())
+
+    device = get_cached_input_device()
+    if device is None:
+        return None
+
+    try:
+        with sd.InputStream(device=device, samplerate=SAMPLE_RATE, channels=CHANNELS,
+                            dtype='int16', callback=audio_callback,
+                            blocksize=1024):
+            stop_event.wait(timeout=max_duration)
+    finally:
+        if hook is not None:
+            kb.unhook(hook)
+
+    if not frames:
+        return None
+    return np.concatenate(frames, axis=0)
+
+
+def _save_wav(audio: np.ndarray, path: str) -> None:
+    """Save numpy int16 audio to WAV file."""
+    with wave.open(path, 'wb') as wf:
+        wf.setnchannels(CHANNELS)
+        wf.setsampwidth(2)
+        wf.setframerate(SAMPLE_RATE)
+        wf.writeframes(audio.tobytes())
+
+
+# ── Timed recording (post wake-word) ─────────────────────────────────────
+
+def _record_timed(max_duration: float = 5.0, use_vad: bool = True) -> np.ndarray | None:
+    """Record audio for a fixed duration with VAD-based end-of-speech detection.
+
+    v3: Uses Silero VAD for intelligent speech boundary detection.
+    Falls back to amplitude-based detection if VAD unavailable.
+    """
+    import time
+    frames: list[np.ndarray] = []
+    device = get_cached_input_device()
+    if device is None:
+        return None
+
+    # Initialize VAD
+    vad = None
+    if use_vad:
+        try:
+            from src.vad import VoiceActivityDetector
+            vad = VoiceActivityDetector(
+                min_speech_ms=200,
+                min_silence_ms=700,
+            )
+            vad.start()
+        except (ImportError, Exception) as exc:
+            logger.debug("VAD unavailable, falling back to amplitude: %s", exc)
+            vad = None
+
+    try:
+        with sd.InputStream(device=device, samplerate=SAMPLE_RATE, channels=CHANNELS,
+                            dtype='int16', blocksize=1024) as stream:
+            start = time.monotonic()
+            silence_count = 0
+            while time.monotonic() - start < max_duration:
+                data, _ = stream.read(1024)
+                frames.append(data.copy())
+
+                if vad is not None:
+                    result = vad.process_chunk(data)
+                    if result["utterance_complete"] and result["speech_audio"] is not None:
+                        # VAD detected end of speech — return speech-only audio
+                        return result["speech_audio"]
+                else:
+                    # Fallback: amplitude-based silence detection
+                    amplitude = np.abs(data).mean()
+                    if amplitude < 200:
+                        silence_count += 1
+                    else:
+                        silence_count = 0
+                    if silence_count > 23:  # ~1.5s of silence at 16kHz/1024
+                        break
+    except (sd.PortAudioError, OSError) as exc:
+        logger.debug("_record_timed audio error: %s", exc)
+
+    if not frames:
+        return None
+
+    raw_audio = np.concatenate(frames, axis=0)
+
+    # Post-process with VAD: strip silence from recording
+    if vad is not None:
+        speech = vad.extract_speech(raw_audio)
+        if speech is not None and len(speech) > SAMPLE_RATE * 0.3:
+            return speech
+
+    return raw_audio
+
+
+# ── Main listen function ─────────────────────────────────────────────────
+
+async def listen_voice(timeout: float = 15.0, keyboard_fallback: bool = True, use_ptt: bool = False) -> str | None:
+    """Record voice → Whisper transcribe → OL1 analyze.
+
+    Returns the analyzed/corrected text, or None.
+    """
+    if not check_microphone():
+        if keyboard_fallback:
+            try:
+                text = await asyncio.to_thread(input, "[JARVIS] > ")
+                return text.strip() if text and text.strip() else None
+            except (EOFError, KeyboardInterrupt):
+                return None
+        return None
+
+    # PTT: wait for Ctrl press
+    if use_ptt and HAS_KEYBOARD:
+        print(f"  [Maintiens {PTT_KEY.upper()} pour parler...]", flush=True)
+        pressed = await wait_for_ptt(timeout=30.0)
+        if not pressed:
+            return None
+        print("  [Enregistrement... relache CTRL]", flush=True)
+
+    # Record while key held
+    audio = await asyncio.to_thread(_record_while_key_held, PTT_KEY, timeout)
+
+    if audio is None or len(audio) < SAMPLE_RATE * 0.3:
+        return None
+
+    duration = len(audio) / SAMPLE_RATE
+    print(f"  [Enregistre {duration:.1f}s — transcription Whisper...]", flush=True)
+
+    # Save WAV
+    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
+        wav_path = tmp.name
+    _save_wav(audio, wav_path)
+
+    # Transcribe via persistent worker
+    try:
+        text = await asyncio.to_thread(_whisper_worker.transcribe, wav_path)
+    finally:
+        Path(wav_path).unlink(missing_ok=True)
+
+    if not text:
+        print("  [Pas de parole detectee]", flush=True)
+        return None
+
+    print(f"  [STT] {text}", flush=True)
+
+    # LM Studio analysis/correction
+    print(f"  [Analyse IA...]", flush=True)
+    analysis = await analyze_with_lm(text)
+    corrected = analysis["intent"]
+    confidence = analysis["confidence"]
+
+    if corrected != text:
+        print(f"  [IA] {corrected} (conf={confidence:.0%})", flush=True)
+
+    return corrected
+
+
+# ── Voice Pipeline v2 ────────────────────────────────────────────────────
+
+async def listen_voice_v2(
+    use_wake_word: bool = True,
+    use_cache: bool = True,
+    timeout: float = 30.0,
+) -> dict | None:
+    """Voice Pipeline v2 — Wake word + streaming STT + local-first routing.
+
+    Returns full correction result dict, or None.
+    """
+    from src.voice_correction import full_correction_pipeline
+
+    # Step 1: Wait for wake word or PTT
+    if use_wake_word:
+        wake_event = asyncio.Event()
+
+        def on_wake():
+            wake_event.set()
+
+        from src.wake_word import WakeWordDetector
+        detector = WakeWordDetector(callback=on_wake)
+        device = get_cached_input_device()
+        if detector.start(device=device):
+            print("  [En attente de 'Jarvis'...]", flush=True)
+            try:
+                await asyncio.wait_for(wake_event.wait(), timeout=timeout)
+                print("  [Wake word detecte! Parle...]", flush=True)
+            except asyncio.TimeoutError:
+                detector.stop()
+                return None
+            finally:
+                detector.stop()
+        else:
+            # Fallback to PTT if wake word fails
+            print(f"  [Wake word indisponible, maintiens {PTT_KEY.upper()}...]", flush=True)
+            if not await wait_for_ptt(timeout=timeout):
+                return None
+
+        # Record after wake word (timed with silence detection)
+        audio = await asyncio.to_thread(_record_timed, 5.0)
+    else:
+        # PTT mode
+        if not await wait_for_ptt(timeout=timeout):
+            return None
+        audio = await asyncio.to_thread(_record_while_key_held, PTT_KEY, 15.0)
+
+    if audio is None or len(audio) < SAMPLE_RATE * 0.3:
+        return None
+
+    # Step 2: Save + transcribe
+    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
+        wav_path = tmp.name
+    _save_wav(audio, wav_path)
+
+    try:
+        text = await asyncio.to_thread(_whisper_worker.transcribe, wav_path)
+    finally:
+        Path(wav_path).unlink(missing_ok=True)
+
+    if not text:
+        print("  [Pas de parole detectee]", flush=True)
+        return None
+
+    print(f"  [STT] {text}", flush=True)
+
+    # Step 3: Check cache
+    if use_cache:
+        cached = _cache_get(text)
+        if cached:
+            cached = dict(cached)  # Copy to avoid mutation
+            cached["method"] = "cache"
+            print(f"  [CACHE] {cached.get('intent', text)}", flush=True)
+            return cached
+
+    # Step 4: Full correction pipeline (local-first, IA only if needed)
+    result = await full_correction_pipeline(text, use_ia=True)
+    print(f"  [MATCH] method={result['method']}, confidence={result['confidence']:.0%}", flush=True)
+
+    # Step 4.5a: Try voice computer control (browser/windows/system/media)
+    if not result.get("command"):
+        try:
+            from cowork.dev.voice_computer_control import execute_voice_command
+            vcc_output = execute_voice_command(text)
+            if vcc_output and vcc_output != text:
+                result["command"] = text
+                result["method"] = "voice_control"
+                result["confidence"] = 0.85
+                result["vcc_output"] = vcc_output
+                print(f"  [VCC] {vcc_output[:80]}", flush=True)
+        except Exception:
+            pass
+
+    # Step 4.5b: Execute domino pipeline if matched
+    if result.get("method") == "domino" and result.get("domino"):
+        try:
+            from src.voice_correction import execute_domino_result
+            domino_result = await asyncio.to_thread(execute_domino_result, result)
+            if domino_result and "error" not in domino_result:
+                result["domino_result"] = domino_result
+                print(f"  [DOMINO] {domino_result['domino_id']}: "
+                      f"{domino_result['passed']}/{domino_result['total_steps']} PASS "
+                      f"in {domino_result['total_ms']:.0f}ms", flush=True)
+        except (ImportError, OSError, ValueError) as exc:
+            print(f"  [DOMINO] execution failed: {exc}", flush=True)
+
+    # Step 5: Cache result if command found
+    if use_cache and result.get("command"):
+        _cache_set(text, result)
+
+    # Step 6: Record action for prediction engine
+    if result.get("command"):
+        try:
+            from src.prediction_engine import prediction_engine
+            from datetime import datetime as _dt
+            _now = _dt.now()
+            prediction_engine.record_action(result["command"], {
+                "source": "voice",
+                "method": result.get("method", ""),
+                "confidence": result.get("confidence", 0),
+                "hour": _now.hour,
+                "weekday": _now.weekday(),
+            })
+        except Exception:
+            pass
+
+    return result
+
+
+# ── TTS ───────────────────────────────────────────────────────────────────
+
+async def speak_text(text: str, voice: str = "fr-FR") -> bool:
+    """Synthesize speech via Windows SAPI (PowerShell)."""
+    if not text or not text.strip():
+        return False
+
+    import re as _re
+    clean = text.replace("\n", " ").replace("**", "")
+    if len(clean) > 500:
+        clean = clean[:497] + "..."
+    # Sanitize voice tag (only allow culture codes like fr-FR, en-US)
+    if not _re.match(r'^[a-zA-Z]{2}(-[a-zA-Z]{2,})*$', voice):
+        voice = "fr-FR"
+
+    ps_path = None
+    try:
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.ps1', delete=False, encoding='utf-8') as f:
+            # Use single-quoted here-string @'...'@ to prevent PS injection
+            # Escape the here-string terminator to prevent breakout
+            safe_text = clean.replace("'@", "'`@")
+            f.write(
+                'Add-Type -AssemblyName System.Speech\n'
+                '$synth = New-Object System.Speech.Synthesis.SpeechSynthesizer\n'
+                f"$synth.SelectVoiceByHints('NotSet', 0, 0, "
+                f"[System.Globalization.CultureInfo]::GetCultureInfo('{voice}'))\n"
+                "$text = @'\n"
+                f"{safe_text}\n"
+                "'@\n"
+                '$synth.Speak($text)\n'
+            )
+            ps_path = f.name
+
+        result = await asyncio.to_thread(
+            lambda: subprocess.run(
+                ["powershell", "-ExecutionPolicy", "Bypass", "-File", ps_path],
+                capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=30,
+            )
+        )
+        return result.returncode == 0
+    except (subprocess.TimeoutExpired, OSError) as exc:
+        logger.debug("speak_text failed: %s", exc)
+        return False
+    finally:
+        if ps_path:
+            Path(ps_path).unlink(missing_ok=True)
+
+
+async def _warmup_ollama():
+    """Ping OL1 every 60s to keep model warm in GPU memory."""
+    import httpx
+    while True:
+        try:
+            async with httpx.AsyncClient(timeout=2) as c:
+                await c.post(OLLAMA_URL, json={
+                    "model": OLLAMA_MODEL,
+                    "messages": [{"role": "user", "content": "ping"}],
+                    "stream": False, "think": False,
+                    "options": {"num_predict": 1},
+                })
+        except (httpx.HTTPError, OSError) as exc:
+            logger.debug("Ollama warmup failed: %s", exc)
+        await asyncio.sleep(60)
+
+
+# ── Startup / Shutdown ────────────────────────────────────────────────────
+
+def start_whisper() -> bool:
+    """Start the persistent Whisper worker (call at JARVIS startup)."""
+    return _whisper_worker.start()
+
+
+def stop_whisper():
+    """Stop the Whisper worker (call at JARVIS shutdown)."""
+    _whisper_worker.stop()
+
+
+async def voice_loop(callback, use_wake_word: bool = True) -> None:
+    """Continuous voice listening loop (v2 with wake word support)."""
+    mode = "wake word" if use_wake_word else "PTT"
+    print(f"[JARVIS] Mode vocal v2 actif ({mode}).", flush=True)
+
+    # Start OL1 warm-up in background
+    warmup_task = asyncio.create_task(_warmup_ollama())
+
+    try:
+        while True:
+            result = await listen_voice_v2(use_wake_word=use_wake_word, timeout=30.0)
+            if result:
+                intent = result.get("intent", "")
+                if intent.lower().strip() in ("stop", "arrete", "exit", "quitter"):
+                    from src.tts_streaming import speak_quick
+                    await speak_quick("Session vocale terminee.")
+                    break
+
+                cmd = result.get("command")
+                if cmd:
+                    print(f"[VOICE] {cmd.triggers[0]} (conf={result['confidence']:.0%})", flush=True)
+                    response = await callback(intent)
+                else:
+                    # Freeform — send to Claude
+                    print(f"[VOICE] Freeform: {intent}", flush=True)
+                    response = await callback(intent)
+
+                if response:
+                    from src.tts_streaming import speak_streaming
+                    await speak_streaming(str(response))
+    finally:
+        warmup_task.cancel()

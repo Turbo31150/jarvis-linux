@@ -1,0 +1,13 @@
+[Unit]
+Description=JARVIS Voice Listener (Wake Word)
+After=network.target
+
+[Service]
+ExecStart=/home/turbo/jarvis-m1-ops/.venv/bin/python3 /home/turbo/jarvis-m1-ops/src/voice_engine.py
+WorkingDirectory=/home/turbo/jarvis-m1-ops
+Restart=always
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

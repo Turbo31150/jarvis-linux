@@ -1,0 +1,20 @@
+
+# GEMINI AUTONOMY MODE
+alias gauto='gemini -y --sandbox --checkpointing --memory --allow-edits --retry 5 --timeout 3600'
+alias gmax='gemini -y --sandbox -p'
+alias jauto='cd ~/jarvis-m1-ops && gauto'
+
+# Exemples prêts :
+alias jarvis-linux="gmax 'MODE AUTONOME: Migrer JARVIS Windows→Linux...'"
+alias gpu-max="gmax 'OPTIM GPU 6 cartes + ZRAM + monitoring...'"
+
+# GEMINI AUTONOMY MODE
+alias gauto='gemini -y --sandbox --checkpointing --memory --allow-edits --retry 5 --timeout 3600'
+alias gmax='gemini -y --sandbox -p'
+alias jauto='cd ~/jarvis-m1-ops && gauto'
+
+# Exemples prêts :
+alias jarvis-linux="gmax 'MODE AUTONOME: Migrer JARVIS Windows→Linux...'"
+alias gpu-max="gmax 'OPTIM GPU 6 cartes + ZRAM + monitoring...'"
+alias gloop='gemini -y --sandbox --checkpointing --memory --allow-edits --retry 5 --timeout 3600 -p'
+alias gloop='gemini -y --sandbox --checkpointing --memory --allow-edits --retry 5 --timeout 3600 -p'

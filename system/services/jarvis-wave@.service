@@ -1,0 +1,13 @@
+[Unit]
+Description=JARVIS Wave Service - Wave %i
+After=jarvis-master.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/turbo/jarvis
+ExecStart=/home/turbo/jarvis/jarvis-wave.sh %i
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

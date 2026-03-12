@@ -1,0 +1,14 @@
+[Unit]
+Description=JARVIS GPU Watcher Service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/turbo/jarvis
+ExecStart=/home/turbo/jarvis/.venv/bin/python /home/turbo/jarvis/scripts/gpu_watcher.py
+Restart=always
+RestartSec=30
+EnvironmentFile=/home/turbo/jarvis/.env
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,11 @@
+[Unit]
+Description=Whisper-Flow WebSocket Server
+After=docker.service
+
+[Service]
+ExecStart=/usr/bin/docker compose -f /home/turbo/jarvis-m1-ops/whisper_streaming_web/docker-compose.yml up
+WorkingDirectory=/home/turbo/jarvis-m1-ops/whisper_streaming_web
+Restart=always
+
+[Install]
+WantedBy=default.target

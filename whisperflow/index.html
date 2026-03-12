@@ -1,0 +1,2929 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS WhisperFlow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0e14;
+    --surface: rgba(19, 25, 32, 0.75);
+    --surface-solid: #131920;
+    --surface2: rgba(26, 34, 48, 0.8);
+    --surface2-solid: #1a2230;
+    --accent: #ff6b35;
+    --accent2: #ff8c5a;
+    --cyan: #00d4ff;
+    --green: #00e676;
+    --red: #ff5252;
+    --blue: #448aff;
+    --purple: #b388ff;
+    --text: #e8ecf0;
+    --dim: #8da0b8;
+    --border: rgba(30, 45, 61, 0.6);
+    --glow: rgba(255, 107, 53, 0.15);
+    --glow-cyan: rgba(0, 212, 255, 0.12);
+    --glass: blur(20px) saturate(1.3);
+    --radius: 10px;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  body {
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(255, 107, 53, 0.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(0, 212, 255, 0.03) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 100%, rgba(68, 138, 255, 0.03) 0%, transparent 40%);
+    color: var(--text);
+    overflow: hidden;
+    user-select: none;
+    height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* HEADER — draggable title bar */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--surface);
+    backdrop-filter: var(--glass);
+    -webkit-backdrop-filter: var(--glass);
+    border-bottom: 1px solid var(--border);
+    -webkit-app-region: drag;
+    cursor: move;
+  }
+  .header-left { display: flex; align-items: center; gap: 10px; }
+  .logo {
+    width: 24px; height: 24px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: #fff;
+    box-shadow: 0 2px 8px var(--glow);
+  }
+  .title { font-size: 13px; font-weight: 600; letter-spacing: 0.5px; }
+  .title span { color: var(--accent); }
+  .header-right { display: flex; gap: 4px; -webkit-app-region: no-drag; }
+  .header-btn {
+    width: 28px; height: 28px;
+    border: none; background: transparent;
+    color: var(--dim); cursor: pointer;
+    border-radius: 6px; font-size: 15px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all var(--transition);
+  }
+  .header-btn:hover { background: var(--surface2); color: var(--text); transform: scale(1.1); }
+
+  /* STATUS BAR */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 14px;
+    background: var(--surface);
+    backdrop-filter: var(--glass);
+    -webkit-backdrop-filter: var(--glass);
+    font-size: 11px;
+    color: var(--dim);
+    border-bottom: 1px solid var(--border);
+  }
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    flex-shrink: 0;
+  }
+  .status-dot.offline { background: var(--red); }
+  .status-dot.connecting { background: #ffab40; animation: pulse 1s infinite; }
+  @keyframes pulse { 50% { opacity: 0.3; } }
+
+  /* MAIN CONTENT */
+  .main {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 78px);
+    padding: 12px;
+    gap: 10px;
+  }
+
+  /* TRANSCRIPTION ZONE */
+  .transcript-zone {
+    flex: 1;
+    background: var(--surface);
+    backdrop-filter: var(--glass);
+    -webkit-backdrop-filter: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    overflow-y: auto;
+    min-height: 80px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    transition: border-color var(--transition);
+  }
+  .transcript-zone.flash-success {
+    border-color: var(--green);
+    box-shadow: 0 4px 16px rgba(0, 230, 118, 0.15);
+  }
+  .transcript-zone.flash-error {
+    border-color: var(--red);
+    box-shadow: 0 4px 16px rgba(255, 82, 82, 0.15);
+  }
+  .transcript-zone::-webkit-scrollbar { width: 4px; }
+  .transcript-zone::-webkit-scrollbar-thumb { background: rgba(141, 160, 184, 0.3); border-radius: 2px; }
+  .transcript-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .transcript-text.listening {
+    color: var(--accent2);
+    animation: textpulse 1.5s ease-in-out infinite;
+  }
+  @keyframes textpulse { 50% { opacity: 0.6; } }
+  .transcript-text.processing { color: var(--blue); }
+  .transcript-placeholder {
+    color: var(--dim);
+    font-style: italic;
+    font-size: 13px;
+    text-align: center;
+    padding-top: 24px;
+  }
+  .cmd-detected {
+    display: inline-block;
+    background: rgba(0, 212, 255, 0.1);
+    color: var(--cyan);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 6px;
+    letter-spacing: 0.3px;
+  }
+
+  /* DOMINO RESULT */
+  .domino-result {
+    background: var(--surface2);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    font-size: 12px;
+    display: none;
+    box-shadow: 0 0 20px var(--glow), 0 2px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeSlideIn var(--transition) both;
+  }
+  .domino-result.show { display: block; }
+  .domino-name { color: var(--accent); font-weight: 600; font-size: 13px; }
+  .domino-cat { color: var(--dim); margin-left: 8px; font-size: 11px; }
+  .domino-steps { color: var(--green); margin-top: 4px; font-size: 11px; }
+
+  /* CASCADE PROGRESS */
+  .cascade-panel {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    display: none;
+    animation: fadeSlideIn var(--transition) both;
+  }
+  .cascade-panel.show { display: block; }
+  .cascade-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .cascade-title { color: var(--accent); font-weight: 600; font-size: 12px; }
+  .cascade-stats { color: var(--dim); font-size: 10px; }
+  .cascade-bar {
+    height: 4px;
+    background: var(--surface);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .cascade-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+  .cascade-fill.has-fail { background: linear-gradient(90deg, var(--green), var(--error)); }
+  .cascade-step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    max-height: 140px;
+    overflow-y: auto;
+  }
+  .cascade-step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    padding: 2px 0;
+  }
+  .cascade-step .step-badge {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+  .cascade-step .step-badge.pass { background: var(--green); color: #000; border-color: var(--green); }
+  .cascade-step .step-badge.fail { background: var(--error); color: #fff; border-color: var(--error); }
+  .cascade-step .step-badge.skip { background: var(--dim); color: #fff; }
+  .cascade-step .step-name { color: var(--text); flex: 1; }
+  .cascade-step .step-node { color: var(--dim); font-size: 9px; }
+  .cascade-step .step-ms { color: var(--accent); font-size: 9px; min-width: 36px; text-align: right; }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* JARVIS RESPONSE */
+  .jarvis-response {
+    background: linear-gradient(135deg, var(--surface2), rgba(255,107,53,0.06));
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+    display: none;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 140px;
+    overflow-y: auto;
+    box-shadow: 0 0 16px var(--glow), 0 2px 8px rgba(0, 0, 0, 0.15);
+    animation: fadeSlideIn var(--transition) both;
+  }
+  .jarvis-response.show { display: block; }
+  .jarvis-response .jr-label {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 4px;
+  }
+  .jarvis-response .jr-text { color: var(--text); }
+  .jarvis-response.thinking {
+    color: var(--blue);
+    animation: textpulse 1.5s ease-in-out infinite;
+  }
+
+  /* HISTORY */
+  .history {
+    max-height: 150px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .history::-webkit-scrollbar { width: 3px; }
+  .history::-webkit-scrollbar-thumb { background: rgba(141, 160, 184, 0.3); border-radius: 2px; }
+  .history-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 10px;
+    background: var(--surface);
+    backdrop-filter: blur(10px);
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+  }
+  .history-item:hover { background: var(--surface2); border-color: var(--border); }
+  .history-time { color: var(--dim); min-width: 44px; font-size: 10px; font-variant-numeric: tabular-nums; }
+  .history-text { color: var(--text); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .history-domino { color: var(--accent); font-weight: 600; }
+  .history-status {
+    font-size: 9px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    flex-shrink: 0;
+  }
+  .history-status.ok { background: rgba(0, 230, 118, 0.15); color: var(--green); }
+  .history-status.fail { background: rgba(255, 82, 82, 0.15); color: var(--red); }
+
+  /* CONTROLS */
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0;
+  }
+
+  /* MIC BUTTON */
+  .mic-btn {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    transition: all var(--transition);
+    flex-shrink: 0;
+    position: relative;
+    box-shadow: 0 0 12px var(--glow);
+  }
+  .mic-btn:hover { background: rgba(255,107,53,0.1); transform: scale(1.08); box-shadow: 0 0 20px var(--glow); }
+  .mic-btn.recording {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    border-color: var(--accent);
+    animation: mic-pulse 1s ease-in-out infinite;
+    box-shadow: 0 0 30px rgba(255,107,53,0.5);
+  }
+  @keyframes mic-pulse {
+    0%, 100% { box-shadow: 0 0 15px rgba(255,107,53,0.3); }
+    50% { box-shadow: 0 0 35px rgba(255,107,53,0.6); }
+  }
+  .mic-btn.processing {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    animation: spin 1s linear infinite;
+    box-shadow: 0 0 16px var(--glow-cyan);
+  }
+  @keyframes spin { 100% { transform: rotate(360deg); } }
+
+  /* VISUALIZER */
+  .visualizer {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 32px;
+    flex: 1;
+  }
+  .viz-bar {
+    width: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: height 0.08s ease;
+    min-height: 3px;
+  }
+
+  /* TEXT INPUT */
+  .text-input-wrap {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .text-input {
+    flex: 1;
+    background: var(--surface);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-size: 13px;
+    outline: none;
+    font-family: inherit;
+    transition: border-color var(--transition), box-shadow var(--transition);
+  }
+  .text-input:focus { border-color: var(--accent); box-shadow: 0 0 12px var(--glow); }
+  .text-input::placeholder { color: var(--dim); }
+  .send-btn {
+    width: 36px; height: 36px;
+    border: none;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all var(--transition);
+    box-shadow: 0 2px 8px var(--glow);
+  }
+  .send-btn:hover { transform: scale(1.08); box-shadow: 0 4px 12px var(--glow); }
+
+  /* CLUSTER MINI */
+  .cluster-mini {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .node-dot {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    color: var(--dim);
+    padding: 3px 6px;
+    background: var(--surface2);
+    border-radius: 4px;
+    transition: all 0.15s ease;
+  }
+  .node-dot .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px rgba(0, 230, 118, 0.4);
+  }
+  .node-dot .dot.off { background: var(--red); box-shadow: 0 0 6px rgba(255, 82, 82, 0.4); }
+
+  /* MODE TOGGLE */
+  .mode-toggle {
+    display: flex;
+    gap: 2px;
+    background: var(--surface2);
+    border-radius: 6px;
+    padding: 3px;
+  }
+  .mode-btn {
+    padding: 4px 10px;
+    border: none;
+    background: transparent;
+    color: var(--dim);
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 500;
+    transition: all 0.15s ease;
+  }
+  .mode-btn.active { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
+  .mode-btn:hover:not(.active) { color: var(--text); background: rgba(141, 160, 184, 0.1); }
+
+  /* SHORTCUTS HINT */
+  .shortcuts {
+    text-align: center;
+    font-size: 10px;
+    color: var(--dim);
+    padding: 3px;
+  }
+  kbd {
+    background: var(--surface2);
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    font-size: 10px;
+    font-family: inherit;
+  }
+
+  /* SETTINGS PANEL */
+  .settings-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: all var(--transition);
+  }
+  .settings-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+    background: rgba(0, 0, 0, 0.6);
+  }
+  .settings-panel {
+    background: var(--surface-solid);
+    backdrop-filter: var(--glass);
+    -webkit-backdrop-filter: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    width: 340px;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    transform: translateY(20px) scale(0.95);
+    transition: transform var(--transition);
+  }
+  .settings-overlay.open .settings-panel {
+    transform: translateY(0) scale(1);
+  }
+  .settings-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .settings-close {
+    background: none; border: none; color: var(--dim);
+    cursor: pointer; font-size: 20px;
+    transition: color 0.15s;
+  }
+  .settings-close:hover { color: var(--text); }
+  .settings-group {
+    margin-bottom: 14px;
+  }
+  .settings-group label {
+    display: block;
+    font-size: 11px;
+    color: var(--dim);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-weight: 500;
+  }
+  .settings-group select,
+  .settings-group input[type="text"],
+  .settings-group input[type="number"] {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    color: var(--text);
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color var(--transition);
+  }
+  .settings-group select:focus,
+  .settings-group input:focus { border-color: var(--accent); }
+  .settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+  }
+  .settings-row span { font-size: 13px; }
+  .toggle-switch {
+    width: 40px; height: 20px;
+    background: rgba(141, 160, 184, 0.3);
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    transition: background var(--transition);
+  }
+  .toggle-switch.on { background: var(--accent); }
+  .toggle-switch::after {
+    content: '';
+    width: 16px; height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px; left: 2px;
+    transition: left var(--transition);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  .toggle-switch.on::after { left: 22px; }
+  .settings-info {
+    font-size: 11px;
+    color: var(--dim);
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    line-height: 1.6;
+  }
+
+  /* ── DICTIONARY PANEL ───────────────────────────────────── */
+  .dict-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    z-index: 200;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: all var(--transition);
+  }
+  .dict-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+    background: rgba(0, 0, 0, 0.7);
+  }
+  .dict-panel {
+    background: var(--bg);
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    transform: translateY(20px);
+    transition: transform var(--transition);
+  }
+  .dict-overlay.open .dict-panel {
+    transform: translateY(0);
+  }
+  .dict-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: var(--surface);
+    backdrop-filter: var(--glass);
+    border-bottom: 1px solid var(--border);
+  }
+  .dict-header .dict-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+  }
+  .dict-search-wrap {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .dict-search {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 32px 8px 12px;
+    color: var(--text);
+    font-size: 13px;
+    outline: none;
+    font-family: inherit;
+    transition: border-color var(--transition), box-shadow var(--transition);
+  }
+  .dict-search:focus { border-color: var(--accent); box-shadow: 0 0 12px var(--glow); }
+  .dict-search-clear {
+    position: absolute;
+    right: 8px;
+    background: none;
+    border: none;
+    color: var(--dim);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 2px;
+    display: none;
+    transition: color 0.15s;
+  }
+  .dict-search-clear.visible { display: block; }
+  .dict-search-clear:hover { color: var(--text); }
+  .dict-result-count {
+    font-size: 11px;
+    color: var(--dim);
+    white-space: nowrap;
+    margin-left: 8px;
+    min-width: 50px;
+    text-align: right;
+  }
+  .dict-close {
+    background: none; border: none; color: var(--dim);
+    cursor: pointer; font-size: 20px; padding: 0 4px;
+    transition: color 0.15s;
+  }
+  .dict-close:hover { color: var(--text); }
+  .dict-stats {
+    display: flex;
+    gap: 6px;
+    padding: 8px 14px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .dict-stat {
+    font-size: 11px;
+    color: var(--dim);
+    padding: 3px 10px;
+    background: var(--surface2);
+    border-radius: 5px;
+  }
+  .dict-stat b { color: var(--accent); }
+  .dict-tabs {
+    display: flex;
+    gap: 3px;
+    padding: 8px 14px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  .dict-tabs::-webkit-scrollbar { height: 3px; }
+  .dict-tabs::-webkit-scrollbar-thumb { background: rgba(141, 160, 184, 0.3); border-radius: 2px; }
+  .dict-tab {
+    padding: 5px 12px;
+    border: none;
+    background: transparent;
+    color: var(--dim);
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+    font-weight: 500;
+    transition: all 0.15s ease;
+  }
+  .dict-tab.active { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
+  .dict-tab:hover:not(.active) { background: var(--surface2); color: var(--text); }
+  .dict-tab .tab-count {
+    font-size: 10px;
+    opacity: 0.7;
+    margin-left: 4px;
+  }
+  .dict-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+  }
+  .dict-body::-webkit-scrollbar { width: 5px; }
+  .dict-body::-webkit-scrollbar-thumb { background: rgba(141, 160, 184, 0.3); border-radius: 3px; }
+  .dict-section-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    padding: 8px 10px 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+  .dict-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+  }
+  .dict-item:hover { background: var(--surface2); border-color: var(--border); }
+  .dict-item.kb-active { background: var(--surface2); border-color: var(--accent); outline: none; }
+  .dict-item-icon {
+    width: 28px; height: 22px;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700;
+    flex-shrink: 0;
+    letter-spacing: 0.3px;
+  }
+  .dict-item-icon.cmd { background: rgba(68,138,255,0.15); color: var(--blue); }
+  .dict-item-icon.pipe { background: rgba(179,136,255,0.15); color: var(--purple); }
+  .dict-item-icon.chain { background: rgba(0,230,118,0.15); color: var(--green); }
+  .dict-item-icon.corr { background: rgba(255,171,64,0.15); color: #ffab40; }
+  .dict-item-info { flex: 1; min-width: 0; }
+  .dict-item-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dict-item-desc {
+    font-size: 10px;
+    color: var(--dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dict-item-triggers {
+    font-size: 10px;
+    color: var(--accent2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dict-item-badge {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: var(--surface);
+    color: var(--dim);
+    flex-shrink: 0;
+    font-weight: 500;
+  }
+  .dict-item-exec {
+    width: 26px; height: 26px;
+    border: 1px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 11px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    opacity: 0.6;
+    transition: all 0.15s ease;
+  }
+  .dict-item:hover .dict-item-exec { opacity: 1; }
+  .dict-item-exec:hover { background: var(--accent); color: #fff; transform: scale(1.1); }
+  .dict-empty {
+    text-align: center;
+    color: var(--dim);
+    font-size: 13px;
+    padding: 40px 10px;
+    font-style: italic;
+  }
+  .dict-loading {
+    text-align: center;
+    color: var(--cyan);
+    font-size: 13px;
+    padding: 40px 10px;
+    animation: textpulse 1.5s ease-in-out infinite;
+  }
+
+  /* ── SUGGESTION DROPDOWN ── */
+  .suggest-wrap { position: relative; }
+  .suggest-dropdown {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 0; right: 0;
+    max-height: 320px;
+    overflow-y: auto;
+    background: rgba(14, 18, 24, 0.92);
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04);
+    z-index: 50;
+    padding: 4px;
+  }
+  .suggest-dropdown::-webkit-scrollbar { width: 4px; }
+  .suggest-dropdown::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .suggest-section {
+    padding: 4px 10px 2px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--dim);
+    opacity: 0.7;
+  }
+  .suggest-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .suggest-item:hover, .suggest-item.active {
+    background: rgba(255, 107, 53, 0.12);
+  }
+  .suggest-item.active {
+    background: rgba(255, 107, 53, 0.18);
+    box-shadow: inset 2px 0 0 var(--accent);
+  }
+  .suggest-icon {
+    width: 32px; height: 22px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    letter-spacing: 0.3px;
+  }
+  .suggest-icon.cmd { background: rgba(68,138,255,0.18); color: var(--blue); }
+  .suggest-icon.pipe { background: rgba(179,136,255,0.18); color: var(--purple); }
+  .suggest-icon.db { background: rgba(0,230,118,0.18); color: var(--green); }
+  .suggest-icon.recent { background: rgba(255,107,53,0.15); color: var(--accent); }
+  .suggest-info { flex: 1; min-width: 0; }
+  .suggest-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .suggest-name mark {
+    background: rgba(255,107,53,0.3);
+    color: var(--accent2);
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+  .suggest-desc {
+    font-size: 11px;
+    color: var(--dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .suggest-badge {
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--surface2);
+    color: var(--dim);
+    flex-shrink: 0;
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .suggest-empty {
+    padding: 14px 10px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--dim);
+  }
+  .suggest-hint {
+    font-size: 10px;
+    color: var(--dim);
+    opacity: 0.5;
+    margin-top: 2px;
+  }
+
+  /* CONTEXT MENU on suggestions */
+  .suggest-item .suggest-menu-btn {
+    width: 22px; height: 22px;
+    border: none; background: transparent;
+    color: var(--dim); cursor: pointer;
+    border-radius: 4px; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.15s, background 0.15s;
+    flex-shrink: 0;
+  }
+  .suggest-item:hover .suggest-menu-btn { opacity: 1; }
+  .suggest-item .suggest-menu-btn:hover { background: var(--surface2); color: var(--text); }
+
+  .suggest-ctx-menu {
+    position: fixed;
+    z-index: 200;
+    background: rgba(14, 18, 24, 0.95);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px;
+    min-width: 160px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    animation: fadeSlideIn 0.15s both;
+  }
+  .suggest-ctx-menu .ctx-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px; border-radius: 4px;
+    font-size: 12px; color: var(--text); cursor: pointer;
+    transition: background 0.1s;
+  }
+  .suggest-ctx-menu .ctx-item:hover { background: rgba(255,107,53,0.12); }
+  .suggest-ctx-menu .ctx-item.danger { color: var(--red); }
+  .suggest-ctx-menu .ctx-item .ctx-icon { font-size: 13px; width: 18px; text-align: center; }
+
+  /* ADD COMMAND — button when no results */
+  .suggest-add-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px; margin: 4px;
+    border-radius: 6px; border: 1px dashed var(--accent);
+    background: rgba(255,107,53,0.06); cursor: pointer;
+    color: var(--accent); font-size: 12px; font-weight: 500;
+    transition: all 0.15s;
+  }
+  .suggest-add-btn:hover { background: rgba(255,107,53,0.15); border-style: solid; }
+  .suggest-add-btn .add-icon { font-size: 16px; font-weight: 700; }
+
+  /* INLINE EDIT FORM */
+  .dict-edit-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6); z-index: 150;
+    display: flex; align-items: center; justify-content: center;
+    animation: fadeSlideIn 0.2s both;
+  }
+  .dict-edit-panel {
+    background: var(--surface-solid);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    width: 320px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .dict-edit-panel h3 {
+    font-size: 14px; color: var(--accent);
+    margin-bottom: 12px; font-weight: 600;
+  }
+  .dict-edit-panel .field-group {
+    margin-bottom: 10px;
+  }
+  .dict-edit-panel label {
+    display: block; font-size: 10px; color: var(--dim);
+    text-transform: uppercase; letter-spacing: 0.6px;
+    margin-bottom: 3px; font-weight: 500;
+  }
+  .dict-edit-panel input, .dict-edit-panel select {
+    width: 100%; background: var(--bg);
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 7px 10px; color: var(--text);
+    font-size: 12px; font-family: inherit; outline: none;
+  }
+  .dict-edit-panel input:focus, .dict-edit-panel select:focus {
+    border-color: var(--accent);
+  }
+  .dict-edit-panel .btn-row {
+    display: flex; gap: 8px; margin-top: 14px;
+  }
+  .dict-edit-panel .btn-row button {
+    flex: 1; padding: 7px;
+    border: none; border-radius: 6px;
+    font-size: 12px; font-weight: 500;
+    cursor: pointer; font-family: inherit;
+    transition: all 0.15s;
+  }
+  .dict-edit-panel .btn-save {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+  }
+  .dict-edit-panel .btn-save:hover { transform: scale(1.02); }
+  .dict-edit-panel .btn-cancel {
+    background: var(--surface2); color: var(--dim);
+  }
+  .dict-edit-panel .btn-cancel:hover { color: var(--text); }
+
+  /* BADGE COUNTER in footer */
+  .dict-count-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; color: var(--dim);
+    background: var(--surface2);
+    padding: 2px 8px; border-radius: 10px;
+    margin-left: 8px;
+  }
+  .dict-count-badge .badge-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--green);
+  }
+
+  /* TOAST NOTIFICATION */
+  .dict-toast {
+    position: fixed; bottom: 20px; left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: var(--surface-solid);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-size: 12px; color: var(--text);
+    z-index: 300;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .dict-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .dict-toast.success { border-color: var(--green); }
+  .dict-toast.success .toast-icon { color: var(--green); }
+  .dict-toast.error { border-color: var(--red); }
+  .dict-toast.error .toast-icon { color: var(--red); }
+  .toast-icon { font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="logo">J</div>
+    <div class="title"><span>JARVIS</span> WhisperFlow</div>
+  </div>
+  <div class="header-right">
+    <button class="header-btn" id="dictBtn" title="Dictionnaire commandes" style="font-size:12px;">&#x1F4D6;</button>
+    <button class="header-btn" id="detachBtn" title="Detacher en mini widget">&#x2922;</button>
+    <button class="header-btn" id="pinBtn" title="Toujours visible">&#x1F4CC;</button>
+    <button class="header-btn" id="settingsBtn" title="Parametres">&#x2699;</button>
+    <button class="header-btn" id="minimizeBtn" title="Minimiser">&#x2500;</button>
+  </div>
+</div>
+
+<div class="status-bar">
+  <div class="status-dot" id="wsStatus"></div>
+  <span id="wsStatusText">Connexion...</span>
+  <div class="cluster-mini" id="clusterMini"></div>
+</div>
+
+<div class="main">
+  <!-- Transcription -->
+  <div class="transcript-zone" id="transcriptZone">
+    <div class="transcript-placeholder" id="placeholder">
+      Appuie sur le micro ou maintiens <kbd>Espace</kbd> pour parler
+    </div>
+    <div class="transcript-text" id="transcriptText" style="display:none"></div>
+    <div class="domino-result" id="dominoResult">
+      <span class="domino-name" id="dominoName"></span>
+      <span class="domino-cat" id="dominoCat"></span>
+      <div class="domino-steps" id="dominoSteps"></div>
+    </div>
+    <!-- Cascade progress panel -->
+    <div class="cascade-panel" id="cascadePanel">
+      <div class="cascade-header">
+        <span class="cascade-title" id="cascadeTitle">Cascade</span>
+        <span class="cascade-stats" id="cascadeStats"></span>
+      </div>
+      <div class="cascade-bar"><div class="cascade-fill" id="cascadeFill"></div></div>
+      <div class="cascade-step-list" id="cascadeSteps"></div>
+    </div>
+    <div class="jarvis-response" id="jarvisResponse">
+      <div class="jr-label">JARVIS</div>
+      <div class="jr-text" id="jarvisText"></div>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div class="history" id="history"></div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button class="mic-btn" id="micBtn" title="Enregistrer (Espace)">&#x1F3A4;</button>
+    <div class="visualizer" id="visualizer"></div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" data-mode="ptt">PTT</button>
+      <button class="mode-btn" data-mode="wake">Wake</button>
+      <button class="mode-btn" data-mode="auto">Auto</button>
+    </div>
+  </div>
+
+  <!-- Text input -->
+  <div class="text-input-wrap suggest-wrap">
+    <input class="text-input" id="textInput" placeholder="Tape une commande..." autocomplete="off" />
+    <button class="send-btn" id="sendBtn">&#x27A4;</button>
+    <div class="suggest-dropdown" id="suggestDropdown" style="display:none"></div>
+  </div>
+
+  <div class="shortcuts">
+    <kbd>Ctrl&#x2192;</kbd> PTT &nbsp; <kbd>Espace</kbd> PTT &nbsp; <kbd>Esc</kbd> Stop &nbsp; <kbd>Enter</kbd> Exec &nbsp; <kbd>Tab</kbd> Remplir &nbsp; <kbd>&#x2191;&#x2193;</kbd> Nav
+    <span class="dict-count-badge" id="dictCountBadge"><span class="badge-dot"></span><span id="dictCountText">0</span> cmds</span>
+  </div>
+</div>
+
+<!-- DICTIONARY PANEL -->
+<div class="dict-overlay" id="dictOverlay">
+  <div class="dict-panel">
+    <div class="dict-header">
+      <div class="dict-title">DICTIONNAIRE</div>
+      <div class="dict-search-wrap">
+        <input class="dict-search" id="dictSearch" placeholder="Rechercher commande, pipeline, trigger..." autofocus />
+        <button class="dict-search-clear" id="dictSearchClear">&times;</button>
+      </div>
+      <span class="dict-result-count" id="dictResultCount"></span>
+      <button class="dict-close" id="dictClose">&times;</button>
+    </div>
+    <div class="dict-stats" id="dictStats"></div>
+    <div class="dict-tabs" id="dictTabs"></div>
+    <div class="dict-body" id="dictBody">
+      <div class="dict-loading">Chargement du dictionnaire...</div>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS PANEL -->
+<div class="settings-overlay" id="settingsOverlay">
+  <div class="settings-panel">
+    <div class="settings-title">
+      Parametres
+      <button class="settings-close" id="settingsClose">&times;</button>
+    </div>
+
+    <div class="settings-group">
+      <label>Backend WebSocket</label>
+      <input type="text" id="setWsUrl" value="ws://127.0.0.1:9742/ws" />
+    </div>
+
+    <div class="settings-group">
+      <label>Whisper Model</label>
+      <select id="setWhisperModel">
+        <option value="large-v3-turbo" selected>large-v3-turbo (CUDA)</option>
+        <option value="large-v3">large-v3</option>
+        <option value="medium">medium</option>
+        <option value="small">small</option>
+      </select>
+    </div>
+
+    <div class="settings-group">
+      <label>Voix TTS</label>
+      <select id="setTtsVoice">
+        <option value="fr-FR-DeniseNeural" selected>Denise (FR)</option>
+        <option value="fr-FR-HenriNeural">Henri (FR)</option>
+        <option value="en-US-GuyNeural">Guy (EN)</option>
+        <option value="en-US-JennyNeural">Jenny (EN)</option>
+      </select>
+    </div>
+
+    <div class="settings-group">
+      <label>Options</label>
+      <div class="settings-row">
+        <span>Correction vocale</span>
+        <div class="toggle-switch on" id="toggleCorrection" data-key="correction"></div>
+      </div>
+      <div class="settings-row">
+        <span>Son feedback</span>
+        <div class="toggle-switch on" id="toggleSound" data-key="sound"></div>
+      </div>
+      <div class="settings-row">
+        <span>Auto-execute domino</span>
+        <div class="toggle-switch" id="toggleAutoExec" data-key="autoExec"></div>
+      </div>
+      <div class="settings-row">
+        <span>Mode silencieux</span>
+        <div class="toggle-switch" id="toggleSilent" data-key="silent"></div>
+      </div>
+    </div>
+
+    <div class="settings-info">
+      JARVIS WhisperFlow v1.1<br>
+      Backend: FastAPI + Whisper CUDA<br>
+      Raccourcis: <kbd>Ctrl&#x2192;</kbd> PTT | <kbd>Espace</kbd> PTT | <kbd>Esc</kbd> Stop | <kbd>Ctrl+Shift+W</kbd> Toggle
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+// JARVIS WhisperFlow — Voice-First Overlay Interface
+// ══════════════════════════════════════════════════════════════════
+
+// Auto-detect WS URL: same host if served from backend, fallback to localhost
+const _loc = window.location;
+const WS_URL = (_loc.protocol === 'file:')
+  ? 'ws://127.0.0.1:9742/ws'
+  : `ws://${_loc.host}/ws`;
+const CLUSTER_NODES = {
+  M1:  { url: 'http://127.0.0.1:1234/api/v1/models', label: 'M1' },
+  M2:  { url: 'http://192.168.1.26:1234/api/v1/models', label: 'M2' },
+  OL1: { url: 'http://127.0.0.1:11434/api/tags', label: 'OL1' },
+  M3:  { url: 'http://192.168.1.113:1234/api/v1/models', label: 'M3' },
+};
+const OPENCLAW_URL = 'http://127.0.0.1:18800/chat';
+const TELEGRAM_FORWARD_URL = 'http://127.0.0.1:9742/api/telegram/forward';
+
+// STATE
+let ws = null;
+let isRecording = false;
+let isProcessing = false;
+let audioContext = null;
+let mediaStream = null;
+let analyser = null;
+let recorder = null;
+let audioChunks = [];
+let history = [];
+let reqId = 0;
+let mode = 'ptt'; // ptt | wake | auto
+let currentTtsAudio = null; // Audio element for TTS playback (pause/stop)
+
+// DOM
+const $wsStatus = document.getElementById('wsStatus');
+const $wsStatusText = document.getElementById('wsStatusText');
+const $clusterMini = document.getElementById('clusterMini');
+const $transcriptZone = document.getElementById('transcriptZone');
+const $placeholder = document.getElementById('placeholder');
+const $transcriptText = document.getElementById('transcriptText');
+const $dominoResult = document.getElementById('dominoResult');
+const $dominoName = document.getElementById('dominoName');
+const $dominoCat = document.getElementById('dominoCat');
+const $dominoSteps = document.getElementById('dominoSteps');
+const $history = document.getElementById('history');
+const $micBtn = document.getElementById('micBtn');
+const $visualizer = document.getElementById('visualizer');
+const $textInput = document.getElementById('textInput');
+const $sendBtn = document.getElementById('sendBtn');
+
+// ── VISUALIZER BARS ──
+const BAR_COUNT = 24;
+for (let i = 0; i < BAR_COUNT; i++) {
+  const bar = document.createElement('div');
+  bar.className = 'viz-bar';
+  bar.style.height = '3px';
+  $visualizer.appendChild(bar);
+}
+const vizBars = $visualizer.querySelectorAll('.viz-bar');
+
+// ── WEBSOCKET ──
+function connectWS() {
+  $wsStatus.className = 'status-dot connecting';
+  $wsStatusText.textContent = 'Connexion...';
+
+  try {
+    ws = new WebSocket(WS_URL);
+  } catch(e) {
+    $wsStatus.className = 'status-dot offline';
+    $wsStatusText.textContent = 'Backend offline';
+    setTimeout(connectWS, 5000);
+    return;
+  }
+
+  ws.onopen = () => {
+    $wsStatus.className = 'status-dot';
+    $wsStatusText.textContent = 'Connecte';
+    // Pre-load dictionary for autocomplete suggestions
+    if (!dictData) loadDictionary();
+  };
+
+  ws.onmessage = (ev) => {
+    try {
+      const msg = JSON.parse(ev.data);
+      handleWSMessage(msg);
+    } catch(e) {}
+  };
+
+  ws.onclose = () => {
+    $wsStatus.className = 'status-dot offline';
+    $wsStatusText.textContent = 'Deconnecte';
+    setTimeout(connectWS, 3000);
+  };
+
+  ws.onerror = () => {
+    $wsStatus.className = 'status-dot offline';
+    $wsStatusText.textContent = 'Erreur connexion';
+  };
+}
+
+function wsSend(channel, action, payload = {}) {
+  if (!ws || ws.readyState !== 1) return null;
+  const id = `req_${++reqId}_${Date.now()}`;
+  ws.send(JSON.stringify({ id, type: 'request', channel, action, payload }));
+  return id;
+}
+
+function handleWSMessage(msg) {
+  // Voice responses — only handle the response, ignore transcription_result event (avoids double)
+  if (msg.type === 'response' && msg.channel === 'voice') {
+    if (msg.action === 'stop_recording' && msg.payload) {
+      onTranscriptionResult(msg.payload);
+    }
+    if (msg.action === 'tts_speak' && msg.payload) {
+      playTtsResponse(msg.payload);
+    }
+  }
+  if (msg.type === 'event' && msg.channel === 'voice') {
+    if (msg.event === 'transcription_partial') {
+      showTranscript(msg.payload.text, 'listening');
+    }
+    // Global PTT events from backend keyboard hook (Right-CTRL)
+    if (msg.event === 'ptt_start' && !isRecording && !isProcessing) {
+      pttSource = 'global';
+      startRecording();
+    }
+    if (msg.event === 'ptt_stop' && isRecording && pttSource === 'global') {
+      pttSource = null;
+      stopRecording();
+    }
+    // Wake word "jarvis" detected — auto-record for 5 seconds
+    if (msg.event === 'wake_detected' && !isRecording && !isProcessing) {
+      pttSource = 'wake';
+      showTranscript('Jarvis ecoute...', 'listening');
+      startRecording();
+      // Auto-stop after 5 seconds (user speaks their command)
+      setTimeout(() => {
+        if (isRecording && pttSource === 'wake') {
+          pttSource = null;
+          stopRecording();
+        }
+      }, 5000);
+    }
+    // transcription_result event ignored — response already handled above
+  }
+
+  // Chat responses — only handle the response, ignore agent_message event (avoids double)
+  if (msg.type === 'response' && msg.channel === 'chat') {
+    if (msg.payload && !msg.error) {
+      onJarvisResponse(msg.payload);
+    } else if (msg.error) {
+      $jarvisResponse.classList.remove('thinking');
+      $jarvisResponse.classList.add('show');
+      $jarvisText.textContent = `Erreur: ${msg.error}`;
+    }
+  }
+  if (msg.type === 'event' && msg.channel === 'chat') {
+    // agent_message event ignored — response already handled above
+    if (msg.event === 'agent_complete') {
+      $jarvisResponse.classList.remove('thinking');
+    }
+  }
+
+  // Domino cascade events
+  if (msg.type === 'event' && msg.channel === 'system') {
+    if (msg.event === 'domino_complete') {
+      showCascadeResult(msg.payload);
+    }
+    if (msg.event === 'domino_steps') {
+      showCascadeSteps(msg.payload);
+    }
+  }
+
+  // System command execution responses
+  if (msg.type === 'response' && msg.channel === 'system') {
+    if (msg.action === 'execute_command' && msg.payload) {
+      $jarvisResponse.classList.remove('thinking');
+      $jarvisResponse.classList.add('show');
+      if (msg.payload.executed) {
+        const desc = msg.payload.description || msg.payload.command_name;
+        const output = msg.payload.output || '';
+        const elapsed = msg.payload.elapsed || 0;
+        $jarvisText.textContent = `${desc}\n${output}`.trim();
+        flashTranscript('success');
+        if (history.length > 0) { history[0].status = 'ok'; renderHistory(); }
+        // TTS confirmation
+        if (!settings.silent) {
+          const ttsText = cleanTextForTTS(desc);
+          if (ttsText.length > 2) wsSend('voice', 'tts_speak', { text: ttsText });
+        }
+      } else if (msg.error || msg.payload.error) {
+        $jarvisText.textContent = `Erreur: ${msg.error || msg.payload.error}`;
+        flashTranscript('error');
+        if (history.length > 0) { history[0].status = 'fail'; renderHistory(); }
+      }
+    }
+    if (msg.action === 'execute_domino' && msg.payload) {
+      $jarvisResponse.classList.remove('thinking');
+      $jarvisResponse.classList.add('show');
+      if (msg.payload.executed) {
+        const d = msg.payload.domino || {};
+        $jarvisText.textContent = `Cascade ${d.domino_id || ''}: ${d.passed || 0} OK / ${d.failed || 0} FAIL (${d.total_ms || 0}ms)`;
+      } else if (msg.payload.error) {
+        $jarvisText.textContent = `Erreur domino: ${msg.payload.error}`;
+      }
+    }
+  }
+
+  // Cluster status (response or push event)
+  if (msg.channel === 'cluster') {
+    const nodes = msg.payload?.nodes || msg.payload?.status;
+    if (nodes && typeof nodes === 'object') {
+      for (const [name, info] of Object.entries(nodes)) {
+        const key = name.toUpperCase();
+        if (key in clusterState) {
+          clusterState[key] = info?.online ?? info?.ok ?? (info === true);
+        }
+      }
+      renderCluster();
+    }
+    if (Array.isArray(msg.payload)) {
+      for (const n of msg.payload) {
+        const key = (n.name || n.id || '').toUpperCase();
+        if (key in clusterState) clusterState[key] = n.online ?? n.ok ?? true;
+      }
+      renderCluster();
+    }
+  }
+}
+
+// ── AUDIO RECORDING ──
+async function startRecording() {
+  if (isRecording || isProcessing) return;
+  isRecording = true;
+  audioChunks = [];
+  $micBtn.classList.add('recording');
+  $placeholder.style.display = 'none';
+  $transcriptText.style.display = 'block';
+  $dominoResult.classList.remove('show');
+  showTranscript('Ecoute en cours...', 'listening');
+
+  try {
+    mediaStream = await navigator.mediaDevices.getUserMedia({
+      audio: { sampleRate: 16000, channelCount: 1, echoCancellation: true, noiseSuppression: true }
+    });
+
+    audioContext = new AudioContext({ sampleRate: 16000 });
+    const source = audioContext.createMediaStreamSource(mediaStream);
+    analyser = audioContext.createAnalyser();
+    analyser.fftSize = 256;
+    source.connect(analyser);
+
+    // MediaRecorder for chunks
+    recorder = new MediaRecorder(mediaStream, { mimeType: 'audio/webm;codecs=opus' });
+    recorder.ondataavailable = (e) => { if (e.data.size > 0) audioChunks.push(e.data); };
+    recorder.start(250); // 250ms chunks
+
+    // Notify backend
+    wsSend('voice', 'start_recording');
+
+    // Start visualizer
+    updateVisualizer();
+
+    // Stream chunks to backend
+    streamAudioChunks();
+  } catch(e) {
+    console.error('Mic error:', e);
+    showTranscript('Erreur microphone: ' + e.message, '');
+    stopRecording();
+  }
+}
+
+async function streamAudioChunks() {
+  if (!isRecording) return;
+  // Send pending chunks as base64
+  while (audioChunks.length > 0) {
+    const chunk = audioChunks.shift();
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result.split(',')[1];
+      wsSend('voice', 'audio_chunk', { audio: base64 });
+    };
+    reader.readAsDataURL(chunk);
+  }
+  if (isRecording) requestAnimationFrame(streamAudioChunks);
+}
+
+async function stopRecording() {
+  if (!isRecording) return;
+  isRecording = false;
+  isProcessing = true;
+  $micBtn.classList.remove('recording');
+  $micBtn.classList.add('processing');
+  showTranscript('Analyse en cours...', 'processing');
+
+  if (recorder && recorder.state !== 'inactive') recorder.stop();
+  if (mediaStream) mediaStream.getTracks().forEach(t => t.stop());
+
+  // Request transcription
+  wsSend('voice', 'stop_recording');
+
+  // Timeout fallback
+  setTimeout(() => {
+    if (isProcessing) {
+      isProcessing = false;
+      $micBtn.classList.remove('processing');
+      showTranscript('Timeout — reessaie', '');
+    }
+  }, 15000);
+}
+
+const $jarvisResponse = document.getElementById('jarvisResponse');
+const $jarvisText = document.getElementById('jarvisText');
+
+function onTranscriptionResult(data) {
+  isProcessing = false;
+  $micBtn.classList.remove('processing');
+
+  // Extract text from transcription wrapper or direct data
+  const tr = data.transcription || data;
+  const text = tr.corrected || tr.original || tr.text || '';
+  if (!text || text.length < 2) {
+    showTranscript('(rien detecte)', '');
+    return;
+  }
+
+  showTranscript(text, '');
+  const domino = tr.domino || data.domino;
+  const execution = tr.execution || data.execution;
+  addHistory(text, domino);
+
+  // Show domino match if found
+  if (domino) {
+    $dominoName.textContent = domino.id || domino;
+    $dominoCat.textContent = domino.category ? `[${domino.category}]` : '';
+    $dominoSteps.textContent = domino.description || '';
+    $dominoResult.classList.add('show');
+  }
+
+  // If command was already executed by voice pipeline, show result
+  if (execution && execution.executed) {
+    $jarvisResponse.classList.remove('thinking');
+    $jarvisResponse.classList.add('show');
+    $jarvisText.textContent = execution.output || execution.description || 'Commande executee';
+    flashTranscript('success');
+    // Update last history entry with status
+    if (history.length > 0) history[0].status = 'ok';
+    renderHistory();
+    // TTS confirmation
+    if (!settings.silent) {
+      const desc = execution.description || execution.command_name || '';
+      const ttsText = cleanTextForTTS(desc);
+      if (ttsText.length > 2) wsSend('voice', 'tts_speak', { text: ttsText });
+    }
+    return;
+  }
+
+  // No command executed — send to chat for IA response
+  processCommand(text);
+}
+
+function executeCommand(domino) {
+  // Execute matched command on the system
+  $jarvisResponse.classList.add('show', 'thinking');
+  $jarvisText.textContent = `Execution: ${domino.description || domino.id}...`;
+
+  wsSend('system', 'execute_command', {
+    command_name: domino.id,
+    params: domino.params || {},
+  });
+}
+
+function processCommand(text) {
+  // Show thinking state
+  $jarvisResponse.classList.add('show', 'thinking');
+  $jarvisText.textContent = 'Reflexion...';
+
+  // Primary: Send via WebSocket backend
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    wsSend('chat', 'send_message', { text: text.trim(), files: [] });
+  } else {
+    // Fallback: Send directly to OpenClaw (port 18800)
+    processViaOpenClaw(text.trim());
+  }
+
+  // Forward to Telegram (async, fire-and-forget)
+  forwardToTelegram(text.trim());
+}
+
+async function processViaOpenClaw(text) {
+  try {
+    const resp = await fetch(OPENCLAW_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text, session_id: 'whisperflow' }),
+    });
+    const data = await resp.json();
+    const reply = data.response || data.message || data.text || JSON.stringify(data);
+    onJarvisResponse({ response: reply });
+  } catch (e) {
+    $jarvisResponse.classList.remove('thinking');
+    $jarvisText.textContent = 'OpenClaw offline — aucun backend disponible';
+  }
+}
+
+async function forwardToTelegram(text) {
+  try {
+    await fetch(TELEGRAM_FORWARD_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: text, source: 'whisperflow' }),
+    });
+  } catch (e) { /* silent — Telegram forward is best-effort */ }
+}
+
+function cleanTextForTTS(text) {
+  // Strip agent tags like [M1], [OL1], [M2], [M3], [GEMINI]
+  let clean = text.replace(/\[(?:M[1-3]|OL1|GEMINI|CLAUDE)[^\]]*\]\s*/gi, '');
+  // Strip markdown-style formatting
+  clean = clean.replace(/[*_`#~]/g, '');
+  // Strip brackets and parentheses
+  clean = clean.replace(/[\[\](){}<>]/g, '');
+  // Replace common punctuation with pauses or nothing
+  clean = clean.replace(/[.!?;:]+/g, ', ');
+  // Strip remaining symbols except letters, numbers, spaces, commas, hyphens, apostrophes
+  clean = clean.replace(/[^a-zA-ZÀ-ÿ0-9\s,'\-éèêëàâäùûüîïôöçœæ]/g, '');
+  // Collapse multiple spaces/commas
+  clean = clean.replace(/,\s*,+/g, ',');
+  clean = clean.replace(/\s{2,}/g, ' ');
+  return clean.trim();
+}
+
+function playTtsResponse(payload) {
+  // Stop any previous TTS audio
+  stopTtsAudio();
+
+  if (payload.audio && payload.format) {
+    // Server returned base64 audio — play in browser
+    const mime = payload.format === 'mp3' ? 'audio/mpeg' : 'audio/' + payload.format;
+    const audio = new Audio('data:' + mime + ';base64,' + payload.audio);
+    currentTtsAudio = audio;
+    audio.onended = () => { currentTtsAudio = null; };
+    audio.onerror = () => { currentTtsAudio = null; };
+    audio.play().catch(e => console.warn('[TTS] Audio play failed:', e));
+  } else if (payload.fallback === 'web_speech_api' && payload.text) {
+    // Fallback: browser speechSynthesis
+    const utter = new SpeechSynthesisUtterance(payload.text);
+    utter.lang = 'fr-FR';
+    utter.rate = 1.0;
+    speechSynthesis.speak(utter);
+  }
+}
+
+function stopTtsAudio() {
+  if (currentTtsAudio) {
+    currentTtsAudio.pause();
+    currentTtsAudio.currentTime = 0;
+    currentTtsAudio = null;
+  }
+  speechSynthesis.cancel();
+}
+
+function onJarvisResponse(data) {
+  $jarvisResponse.classList.remove('thinking');
+  $jarvisResponse.classList.add('show');
+
+  const agentMsg = data.agent_message;
+  let responseText = '';
+  if (agentMsg) {
+    responseText = agentMsg.text || agentMsg.content || JSON.stringify(agentMsg);
+  } else if (data.response) {
+    responseText = data.response;
+  } else if (typeof data === 'string') {
+    responseText = data;
+  } else {
+    responseText = JSON.stringify(data);
+  }
+
+  // Clean up and display (full text with formatting)
+  if (responseText.length > 500) responseText = responseText.slice(0, 500) + '...';
+  $jarvisText.textContent = responseText || '(pas de reponse)';
+
+  // TTS: read cleaned version aloud if not silent mode
+  if (responseText && !settings.silent && responseText.length < 300) {
+    const ttsText = cleanTextForTTS(responseText);
+    if (ttsText.length > 2) {
+      wsSend('voice', 'tts_speak', { text: ttsText });
+    }
+  }
+}
+
+// ── LOCAL WHISPER FALLBACK ──
+// If WS backend is down, send audio directly to Whisper via fetch
+async function localTranscribe(audioBlob) {
+  showTranscript('Transcription locale...', 'processing');
+  try {
+    const formData = new FormData();
+    formData.append('audio', audioBlob, 'recording.webm');
+    // Try local whisper endpoint
+    const resp = await fetch('http://127.0.0.1:9742/transcribe', {
+      method: 'POST', body: formData
+    });
+    const data = await resp.json();
+    onTranscriptionResult(data);
+  } catch(e) {
+    showTranscript('Backend offline — pas de transcription', '');
+    isProcessing = false;
+    $micBtn.classList.remove('processing');
+  }
+}
+
+// ── TEXT COMMAND ──
+function sendTextCommand(text) {
+  if (!text.trim()) return;
+  closeSuggestions();
+  showTranscript(text, '');
+  $placeholder.style.display = 'none';
+  $transcriptText.style.display = 'block';
+  $dominoResult.classList.remove('show');
+
+  addHistory(text, null);
+  $textInput.value = '';
+
+  // Process via JARVIS (chat channel + show response)
+  processCommand(text);
+}
+
+// ── DISPLAY ──
+function showTranscript(text, state) {
+  $transcriptText.textContent = text;
+  $transcriptText.style.display = 'block';
+  $placeholder.style.display = 'none';
+  $transcriptText.className = 'transcript-text' + (state ? ' ' + state : '');
+}
+
+function addHistory(text, domino, status = null) {
+  const now = new Date();
+  const time = now.toTimeString().slice(0, 5);
+  history.unshift({ text, domino, time, status });
+  if (history.length > 20) history.pop();
+  renderHistory();
+}
+
+function renderHistory() {
+  $history.innerHTML = history.slice(0, 7).map(h => {
+    const statusBadge = h.status === 'ok' ? '<span class="history-status ok">OK</span>'
+      : h.status === 'fail' ? '<span class="history-status fail">FAIL</span>' : '';
+    return `
+    <div class="history-item" onclick="showTranscript('${h.text.replace(/'/g,"/'")}','')">
+      <span class="history-time">${h.time}</span>
+      <span class="history-text">${h.text}</span>
+      ${h.domino ? `<span class="history-domino">${typeof h.domino === 'string' ? h.domino : h.domino.id || ''}</span>` : ''}
+      ${statusBadge}
+    </div>`;
+  }).join('');
+}
+
+// Flash feedback on transcript zone
+function flashTranscript(type) {
+  const cls = type === 'success' ? 'flash-success' : 'flash-error';
+  $transcriptZone.classList.add(cls);
+  setTimeout(() => $transcriptZone.classList.remove(cls), 1200);
+}
+
+// ── VISUALIZER ──
+function updateVisualizer() {
+  if (!analyser || !isRecording) {
+    vizBars.forEach(b => b.style.height = '3px');
+    return;
+  }
+  const data = new Uint8Array(analyser.frequencyBinCount);
+  analyser.getByteFrequencyData(data);
+
+  const step = Math.floor(data.length / BAR_COUNT);
+  for (let i = 0; i < BAR_COUNT; i++) {
+    const val = data[i * step] || 0;
+    const h = Math.max(3, (val / 255) * 32);
+    vizBars[i].style.height = h + 'px';
+  }
+  requestAnimationFrame(updateVisualizer);
+}
+
+// ── CLUSTER STATUS (via WS backend to avoid CORS) ──
+let clusterState = { M1: false, M2: false, OL1: false, M3: false };
+
+async function checkCluster() {
+  // If WS connected, ask backend for cluster status (no CORS issue)
+  if (ws && ws.readyState === 1) {
+    wsSend('cluster', 'get_status');
+    // Response handled in handleWSMessage
+  } else {
+    // Fallback: try direct fetch (works in Electron, may fail in file://)
+    for (const [name, node] of Object.entries(CLUSTER_NODES)) {
+      try {
+        const ctrl = new AbortController();
+        setTimeout(() => ctrl.abort(), 2000);
+        const r = await fetch(node.url, { signal: ctrl.signal, mode: 'no-cors' });
+        clusterState[name] = true;
+      } catch(e) { clusterState[name] = false; }
+    }
+  }
+  renderCluster();
+}
+
+function renderCluster() {
+  const html = [];
+  for (const name of Object.keys(CLUSTER_NODES)) {
+    const ok = clusterState[name];
+    html.push(`<div class="node-dot"><div class="dot ${ok ? '' : 'off'}"></div>${name}</div>`);
+  }
+  $clusterMini.innerHTML = html.join('');
+}
+
+// ── KEYBOARD SHORTCUTS ──
+let spaceDown = false;
+let ctrlRightDown = false;
+let pttSource = null; // 'space' | 'ctrl' | 'global' | null
+document.addEventListener('keydown', (e) => {
+  // Right CTRL = PTT (global, works everywhere)
+  if (e.code === 'ControlRight' && !ctrlRightDown) {
+    e.preventDefault();
+    ctrlRightDown = true;
+    if (!isRecording && !isProcessing) {
+      pttSource = 'ctrl';
+      startRecording();
+    }
+    return;
+  }
+  // Space = PTT (only when not typing)
+  if (e.code === 'Space' && document.activeElement !== $textInput && !spaceDown) {
+    e.preventDefault();
+    spaceDown = true;
+    if (!isRecording && !isProcessing) {
+      pttSource = 'space';
+      startRecording();
+    }
+  }
+  // Escape = stop recording OR close suggestions
+  if (e.code === 'Escape') {
+    if (suggestVisible()) { closeSuggestions(); e.preventDefault(); return; }
+    if (isRecording) stopRecording();
+  }
+  // Suggestion keyboard nav (only when input focused)
+  if (document.activeElement === $textInput && suggestVisible()) {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      suggestActive = Math.min(suggestActive + 1, suggestCount - 1);
+      updateSuggestFocus();
+      return;
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      suggestActive = Math.max(suggestActive - 1, -1);
+      updateSuggestFocus();
+      return;
+    }
+    if (e.key === 'Tab' && suggestActive >= 0) {
+      e.preventDefault();
+      fillSuggestion(suggestActive);
+      return;
+    }
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (suggestActive >= 0) { execSuggestion(suggestActive); }
+      else { closeSuggestions(); sendTextCommand($textInput.value); }
+      return;
+    }
+  }
+  // Enter in text input = send (fallback when no suggestions)
+  if (e.code === 'Enter' && document.activeElement === $textInput) {
+    e.preventDefault();
+    sendTextCommand($textInput.value);
+  }
+});
+
+document.addEventListener('keyup', (e) => {
+  if (e.code === 'ControlRight' && ctrlRightDown) {
+    ctrlRightDown = false;
+    if (isRecording && pttSource === 'ctrl') {
+      pttSource = null;
+      stopRecording();
+    }
+  }
+  if (e.code === 'Space' && spaceDown) {
+    spaceDown = false;
+    if (isRecording && pttSource === 'space') {
+      pttSource = null;
+      stopRecording();
+    }
+  }
+});
+
+// ── BUTTON HANDLERS ──
+$micBtn.addEventListener('click', () => {
+  if (isRecording) stopRecording();
+  else if (!isProcessing) startRecording();
+});
+
+$sendBtn.addEventListener('click', () => sendTextCommand($textInput.value));
+
+// Mode toggle (PTT / Wake / Auto)
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    mode = btn.dataset.mode;
+    // Toggle wake word detector on backend
+    if (mode === 'wake' || mode === 'auto') {
+      try {
+        const r = await fetch('/api/wake/start', { method: 'POST' });
+        const d = await r.json();
+        if (d.ok) showToast('Wake word "jarvis" actif');
+        else showToast('Wake word indisponible', 'error');
+      } catch(_) { showToast('Wake word indisponible', 'error'); }
+    } else {
+      fetch('/api/wake/stop', { method: 'POST' }).catch(() => {});
+    }
+  });
+});
+
+// Pin toggle
+let pinned = true;
+document.getElementById('pinBtn').addEventListener('click', () => {
+  pinned = !pinned;
+  document.getElementById('pinBtn').style.color = pinned ? 'var(--accent)' : 'var(--dim)';
+  if (window.electronAPI) window.electronAPI.setAlwaysOnTop(pinned);
+});
+
+// ── SETTINGS PANEL ──
+const $settingsOverlay = document.getElementById('settingsOverlay');
+const settings = { correction: true, sound: true, autoExec: false, silent: false };
+
+document.getElementById('settingsBtn').addEventListener('click', () => {
+  $settingsOverlay.classList.toggle('open');
+});
+document.getElementById('settingsClose').addEventListener('click', () => {
+  $settingsOverlay.classList.remove('open');
+});
+$settingsOverlay.addEventListener('click', (e) => {
+  if (e.target === $settingsOverlay) $settingsOverlay.classList.remove('open');
+});
+
+// Toggle switches
+document.querySelectorAll('.toggle-switch').forEach(sw => {
+  sw.addEventListener('click', () => {
+    sw.classList.toggle('on');
+    const key = sw.dataset.key;
+    if (key) settings[key] = sw.classList.contains('on');
+  });
+});
+
+// WS URL change
+document.getElementById('setWsUrl').addEventListener('change', (e) => {
+  const newUrl = e.target.value.trim();
+  if (newUrl && newUrl !== WS_URL) {
+    // Reconnect with new URL
+    if (ws) ws.close();
+    Object.defineProperty(window, '_wsUrl', { value: newUrl, writable: true });
+  }
+});
+
+// ══════════════════════════════════════════════════════════════════
+// DICTIONARY — 1931 commands + 88 pipelines + etoile.db
+// ══════════════════════════════════════════════════════════════════
+const $dictOverlay = document.getElementById('dictOverlay');
+const $dictSearch = document.getElementById('dictSearch');
+const $dictSearchClear = document.getElementById('dictSearchClear');
+const $dictResultCount = document.getElementById('dictResultCount');
+const $dictStats = document.getElementById('dictStats');
+const $dictTabs = document.getElementById('dictTabs');
+const $dictBody = document.getElementById('dictBody');
+
+let dictData = null; // cached full dictionary
+let dictFilter = 'all'; // current tab filter
+let dictQuery = ''; // current search query
+let dictKbIndex = -1; // keyboard navigation index
+
+document.getElementById('dictBtn').addEventListener('click', () => {
+  $dictOverlay.classList.toggle('open');
+  if ($dictOverlay.classList.contains('open')) {
+    $dictSearch.focus();
+    dictKbIndex = -1;
+    if (!dictData) loadDictionary();
+  }
+});
+document.getElementById('dictClose').addEventListener('click', () => {
+  $dictOverlay.classList.remove('open');
+});
+$dictOverlay.addEventListener('click', (e) => {
+  if (e.target === $dictOverlay) $dictOverlay.classList.remove('open');
+});
+
+// Search clear button
+$dictSearchClear.addEventListener('click', () => {
+  $dictSearch.value = '';
+  dictQuery = '';
+  $dictSearchClear.classList.remove('visible');
+  renderDictionary();
+  $dictSearch.focus();
+});
+
+// Search with debounce
+let dictSearchTimeout;
+$dictSearch.addEventListener('input', (e) => {
+  clearTimeout(dictSearchTimeout);
+  $dictSearchClear.classList.toggle('visible', e.target.value.length > 0);
+  dictSearchTimeout = setTimeout(() => {
+    dictQuery = e.target.value.trim().toLowerCase();
+    dictKbIndex = -1;
+    renderDictionary();
+  }, 200);
+});
+
+// Keyboard navigation in dictionary
+$dictSearch.addEventListener('keydown', (e) => {
+  const items = $dictBody.querySelectorAll('.dict-item');
+  if (!items.length) return;
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    dictKbIndex = Math.min(dictKbIndex + 1, items.length - 1);
+    updateDictKbFocus(items);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    dictKbIndex = Math.max(dictKbIndex - 1, 0);
+    updateDictKbFocus(items);
+  } else if (e.key === 'Enter' && dictKbIndex >= 0) {
+    e.preventDefault();
+    items[dictKbIndex]?.click();
+  } else if (e.key === 'Escape') {
+    $dictOverlay.classList.remove('open');
+  }
+});
+
+function updateDictKbFocus(items) {
+  items.forEach(el => el.classList.remove('kb-active'));
+  if (dictKbIndex >= 0 && items[dictKbIndex]) {
+    items[dictKbIndex].classList.add('kb-active');
+    items[dictKbIndex].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+}
+
+async function loadDictionary() {
+  if ($dictBody) $dictBody.innerHTML = '<div class="dict-loading">Chargement du dictionnaire...</div>';
+  try {
+    // Try same-origin first, fallback to hardcoded backend
+    let resp;
+    const baseUrl = _loc.protocol === 'file:' ? 'http://127.0.0.1:9742' : '';
+    try {
+      resp = await fetch(`${baseUrl}/api/dictionary`);
+      if (!resp.ok) throw new Error(resp.status);
+    } catch(_) {
+      resp = await fetch('http://127.0.0.1:9742/api/dictionary');
+    }
+    const data = await resp.json();
+    onDictionaryData(data);
+  } catch(e) {
+    if ($dictBody) $dictBody.innerHTML = `<div class="dict-empty">Erreur: ${e.message}</div>`;
+  }
+}
+
+function onDictionaryData(payload) {
+  dictData = payload;
+  buildSuggestionIndex();
+  const s = payload.stats || {};
+  $dictStats.innerHTML = [
+    `<div class="dict-stat"><b>${s.commands||0}</b> commandes</div>`,
+    `<div class="dict-stat"><b>${s.pipelines||0}</b> pipelines</div>`,
+    `<div class="dict-stat"><b>${s.pipeline_dictionary||0}</b> dict DB</div>`,
+    `<div class="dict-stat"><b>${s.domino_chains||0}</b> domino chains</div>`,
+    `<div class="dict-stat"><b>${s.voice_corrections||0}</b> corrections</div>`,
+  ].join('');
+
+  // Build category tabs
+  const cats = new Map();
+  cats.set('all', 0);
+  let total = 0;
+  for (const c of (payload.commands || [])) {
+    cats.set(c.category, (cats.get(c.category)||0) + 1);
+    total++;
+  }
+  for (const p of (payload.pipelines || [])) {
+    cats.set('pipeline:'+p.category, (cats.get('pipeline:'+p.category)||0) + 1);
+    total++;
+  }
+  cats.set('all', total + (payload.pipeline_dictionary||[]).length);
+  cats.set('db:dict', (payload.pipeline_dictionary||[]).length);
+  cats.set('db:chains', (payload.domino_chains||[]).length);
+  cats.set('db:corrections', (payload.voice_corrections||[]).length);
+
+  const tabOrder = ['all'];
+  // Top command categories
+  const cmdCats = [...new Set((payload.commands||[]).map(c => c.category))].sort();
+  tabOrder.push(...cmdCats);
+  tabOrder.push('db:dict', 'db:chains', 'db:corrections');
+
+  $dictTabs.innerHTML = tabOrder.map(cat => {
+    const label = cat === 'all' ? 'Tout' :
+                  cat === 'db:dict' ? 'Dict DB' :
+                  cat === 'db:chains' ? 'Chains' :
+                  cat === 'db:corrections' ? 'Corrections' :
+                  cat.replace('pipeline:','P:');
+    const count = cats.get(cat) || 0;
+    return `<button class="dict-tab ${cat===dictFilter?'active':''}" data-cat="${cat}">${label}<span class="tab-count">${count}</span></button>`;
+  }).join('');
+
+  $dictTabs.querySelectorAll('.dict-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      dictFilter = btn.dataset.cat;
+      $dictTabs.querySelectorAll('.dict-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderDictionary();
+    });
+  });
+
+  renderDictionary();
+}
+
+function renderDictionary() {
+  if (!dictData) return;
+  const q = dictQuery;
+  const f = dictFilter;
+  let html = '';
+  let count = 0;
+  const MAX = 200;
+
+  // Helper: match query
+  function matches(item, fields) {
+    if (!q) return true;
+    for (const field of fields) {
+      const val = item[field];
+      if (!val) continue;
+      if (Array.isArray(val)) {
+        if (val.some(v => v.toLowerCase().includes(q))) return true;
+      } else if (typeof val === 'string' && val.toLowerCase().includes(q)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Commands
+  if (f === 'all' || (!f.startsWith('db:') && !f.startsWith('pipeline:'))) {
+    const cmds = (dictData.commands || []).filter(c => {
+      if (f !== 'all' && c.category !== f) return false;
+      return matches(c, ['name', 'description', 'triggers']);
+    });
+    if (cmds.length > 0) {
+      html += `<div class="dict-section-title">Commandes (${cmds.length})</div>`;
+      for (const c of cmds.slice(0, MAX - count)) {
+        const triggers = (c.triggers||[]).slice(0,3).join(', ');
+        html += `<div class="dict-item" data-exec-cmd="${c.name}">
+          <div class="dict-item-icon cmd">CMD</div>
+          <div class="dict-item-info">
+            <div class="dict-item-name">${esc(c.name)}</div>
+            <div class="dict-item-desc">${esc(c.description)}</div>
+            <div class="dict-item-triggers">${esc(triggers)}</div>
+          </div>
+          <div class="dict-item-badge">${c.action_type||''}</div>
+          <button class="dict-item-exec" title="Executer">&#x25B6;</button>
+        </div>`;
+        count++;
+      }
+    }
+  }
+
+  // Pipelines
+  if ((f === 'all' || f.startsWith('pipeline:')) && count < MAX) {
+    const pipes = (dictData.pipelines || []).filter(p => {
+      if (f.startsWith('pipeline:') && p.category !== f.replace('pipeline:','')) return false;
+      if (f === 'all' || f.startsWith('pipeline:')) return matches(p, ['id', 'description', 'trigger_vocal']);
+      return false;
+    });
+    if (pipes.length > 0) {
+      html += `<div class="dict-section-title">Pipelines (${pipes.length})</div>`;
+      for (const p of pipes.slice(0, MAX - count)) {
+        const triggers = (p.trigger_vocal||[]).slice(0,3).join(', ');
+        html += `<div class="dict-item" data-exec-domino="${p.id}">
+          <div class="dict-item-icon pipe">PIPE</div>
+          <div class="dict-item-info">
+            <div class="dict-item-name">${esc(p.id)}</div>
+            <div class="dict-item-desc">${esc(p.description)} (${p.steps} etapes)</div>
+            <div class="dict-item-triggers">${esc(triggers)}</div>
+          </div>
+          <div class="dict-item-badge">${p.category||''}</div>
+          <button class="dict-item-exec" title="Executer">&#x25B6;</button>
+        </div>`;
+        count++;
+      }
+    }
+  }
+
+  // DB: pipeline_dictionary
+  if ((f === 'all' || f === 'db:dict') && count < MAX) {
+    const dicts = (dictData.pipeline_dictionary || []).filter(d => {
+      return matches(d, ['trigger_phrase', 'pipeline_id', 'category', 'steps']);
+    });
+    if (dicts.length > 0) {
+      html += `<div class="dict-section-title">Pipeline Dictionary DB (${dicts.length})</div>`;
+      for (const d of dicts.slice(0, MAX - count)) {
+        html += `<div class="dict-item" data-exec-text="${esc(d.trigger_phrase||'')}">
+          <div class="dict-item-icon chain">DB</div>
+          <div class="dict-item-info">
+            <div class="dict-item-name">${esc(d.trigger_phrase||d.pipeline_id||'')}</div>
+            <div class="dict-item-desc">${esc(d.steps||'')} | ${esc(d.agents_involved||'')}</div>
+          </div>
+          <div class="dict-item-badge">${d.action_type||d.category||''}</div>
+          <button class="dict-item-exec" title="Executer">&#x25B6;</button>
+        </div>`;
+        count++;
+      }
+    }
+  }
+
+  // DB: domino_chains
+  if ((f === 'all' || f === 'db:chains') && count < MAX) {
+    const chains = (dictData.domino_chains || []).filter(d => {
+      return matches(d, ['trigger_cmd', 'next_cmd', 'description', 'condition']);
+    });
+    if (chains.length > 0) {
+      html += `<div class="dict-section-title">Domino Chains DB (${chains.length})</div>`;
+      for (const d of chains.slice(0, MAX - count)) {
+        html += `<div class="dict-item">
+          <div class="dict-item-icon chain">&#x26D3;</div>
+          <div class="dict-item-info">
+            <div class="dict-item-name">${esc(d.trigger_cmd||'')} &#x2192; ${esc(d.next_cmd||'')}</div>
+            <div class="dict-item-desc">${esc(d.description||'')} ${d.condition?'['+d.condition+']':''}</div>
+          </div>
+          <div class="dict-item-badge">${d.auto?'auto':d.delay_ms+'ms'}</div>
+        </div>`;
+        count++;
+      }
+    }
+  }
+
+  // DB: voice_corrections
+  if ((f === 'all' || f === 'db:corrections') && count < MAX) {
+    const corrs = (dictData.voice_corrections || []).filter(d => {
+      return matches(d, ['wrong', 'correct', 'category']);
+    });
+    if (corrs.length > 0) {
+      html += `<div class="dict-section-title">Corrections Vocales DB (${corrs.length})</div>`;
+      for (const d of corrs.slice(0, MAX - count)) {
+        html += `<div class="dict-item">
+          <div class="dict-item-icon corr">&#x270E;</div>
+          <div class="dict-item-info">
+            <div class="dict-item-name">"${esc(d.wrong||'')}" &#x2192; "${esc(d.correct||'')}"</div>
+            <div class="dict-item-desc">${d.category||''} | hits: ${d.hit_count||0}</div>
+          </div>
+        </div>`;
+        count++;
+      }
+    }
+  }
+
+  // Update result counter
+  $dictResultCount.textContent = dictQuery ? `${count} resultat${count !== 1 ? 's' : ''}` : '';
+
+  if (!html) {
+    html = '<div class="dict-empty">Aucun resultat</div>';
+  }
+
+  $dictBody.innerHTML = html;
+  dictKbIndex = -1;
+
+  // Attach click handlers for execution
+  $dictBody.querySelectorAll('[data-exec-cmd]').forEach(el => {
+    el.addEventListener('click', () => {
+      const cmdName = el.dataset.execCmd;
+      $dictOverlay.classList.remove('open');
+      $jarvisResponse.classList.add('show', 'thinking');
+      $jarvisText.textContent = `Execution: ${cmdName}...`;
+      wsSend('system', 'execute_command', { command_name: cmdName, params: {} });
+    });
+  });
+  $dictBody.querySelectorAll('[data-exec-domino]').forEach(el => {
+    el.addEventListener('click', () => {
+      const dominoId = el.dataset.execDomino;
+      $dictOverlay.classList.remove('open');
+      $jarvisResponse.classList.add('show', 'thinking');
+      $jarvisText.textContent = `Cascade: ${dominoId}...`;
+      wsSend('system', 'execute_domino', { domino_id: dominoId });
+    });
+  });
+  $dictBody.querySelectorAll('[data-exec-text]').forEach(el => {
+    el.addEventListener('click', () => {
+      const text = el.dataset.execText;
+      $dictOverlay.classList.remove('open');
+      processCommand(text);
+    });
+  });
+}
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── SUGGESTION / AUTOCOMPLETE ENGINE ──
+const $suggestDropdown = document.getElementById('suggestDropdown');
+let suggestionIndex = []; // flat array of {text, type, name, category, desc, data}
+let suggestActive = -1;   // keyboard navigation index
+let suggestCount = 0;      // current number of visible suggestions
+let suggestDebounce = null;
+let suggestResults = [];   // current search results
+
+function buildSuggestionIndex() {
+  if (!dictData) return;
+  const idx = [];
+  // Commands: index each trigger + name
+  for (const c of (dictData.commands || [])) {
+    const base = { type: 'cmd', name: c.name, category: c.category || '', desc: c.description || '', data: c };
+    idx.push({ text: c.name.toLowerCase(), ...base, bonus: c.confirm ? 5 : 0 });
+    for (const t of (c.triggers || [])) {
+      idx.push({ text: t.toLowerCase(), ...base, bonus: c.confirm ? 5 : 0 });
+    }
+  }
+  // Pipelines: index each trigger_vocal + id
+  for (const p of (dictData.pipelines || [])) {
+    const prio = (p.priority === 'high' || p.priority === 'critical') ? 15 : 0;
+    const base = { type: 'pipe', name: p.id, category: p.category || '', desc: p.description || `${p.steps} etapes`, data: p };
+    idx.push({ text: p.id.toLowerCase(), ...base, bonus: prio });
+    for (const t of (p.trigger_vocal || [])) {
+      idx.push({ text: t.toLowerCase(), ...base, bonus: prio });
+    }
+  }
+  // Pipeline dictionary: index trigger_phrase
+  for (const d of (dictData.pipeline_dictionary || [])) {
+    if (!d.trigger_phrase) continue;
+    idx.push({
+      text: d.trigger_phrase.toLowerCase(),
+      type: 'db', name: d.trigger_phrase, category: d.category || d.action_type || '',
+      desc: d.steps || d.pipeline_id || '', data: d, bonus: 0
+    });
+  }
+  suggestionIndex = idx;
+  updateDictBadge();
+}
+
+function searchSuggestions(query) {
+  if (!query || !suggestionIndex.length) return [];
+  const q = query.toLowerCase().trim();
+  const words = q.split(/\s+/);
+  const seen = new Map(); // name+type → best score
+  const results = [];
+
+  for (const entry of suggestionIndex) {
+    let score = 0;
+    const t = entry.text;
+    if (t === q) score = 100;
+    else if (t.startsWith(q)) score = 60;
+    else if (t.includes(q)) score = 30;
+    else {
+      // Word match: check if any query word appears in entry
+      for (const w of words) {
+        if (w.length >= 2 && t.includes(w)) { score = 20; break; }
+      }
+    }
+    if (score === 0) continue;
+    score += entry.bonus || 0;
+
+    // Deduplicate: keep best score per name+type
+    const key = entry.name + '|' + entry.type;
+    const prev = seen.get(key);
+    if (prev && prev >= score) continue;
+    seen.set(key, score);
+
+    // Remove previous lower-score entry if exists
+    if (prev) {
+      const idx = results.findIndex(r => r.name === entry.name && r.type === entry.type);
+      if (idx >= 0) results.splice(idx, 1);
+    }
+    results.push({ ...entry, score });
+  }
+
+  results.sort((a, b) => b.score - a.score);
+  return results.slice(0, 8);
+}
+
+function highlightMatch(text, query) {
+  if (!query) return esc(text);
+  const escaped = esc(text);
+  const q = esc(query);
+  const idx = escaped.toLowerCase().indexOf(q.toLowerCase());
+  if (idx < 0) return escaped;
+  return escaped.slice(0, idx) + '<mark>' + escaped.slice(idx, idx + q.length) + '</mark>' + escaped.slice(idx + q.length);
+}
+
+function renderSuggestions(results, query) {
+  suggestResults = results;
+  suggestActive = -1;
+  const $dd = $suggestDropdown;
+
+  // Empty input → show recents
+  if (!query && history.length > 0) {
+    const recents = history.slice(0, 5);
+    suggestCount = recents.length;
+    $dd.innerHTML = '<div class="suggest-section">Recents</div>' +
+      recents.map((h, i) =>
+        `<div class="suggest-item" data-suggest-idx="${i}" data-suggest-type="recent" data-suggest-text="${esc(h.text)}">
+          <div class="suggest-icon recent">&#x23F0;</div>
+          <div class="suggest-info">
+            <div class="suggest-name">${esc(h.text)}</div>
+            <div class="suggest-desc">${h.time}${h.domino ? ' — ' + esc(typeof h.domino === 'string' ? h.domino : h.domino.id || '') : ''}</div>
+          </div>
+        </div>`
+      ).join('');
+    suggestResults = recents.map(h => ({ type: 'recent', text: h.text, name: h.text, data: h }));
+    $dd.style.display = '';
+    attachSuggestClicks();
+    return;
+  }
+
+  if (!results.length && query) {
+    suggestCount = 0;
+    $dd.innerHTML = `<div class="suggest-empty">Aucune commande trouvee<div class="suggest-hint">Enter pour envoyer a JARVIS</div></div>` +
+      `<div class="suggest-add-btn" onclick="showAddCommandForm('${esc(query)}')"><span class="add-icon">+</span> Ajouter "${esc(query)}" au dictionnaire</div>`;
+    $dd.style.display = '';
+    return;
+  }
+
+  if (!results.length) { closeSuggestions(); return; }
+
+  const iconMap = { cmd: 'CMD', pipe: 'PIPE', db: 'DB' };
+  suggestCount = results.length;
+  $dd.innerHTML = results.map((r, i) =>
+    `<div class="suggest-item" data-suggest-idx="${i}">
+      <div class="suggest-icon ${r.type}">${iconMap[r.type] || r.type.toUpperCase()}</div>
+      <div class="suggest-info">
+        <div class="suggest-name">${highlightMatch(r.name, query)}</div>
+        <div class="suggest-desc">${esc(r.desc)}</div>
+      </div>
+      ${r.category ? `<div class="suggest-badge">${esc(r.category)}</div>` : ''}
+      ${r.type === 'db' ? `<button class="suggest-menu-btn" onclick="event.stopPropagation();showSuggestCtxMenu(event,${i})" title="Options">&#x22EE;</button>` : ''}
+    </div>`
+  ).join('');
+  $dd.style.display = '';
+  attachSuggestClicks();
+}
+
+function attachSuggestClicks() {
+  $suggestDropdown.querySelectorAll('.suggest-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const idx = parseInt(el.dataset.suggestIdx, 10);
+      execSuggestion(idx);
+    });
+    el.addEventListener('mouseenter', () => {
+      suggestActive = parseInt(el.dataset.suggestIdx, 10);
+      updateSuggestFocus();
+    });
+  });
+}
+
+function updateSuggestFocus() {
+  const items = $suggestDropdown.querySelectorAll('.suggest-item');
+  items.forEach(el => el.classList.remove('active'));
+  if (suggestActive >= 0 && items[suggestActive]) {
+    items[suggestActive].classList.add('active');
+    items[suggestActive].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+}
+
+function suggestVisible() {
+  return $suggestDropdown.style.display !== 'none';
+}
+
+function closeSuggestions() {
+  $suggestDropdown.style.display = 'none';
+  suggestActive = -1;
+  suggestCount = 0;
+  suggestResults = [];
+}
+
+function fillSuggestion(idx) {
+  const r = suggestResults[idx];
+  if (!r) return;
+  $textInput.value = r.name || r.text || '';
+  closeSuggestions();
+  // Re-trigger search with new value
+  const q = $textInput.value.trim().toLowerCase();
+  if (q) {
+    const res = searchSuggestions(q);
+    renderSuggestions(res, q);
+  }
+}
+
+function execSuggestion(idx) {
+  const r = suggestResults[idx];
+  if (!r) return;
+  closeSuggestions();
+  $textInput.value = '';
+
+  if (r.type === 'cmd') {
+    // Execute system command directly
+    showTranscript(r.name, '');
+    addHistory(r.name, null);
+    $jarvisResponse.classList.add('show', 'thinking');
+    $jarvisText.textContent = `Execution: ${r.name}...`;
+    wsSend('system', 'execute_command', { command_name: r.data.name, params: {} });
+    flashTranscript('success');
+  } else if (r.type === 'pipe') {
+    // Execute pipeline/domino
+    showTranscript(r.name, '');
+    addHistory(r.name, r.data.id);
+    $jarvisResponse.classList.add('show', 'thinking');
+    $jarvisText.textContent = `Cascade: ${r.name}...`;
+    wsSend('system', 'execute_domino', { domino_id: r.data.id });
+    flashTranscript('success');
+  } else if (r.type === 'db') {
+    // Send trigger phrase to chat IA
+    showTranscript(r.name, '');
+    addHistory(r.name, null);
+    processCommand(r.data.trigger_phrase || r.name);
+  } else if (r.type === 'recent') {
+    // Re-send text
+    const text = r.text || r.name;
+    showTranscript(text, '');
+    addHistory(text, null);
+    processCommand(text);
+  }
+}
+
+// ── SUGGESTION EVENT HANDLERS ──
+$textInput.addEventListener('input', () => {
+  clearTimeout(suggestDebounce);
+  suggestDebounce = setTimeout(() => {
+    const q = $textInput.value.trim().toLowerCase();
+    if (!q) {
+      // Show recents if we have history
+      renderSuggestions([], '');
+      return;
+    }
+    const res = searchSuggestions(q);
+    renderSuggestions(res, q);
+  }, 80);
+});
+
+$textInput.addEventListener('focus', () => {
+  const q = $textInput.value.trim().toLowerCase();
+  if (!q) {
+    renderSuggestions([], '');
+  } else {
+    const res = searchSuggestions(q);
+    renderSuggestions(res, q);
+  }
+});
+
+// Close suggestions when clicking outside
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.suggest-wrap')) {
+    closeSuggestions();
+  }
+});
+
+// ── CASCADE DISPLAY FUNCTIONS ──
+
+const $cascadePanel = document.getElementById('cascadePanel');
+const $cascadeTitle = document.getElementById('cascadeTitle');
+const $cascadeStats = document.getElementById('cascadeStats');
+const $cascadeFill = document.getElementById('cascadeFill');
+const $cascadeSteps = document.getElementById('cascadeSteps');
+
+function showCascadeResult(data) {
+  if (!data) return;
+  const { domino_id, passed, failed, skipped, total_ms, total_steps, source } = data;
+  $cascadeTitle.textContent = domino_id || 'Cascade';
+  $cascadeStats.textContent = `${passed}/${total_steps} OK | ${total_ms}ms | ${source || 'hardcoded'}`;
+
+  const pct = total_steps > 0 ? Math.round((passed / total_steps) * 100) : 0;
+  $cascadeFill.style.width = `${pct}%`;
+  $cascadeFill.classList.toggle('has-fail', failed > 0);
+
+  $cascadePanel.classList.add('show');
+
+  // Auto-hide after 15s
+  setTimeout(() => $cascadePanel.classList.remove('show'), 15000);
+}
+
+function showCascadeSteps(data) {
+  if (!data || !data.steps) return;
+  $cascadeSteps.innerHTML = data.steps.map(s => {
+    const badge = s.status === 'PASS' ? 'pass' : s.status === 'FAIL' ? 'fail' : 'skip';
+    const icon = s.status === 'PASS' ? '&#x2714;' : s.status === 'FAIL' ? '&#x2718;' : '&#x2500;';
+    const ms = s.duration_ms != null ? `${Math.round(s.duration_ms)}ms` : '';
+    return `<div class="cascade-step">
+      <span class="step-badge ${badge}">${icon}</span>
+      <span class="step-name">${esc(s.step_name)}</span>
+      <span class="step-node">${s.node || ''}</span>
+      <span class="step-ms">${ms}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── DICTIONARY CRUD FUNCTIONS (v2 — toast, dynamic categories, steps field) ──
+
+let _dictCategories = []; // loaded dynamically from DB
+let _ctxMenuData = null;
+
+function showToast(message, type = 'success') {
+  document.querySelectorAll('.dict-toast').forEach(t => t.remove());
+  const toast = document.createElement('div');
+  toast.className = `dict-toast ${type}`;
+  const icon = type === 'success' ? '&#x2714;' : '&#x26A0;';
+  toast.innerHTML = `<span class="toast-icon">${icon}</span> ${esc(message)}`;
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add('show')));
+  setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 4000);
+}
+
+function updateDictBadge() {
+  const total = suggestionIndex.length;
+  const $badge = document.getElementById('dictCountText');
+  if ($badge) $badge.textContent = total;
+}
+
+async function loadDictCategories() {
+  try {
+    const resp = await fetch('http://127.0.0.1:9742/api/dictionary/stats');
+    const data = await resp.json();
+    if (data.stats?.categories) {
+      _dictCategories = Object.keys(data.stats.categories).sort();
+    }
+  } catch (_) {}
+  if (!_dictCategories.length) {
+    _dictCategories = ['system','media','navigation','trading','dev','ia','communication','productivity','entertainment','accessibility','fichiers','daily','cluster','voice','custom','multimedia','systeme','pipeline','automation','network'];
+  }
+}
+
+function categoryOptions(selected) {
+  const cats = _dictCategories.length ? _dictCategories : ['custom'];
+  return cats.map(c => `<option value="${c}" ${c === selected ? 'selected' : ''}>${c}</option>`).join('') +
+    '<option value="custom">custom</option>';
+}
+
+function showSuggestCtxMenu(event, idx) {
+  document.querySelectorAll('.suggest-ctx-menu').forEach(m => m.remove());
+  const r = suggestResults[idx];
+  if (!r) return;
+  _ctxMenuData = r.data;
+  const entryId = r.data?.id || 0;
+  const entryName = r.name || '';
+  const menu = document.createElement('div');
+  menu.className = 'suggest-ctx-menu';
+
+  const items = [
+    { label: 'Modifier', icon: '&#x270E;', cls: '', fn: () => editDictEntry(_ctxMenuData) },
+    { label: 'Copier trigger', icon: '&#x2398;', cls: '', fn: () => copyToClipboard(entryName) },
+    { label: 'Supprimer', icon: '&#x2716;', cls: 'danger', fn: () => deleteDictEntry(entryId, entryName) },
+  ];
+  for (const it of items) {
+    const el = document.createElement('div');
+    el.className = `ctx-item ${it.cls}`;
+    el.innerHTML = `<span class="ctx-icon">${it.icon}</span> ${it.label}`;
+    el.onclick = it.fn;
+    menu.appendChild(el);
+  }
+
+  // Position: clamp to viewport
+  let x = event.clientX, y = event.clientY;
+  document.body.appendChild(menu);
+  const rect = menu.getBoundingClientRect();
+  if (x + rect.width > window.innerWidth) x = window.innerWidth - rect.width - 8;
+  if (y + rect.height > window.innerHeight) y = window.innerHeight - rect.height - 8;
+  if (x < 4) x = 4;
+  if (y < 4) y = 4;
+  menu.style.left = x + 'px';
+  menu.style.top = y + 'px';
+
+  setTimeout(() => {
+    document.addEventListener('click', function _close(e) {
+      if (!e.target.closest('.suggest-ctx-menu')) {
+        menu.remove();
+        document.removeEventListener('click', _close);
+      }
+    });
+  }, 10);
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => showToast('Trigger copie !')).catch(() => {});
+  document.querySelectorAll('.suggest-ctx-menu').forEach(m => m.remove());
+}
+
+function showAddCommandForm(prefill) {
+  closeSuggestions();
+  const overlay = document.createElement('div');
+  overlay.className = 'dict-edit-overlay';
+  overlay.innerHTML = `
+    <div class="dict-edit-panel">
+      <h3>+ Ajouter une commande</h3>
+      <div class="field-group">
+        <label>Trigger vocal</label>
+        <input id="dictAddTrigger" value="${esc(prefill || '')}" />
+      </div>
+      <div class="field-group">
+        <label>Categorie</label>
+        <select id="dictAddCategory">${categoryOptions('custom')}</select>
+      </div>
+      <div class="field-group">
+        <label>Action type</label>
+        <select id="dictAddAction">
+          <option value="pipeline">pipeline</option>
+          <option value="powershell">powershell</option>
+          <option value="curl">curl</option>
+          <option value="python">python</option>
+          <option value="system">system</option>
+          <option value="media">media</option>
+          <option value="browser">browser</option>
+          <option value="voice">voice</option>
+          <option value="script">script</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>Steps / Action</label>
+        <input id="dictAddSteps" placeholder="Ex: Start-Process spotify" />
+      </div>
+      <div class="field-group">
+        <label>Description</label>
+        <input id="dictAddDesc" placeholder="Description courte..." />
+      </div>
+      <div class="btn-row">
+        <button class="btn-cancel" onclick="this.closest('.dict-edit-overlay').remove()">Annuler</button>
+        <button class="btn-save" id="dictAddSubmitBtn" onclick="submitAddCommand()">Ajouter</button>
+      </div>
+    </div>
+  `;
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+  document.getElementById('dictAddTrigger').focus();
+}
+
+async function submitAddCommand() {
+  const trigger = document.getElementById('dictAddTrigger').value.trim();
+  const category = document.getElementById('dictAddCategory').value;
+  const actionType = document.getElementById('dictAddAction').value;
+  const steps = document.getElementById('dictAddSteps').value.trim();
+  const desc = document.getElementById('dictAddDesc').value.trim();
+  if (!trigger) return;
+  const btn = document.getElementById('dictAddSubmitBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '...'; }
+  try {
+    const resp = await fetch('http://127.0.0.1:9742/api/dictionary/command', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ name: trigger, category, triggers: [trigger], action_type: actionType, description: desc, steps })
+    });
+    const data = await resp.json();
+    if (data.ok) {
+      document.querySelectorAll('.dict-edit-overlay').forEach(o => o.remove());
+      showToast(`"${trigger}" ajoute (id=${data.id})`);
+      await loadDictionary();
+      buildSuggestionIndex();
+      updateDictBadge();
+      $textInput.value = trigger;
+      const res = searchSuggestions(trigger.toLowerCase());
+      renderSuggestions(res, trigger);
+    } else {
+      showToast(data.error || 'Erreur inconnue', 'error');
+      if (btn) { btn.disabled = false; btn.textContent = 'Ajouter'; }
+    }
+  } catch (e) {
+    showToast('Erreur reseau: ' + e.message, 'error');
+    if (btn) { btn.disabled = false; btn.textContent = 'Ajouter'; }
+  }
+}
+
+function editDictEntry(entry) {
+  document.querySelectorAll('.suggest-ctx-menu').forEach(m => m.remove());
+  closeSuggestions();
+  const overlay = document.createElement('div');
+  overlay.className = 'dict-edit-overlay';
+  overlay.innerHTML = `
+    <div class="dict-edit-panel">
+      <h3>Modifier la commande</h3>
+      <div class="field-group">
+        <label>Trigger vocal</label>
+        <input id="dictEditTrigger" value="${esc(entry.trigger_phrase || entry.name || '')}" />
+      </div>
+      <div class="field-group">
+        <label>Categorie</label>
+        <select id="dictEditCategory">${categoryOptions(entry.category || '')}</select>
+      </div>
+      <div class="field-group">
+        <label>Action type</label>
+        <select id="dictEditActionType">
+          ${['pipeline','powershell','curl','python','system','media','browser','voice','script','condition','shortcut'].map(a =>
+            `<option value="${a}" ${a === (entry.action_type || '') ? 'selected' : ''}>${a}</option>`
+          ).join('')}
+        </select>
+      </div>
+      <div class="field-group">
+        <label>Steps / Action</label>
+        <input id="dictEditSteps" value="${esc(entry.steps || entry.description || '')}" />
+      </div>
+      <div class="btn-row">
+        <button class="btn-cancel" onclick="this.closest('.dict-edit-overlay').remove()">Annuler</button>
+        <button class="btn-save" id="dictEditSubmitBtn" onclick="submitEditCommand(${entry.id})">Sauvegarder</button>
+      </div>
+    </div>
+  `;
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+  document.getElementById('dictEditTrigger').focus();
+}
+
+async function submitEditCommand(id) {
+  const trigger = document.getElementById('dictEditTrigger').value.trim();
+  const category = document.getElementById('dictEditCategory').value;
+  const actionType = document.getElementById('dictEditActionType').value;
+  const steps = document.getElementById('dictEditSteps').value.trim();
+  if (!trigger) return;
+  const btn = document.getElementById('dictEditSubmitBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '...'; }
+  try {
+    const resp = await fetch(`http://127.0.0.1:9742/api/dictionary/command/${id}`, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ fields: { trigger_phrase: trigger, category, action_type: actionType, steps } })
+    });
+    const data = await resp.json();
+    if (data.ok) {
+      document.querySelectorAll('.dict-edit-overlay').forEach(o => o.remove());
+      showToast('Commande modifiee');
+      await loadDictionary();
+      buildSuggestionIndex();
+      updateDictBadge();
+    } else {
+      showToast(data.error || 'Erreur', 'error');
+      if (btn) { btn.disabled = false; btn.textContent = 'Sauvegarder'; }
+    }
+  } catch (e) {
+    showToast('Erreur reseau: ' + e.message, 'error');
+    if (btn) { btn.disabled = false; btn.textContent = 'Sauvegarder'; }
+  }
+}
+
+async function deleteDictEntry(id, name) {
+  document.querySelectorAll('.suggest-ctx-menu').forEach(m => m.remove());
+  if (!confirm(`Supprimer "${name}" (id=${id}) ?`)) return;
+  try {
+    const resp = await fetch(`http://127.0.0.1:9742/api/dictionary/command/${id}`, { method: 'DELETE' });
+    const data = await resp.json();
+    if (data.ok) {
+      closeSuggestions();
+      showToast(`"${name}" supprime`);
+      await loadDictionary();
+      buildSuggestionIndex();
+      updateDictBadge();
+    } else {
+      showToast(data.error || 'Erreur', 'error');
+    }
+  } catch (e) {
+    showToast('Erreur reseau: ' + e.message, 'error');
+  }
+}
+
+// Load categories on startup
+loadDictCategories();
+
+// ── INIT ──
+connectWS();
+checkCluster();
+setInterval(checkCluster, 15000);
+// Pre-load dictionary for autocomplete (fallback if WS not yet connected)
+if (!dictData) loadDictionary();
+
+// ── ELECTRON BRIDGE (if running in Electron) ──
+if (window.electronAPI) {
+  document.getElementById('minimizeBtn').addEventListener('click', () => window.electronAPI.minimize());
+  document.getElementById('detachBtn').addEventListener('click', () => {
+    if (window.electronAPI.detachWidget) window.electronAPI.detachWidget();
+  });
+} else {
+  document.getElementById('minimizeBtn').style.display = 'none';
+  document.getElementById('detachBtn').style.display = 'none';
+}
+</script>
+</body>
+</html>

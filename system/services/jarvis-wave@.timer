@@ -1,0 +1,12 @@
+[Unit]
+Description=JARVIS Wave Timer - Wave %i
+
+[Timer]
+# On boot, wait i * 10 minutes
+OnBootSec=%i0min
+# Then run every 4 hours
+OnUnitActiveSec=4h
+Unit=jarvis-wave@%i.service
+
+[Install]
+WantedBy=timers.target

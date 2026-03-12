@@ -1,0 +1,15 @@
+[Unit]
+Description=JARVIS Telegram Bot Bridge
+After=network.target jarvis-proxy.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/turbo/jarvis/canvas
+ExecStart=/usr/bin/node telegram-bot.js
+Restart=always
+RestartSec=10
+Environment=TURBO=/home/turbo/jarvis
+Environment=TURBO_DIR=/home/turbo/jarvis
+
+[Install]
+WantedBy=default.target

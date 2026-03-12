@@ -1,0 +1,11 @@
+[Unit]
+Description=JARVIS GPU Monitor & Alerting
+After=network.target
+
+[Service]
+ExecStart=/home/turbo/jarvis-m1-ops/scripts/gpu_monitor.py
+WorkingDirectory=/home/turbo/jarvis-m1-ops
+Restart=always
+
+[Install]
+WantedBy=default.target

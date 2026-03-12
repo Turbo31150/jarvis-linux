@@ -1,0 +1,6 @@
+[Unit]
+Description=JARVIS Backup Service
+
+[Service]
+Type=oneshot
+ExecStart=/home/turbo/jarvis/scripts/jarvis-backup.sh

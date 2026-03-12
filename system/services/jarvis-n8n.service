@@ -1,0 +1,13 @@
+[Unit]
+Description=JARVIS n8n Automation Engine
+After=network.target
+
+[Service]
+Type=simple
+Environment=N8N_PORT=5678
+ExecStart=/home/turbo/.local/bin/n8n start
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

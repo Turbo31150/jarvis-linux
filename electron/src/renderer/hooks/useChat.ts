@@ -1,0 +1,287 @@
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useWebSocket, WsMessage } from './useWebSocket';
+import { getErrorMessage } from '../lib/types';
+
+export interface ToolCall {
+  id: string;
+  name: string;
+  arguments?: Record<string, unknown>;
+  result?: string;
+  status: 'pending' | 'running' | 'complete' | 'error';
+}
+
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  agent?: string;
+  timestamp: number;
+  toolCalls?: ToolCall[];
+  taskType?: string;
+  elapsed?: number;
+  nodeTag?: string;
+  isConsensus?: boolean;
+}
+
+interface ChatState {
+  messages: ChatMessage[];
+  loading: boolean;
+}
+
+const STORAGE_KEY = 'jarvis_chat_history';
+const MAX_STORED = 200;
+const MAX_MESSAGES = 500; // In-memory cap — FIFO eviction beyond this
+
+function loadHistory(): ChatMessage[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw).slice(-MAX_STORED);
+  } catch (err) { console.warn('[Chat] loadHistory error:', err instanceof Error ? err.message : err); }
+  return [];
+}
+
+function capMessages(msgs: ChatMessage[]): ChatMessage[] {
+  return msgs.length > MAX_MESSAGES ? msgs.slice(-MAX_MESSAGES) : msgs;
+}
+
+function saveHistory(messages: ChatMessage[]) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-MAX_STORED)));
+  } catch (err) { console.warn('[Chat] saveHistory error:', err instanceof Error ? err.message : err); }
+}
+
+export function useChat() {
+  const [state, setState] = useState<ChatState>(() => ({
+    messages: loadHistory(),
+    loading: false,
+  }));
+  const { connected, request, subscribe } = useWebSocket();
+  const messageIdCounter = useRef(0);
+  const mountedRef = useRef(true);
+
+  useEffect(() => () => { mountedRef.current = false; }, []);
+
+  // Subscribe to chat channel events
+  useEffect(() => {
+    const unsub = subscribe('chat', (msg: WsMessage) => {
+      switch (msg.event) {
+        case 'agent_message': {
+          const rawContent: string = msg.payload?.content || '';
+          const taskType: string | undefined = msg.payload?.task_type;
+          const elapsed: number | undefined = msg.payload?.elapsed;
+          const isConsensus = taskType === 'consensus';
+
+          // Extract [NODE_TAG] from content beginning (e.g. "[GPT-OSS] response...")
+          let nodeTag: string | undefined;
+          let content = rawContent;
+          const tagMatch = rawContent.match(/^\[([A-Z0-9_-]+)\]\s*/);
+          if (tagMatch) {
+            nodeTag = tagMatch[1];
+            content = rawContent.slice(tagMatch[0].length);
+          }
+
+          const agentMsg: ChatMessage = {
+            id: msg.payload?.id || `agent_${++messageIdCounter.current}_${Date.now()}`,
+            role: 'assistant',
+            content,
+            agent: msg.payload?.agent,
+            timestamp: msg.payload?.timestamp || Date.now(),
+            toolCalls: msg.payload?.toolCalls,
+            taskType,
+            elapsed,
+            nodeTag,
+            isConsensus,
+          };
+          setState(prev => ({
+            ...prev,
+            messages: capMessages([...prev.messages, agentMsg]),
+            loading: false,
+          }));
+          break;
+        }
+
+        case 'agent_chunk': {
+          // Streaming: append content to the last assistant message
+          setState(prev => {
+            const messages = [...prev.messages];
+            const lastMsg = messages[messages.length - 1];
+            if (lastMsg && lastMsg.role === 'assistant' && lastMsg.id === msg.payload?.id) {
+              messages[messages.length - 1] = {
+                ...lastMsg,
+                content: lastMsg.content + (msg.payload?.chunk || ''),
+              };
+            } else {
+              // New streaming message
+              messages.push({
+                id: msg.payload?.id || `stream_${++messageIdCounter.current}`,
+                role: 'assistant',
+                content: msg.payload?.chunk || '',
+                agent: msg.payload?.agent,
+                timestamp: Date.now(),
+              });
+            }
+            return { ...prev, messages: capMessages(messages) };
+          });
+          break;
+        }
+
+        case 'tool_use': {
+          // Update tool call status on the latest assistant message
+          setState(prev => {
+            const messages = [...prev.messages];
+            const lastAssistant = [...messages].reverse().find(m => m.role === 'assistant');
+            if (lastAssistant) {
+              const toolCall: ToolCall = {
+                id: msg.payload?.tool_id || `tool_${Date.now()}`,
+                name: msg.payload?.tool_name || 'unknown',
+                arguments: msg.payload?.arguments,
+                result: msg.payload?.result,
+                status: msg.payload?.status || 'running',
+              };
+
+              const existingIdx = lastAssistant.toolCalls?.findIndex(t => t.id === toolCall.id) ?? -1;
+              const toolCalls = [...(lastAssistant.toolCalls || [])];
+              if (existingIdx >= 0) {
+                toolCalls[existingIdx] = toolCall;
+              } else {
+                toolCalls.push(toolCall);
+              }
+
+              const msgIdx = messages.findIndex(m => m.id === lastAssistant.id);
+              if (msgIdx >= 0) {
+                messages[msgIdx] = { ...lastAssistant, toolCalls };
+              }
+            }
+            return { ...prev, messages };
+          });
+          break;
+        }
+
+        case 'agent_complete': {
+          setState(prev => ({ ...prev, loading: false }));
+          break;
+        }
+
+        case 'error': {
+          const errMsg: ChatMessage = {
+            id: `err_${++messageIdCounter.current}_${Date.now()}`,
+            role: 'system',
+            content: msg.payload?.message || msg.error || 'An error occurred',
+            timestamp: Date.now(),
+          };
+          setState(prev => ({
+            ...prev,
+            messages: capMessages([...prev.messages, errMsg]),
+            loading: false,
+          }));
+          break;
+        }
+      }
+    });
+
+    return unsub;
+  }, [subscribe]);
+
+  // Send a user message (with optional files and agent selection)
+  const sendMessage = useCallback(async (text: string, opts?: { files?: File[]; agent?: string }) => {
+    if (!text.trim() || !connected) return;
+
+    const userMsg: ChatMessage = {
+      id: `user_${++messageIdCounter.current}_${Date.now()}`,
+      role: 'user',
+      content: text.trim(),
+      timestamp: Date.now(),
+    };
+
+    setState(prev => ({
+      messages: capMessages([...prev.messages, userMsg]),
+      loading: true,
+    }));
+
+    try {
+      // Encode files as base64 if present
+      let filePayloads: { name: string; size: number; type: string; data: string }[] | undefined;
+      if (opts?.files && opts.files.length > 0) {
+        filePayloads = await Promise.all(opts.files.map(f => new Promise<{ name: string; size: number; type: string; data: string }>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve({ name: f.name, size: f.size, type: f.type, data: (reader.result as string).split(',')[1] || '' });
+          reader.onerror = reject;
+          reader.readAsDataURL(f);
+        })));
+      }
+
+      await request('chat', 'send_message', {
+        content: text.trim(),
+        conversation_id: 'default',
+        ...(opts?.agent ? { agent: opts.agent } : {}),
+        ...(filePayloads ? { files: filePayloads } : {}),
+      });
+      // Response will come via subscribe events
+    } catch (err) {
+      if (!mountedRef.current) return;
+      const errMsg: ChatMessage = {
+        id: `err_${++messageIdCounter.current}_${Date.now()}`,
+        role: 'system',
+        content: `Request failed: ${getErrorMessage(err)}`,
+        timestamp: Date.now(),
+      };
+      setState(prev => ({
+        messages: capMessages([...prev.messages, errMsg]),
+        loading: false,
+      }));
+    }
+  }, [connected, request]);
+
+  // Persist to localStorage on message change (debounced)
+  const saveTimerRef = useRef<number>(0);
+  useEffect(() => {
+    if (state.messages.length > 0) {
+      clearTimeout(saveTimerRef.current);
+      saveTimerRef.current = window.setTimeout(() => saveHistory(state.messages), 500);
+    }
+    return () => clearTimeout(saveTimerRef.current);
+  }, [state.messages]);
+
+  // Export conversation as markdown
+  const exportConversation = useCallback(() => {
+    const lines = state.messages.map(m => {
+      const ts = new Date(m.timestamp).toLocaleString('fr-FR');
+      const tag = m.nodeTag ? ` [${m.nodeTag}]` : '';
+      return `### ${m.role.toUpperCase()}${tag} — ${ts}\n\n${m.content}\n`;
+    });
+    const md = `# JARVIS Chat Export — ${new Date().toLocaleString('fr-FR')}\n\n${lines.join('\n---\n\n')}`;
+    const blob = new Blob([md], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `jarvis_chat_${Date.now()}.md`;
+    try {
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } finally {
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+  }, [state.messages]);
+
+  // Clear conversation
+  const clearConversation = useCallback(async () => {
+    setState({ messages: [], loading: false });
+    localStorage.removeItem(STORAGE_KEY);
+    if (connected) {
+      try {
+        await request('chat', 'clear_conversation', { conversation_id: 'default' });
+      } catch (err) {
+        console.warn('[Chat] clearConversation error:', err instanceof Error ? err.message : err);
+      }
+    }
+  }, [connected, request]);
+
+  return {
+    messages: state.messages,
+    loading: state.loading,
+    sendMessage,
+    clearConversation,
+    exportConversation,
+  };
+}

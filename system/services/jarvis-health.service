@@ -1,0 +1,8 @@
+[Unit]
+Description=JARVIS Cluster Health Service
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/turbo/jarvis
+ExecStart=/home/turbo/jarvis/.venv/bin/python /home/turbo/jarvis/src/jarvis-cluster-health.py

@@ -1,0 +1,14 @@
+[Unit]
+Description=JARVIS Gemini Standard Proxy
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/turbo/jarvis
+ExecStart=/usr/bin/node gemini-proxy.js
+Restart=always
+RestartSec=5
+Environment=TURBO=/home/turbo/jarvis
+
+[Install]
+WantedBy=default.target

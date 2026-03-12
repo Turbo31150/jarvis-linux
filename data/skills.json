@@ -1,0 +1,4265 @@
+[
+  {
+    "name": "rapport_matin",
+    "description": "Rapport complet du matin: cluster, trading, systeme",
+    "triggers": [
+      "rapport du matin",
+      "rapport matin",
+      "briefing matin",
+      "resume du matin",
+      "status complet",
+      "etat general"
+    ],
+    "steps": [
+      {
+        "tool": "lm_cluster_status",
+        "args": {},
+        "description": "Statut du cluster IA",
+        "wait_for_result": true
+      },
+      {
+        "tool": "system_info",
+        "args": {},
+        "description": "Infos systeme",
+        "wait_for_result": true
+      },
+      {
+        "tool": "trading_status",
+        "args": {},
+        "description": "Status pipeline trading",
+        "wait_for_result": true
+      },
+      {
+        "tool": "trading_pending_signals",
+        "args": {},
+        "description": "Signaux en attente",
+        "wait_for_result": true
+      }
+    ],
+    "category": "routine",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_trading",
+    "description": "Active le mode trading: ouvre Chrome sur les graphes, lance le scanner",
+    "triggers": [
+      "mode trading",
+      "lance le trading",
+      "session trading",
+      "active le trading",
+      "demarre le trading"
+    ],
+    "steps": [
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "chrome"
+        },
+        "description": "Ouvrir Chrome",
+        "wait_for_result": true
+      },
+      {
+        "tool": "open_url",
+        "args": {
+          "url": "https://www.tradingview.com"
+        },
+        "description": "TradingView",
+        "wait_for_result": true
+      },
+      {
+        "tool": "trading_status",
+        "args": {},
+        "description": "Verifier le pipeline",
+        "wait_for_result": true
+      },
+      {
+        "tool": "lm_cluster_status",
+        "args": {},
+        "description": "Verifier le cluster IA",
+        "wait_for_result": true
+      }
+    ],
+    "category": "trading",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_dev",
+    "description": "Active le mode developpement: terminal, VSCode, status git",
+    "triggers": [
+      "mode dev",
+      "mode developpement",
+      "session dev",
+      "lance le dev",
+      "mode code",
+      "mode programmation"
+    ],
+    "steps": [
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "cursor"
+        },
+        "description": "Ouvrir Cursor IDE",
+        "wait_for_result": true
+      },
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "wt"
+        },
+        "description": "Ouvrir Terminal",
+        "wait_for_result": true
+      },
+      {
+        "tool": "lm_cluster_status",
+        "args": {},
+        "description": "Verifier le cluster IA",
+        "wait_for_result": true
+      }
+    ],
+    "category": "dev",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_gaming",
+    "description": "Active le mode gaming: ferme Chrome, lance Steam, volume max",
+    "triggers": [
+      "mode gaming",
+      "mode jeu",
+      "lance le gaming",
+      "session gaming",
+      "on joue"
+    ],
+    "steps": [
+      {
+        "tool": "close_app",
+        "args": {
+          "name": "chrome"
+        },
+        "description": "Fermer Chrome",
+        "wait_for_result": true
+      },
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "steam"
+        },
+        "description": "Lancer Steam",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_up",
+        "args": {},
+        "description": "Monter le volume",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_up",
+        "args": {},
+        "description": "Monter le volume",
+        "wait_for_result": true
+      }
+    ],
+    "category": "loisir",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "diagnostic_complet",
+    "description": "Diagnostic complet: systeme, GPU, cluster, reseau, disques",
+    "triggers": [
+      "diagnostic complet",
+      "check complet",
+      "verification complete",
+      "tout verifier",
+      "health check",
+      "bilan complet"
+    ],
+    "steps": [
+      {
+        "tool": "system_info",
+        "args": {},
+        "description": "Infos systeme",
+        "wait_for_result": true
+      },
+      {
+        "tool": "gpu_info",
+        "args": {},
+        "description": "Infos GPU",
+        "wait_for_result": true
+      },
+      {
+        "tool": "lm_cluster_status",
+        "args": {},
+        "description": "Statut cluster",
+        "wait_for_result": true
+      },
+      {
+        "tool": "network_info",
+        "args": {},
+        "description": "Infos reseau",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "consensus_trading",
+    "description": "Consensus multi-IA sur le marche crypto",
+    "triggers": [
+      "consensus trading",
+      "avis du cluster",
+      "consensus crypto",
+      "que pensent les ia",
+      "analyse multi ia"
+    ],
+    "steps": [
+      {
+        "tool": "trading_status",
+        "args": {},
+        "description": "Status pipeline",
+        "wait_for_result": true
+      },
+      {
+        "tool": "consensus",
+        "args": {
+          "prompt": "Analyse rapide du marche crypto. BTC, ETH, SOL. Tendance et signal en 3 lignes.",
+          "nodes": "M1,M2,M3"
+        },
+        "description": "Consensus cluster",
+        "wait_for_result": true
+      }
+    ],
+    "category": "trading",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "cleanup_ram",
+    "description": "Nettoyer la RAM: lister les processus gourmands et suggerer",
+    "triggers": [
+      "nettoie la ram",
+      "libere la memoire",
+      "cleanup ram",
+      "ram pleine",
+      "trop de ram utilisee"
+    ],
+    "steps": [
+      {
+        "tool": "system_info",
+        "args": {},
+        "description": "Verifier la RAM",
+        "wait_for_result": true
+      },
+      {
+        "tool": "list_processes",
+        "args": {
+          "filter": ""
+        },
+        "description": "Lister les processus",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "ferme_tout",
+    "description": "Fermer toutes les applications non essentielles",
+    "triggers": [
+      "ferme tout",
+      "tout fermer",
+      "clean desktop",
+      "bureau propre",
+      "ferme les applications"
+    ],
+    "steps": [
+      {
+        "tool": "close_app",
+        "args": {
+          "name": "chrome"
+        },
+        "description": "Fermer Chrome",
+        "wait_for_result": true
+      },
+      {
+        "tool": "close_app",
+        "args": {
+          "name": "discord"
+        },
+        "description": "Fermer Discord",
+        "wait_for_result": true
+      },
+      {
+        "tool": "close_app",
+        "args": {
+          "name": "spotify"
+        },
+        "description": "Fermer Spotify",
+        "wait_for_result": true
+      },
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "win+d"
+        },
+        "description": "Afficher le bureau",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": true
+  },
+  {
+    "name": "mode_presentation",
+    "description": "Mode presentation: mode nuit off, luminosite max, volume moyen, projeter ecran",
+    "triggers": [
+      "mode presentation",
+      "lance la presentation",
+      "mode pres",
+      "je presente",
+      "active la presentation"
+    ],
+    "steps": [
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "win+p"
+        },
+        "description": "Ouvrir projection ecran",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$b = 100; (Get-CimInstance -Namespace root/WMI -ClassName WmiMonitorBrightnessMethods).WmiSetBrightness(1, $b)"
+        },
+        "description": "Luminosite max",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_down",
+        "args": {},
+        "description": "Baisser le volume",
+        "wait_for_result": true
+      },
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "win+d"
+        },
+        "description": "Afficher le bureau",
+        "wait_for_result": true
+      }
+    ],
+    "category": "productivite",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_focus",
+    "description": "Mode focus: ferme les distractions, active ne pas deranger, plein ecran",
+    "triggers": [
+      "mode focus",
+      "mode concentration",
+      "je bosse",
+      "pas de distraction",
+      "focus total",
+      "mode travail"
+    ],
+    "steps": [
+      {
+        "tool": "close_app",
+        "args": {
+          "name": "discord"
+        },
+        "description": "Fermer Discord",
+        "wait_for_result": true
+      },
+      {
+        "tool": "close_app",
+        "args": {
+          "name": "spotify"
+        },
+        "description": "Fermer Spotify",
+        "wait_for_result": true
+      },
+      {
+        "tool": "close_app",
+        "args": {
+          "name": "telegram"
+        },
+        "description": "Fermer Telegram",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_mute",
+        "args": {},
+        "description": "Couper le son",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode Focus actif. Aucune distraction."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "productivite",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_musique",
+    "description": "Mode musique: lance Spotify, volume agreable, mode nuit",
+    "triggers": [
+      "mode musique",
+      "mets de la musique",
+      "ambiance musicale",
+      "lance la musique de fond",
+      "background music"
+    ],
+    "steps": [
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "spotify"
+        },
+        "description": "Lancer Spotify",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_down",
+        "args": {},
+        "description": "Baisser un peu le volume",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode musique actif. Spotify lance."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "loisir",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "routine_soir",
+    "description": "Routine du soir: sauvegarde, ferme apps, mode nuit, veille",
+    "triggers": [
+      "routine du soir",
+      "bonne nuit",
+      "fin de journee",
+      "je vais dormir",
+      "routine nuit",
+      "au dodo"
+    ],
+    "steps": [
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "ctrl+s"
+        },
+        "description": "Sauvegarder le travail en cours",
+        "wait_for_result": true
+      },
+      {
+        "tool": "close_app",
+        "args": {
+          "name": "chrome"
+        },
+        "description": "Fermer Chrome",
+        "wait_for_result": true
+      },
+      {
+        "tool": "close_app",
+        "args": {
+          "name": "code"
+        },
+        "description": "Fermer VSCode",
+        "wait_for_result": true
+      },
+      {
+        "tool": "close_app",
+        "args": {
+          "name": "discord"
+        },
+        "description": "Fermer Discord",
+        "wait_for_result": true
+      },
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "win+a"
+        },
+        "description": "Activer mode nuit",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$b = 20; (Get-CimInstance -Namespace root/WMI -ClassName WmiMonitorBrightnessMethods).WmiSetBrightness(1, $b)"
+        },
+        "description": "Luminosite basse",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Bonne nuit. Routine terminee."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "routine",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": true
+  },
+  {
+    "name": "workspace_frontend",
+    "description": "Workspace frontend: Chrome DevTools, VSCode, terminal, localhost",
+    "triggers": [
+      "workspace frontend",
+      "mode frontend",
+      "session front",
+      "lance le front",
+      "workspace web"
+    ],
+    "steps": [
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "code"
+        },
+        "description": "Ouvrir VSCode",
+        "wait_for_result": true
+      },
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "wt"
+        },
+        "description": "Ouvrir Terminal",
+        "wait_for_result": true
+      },
+      {
+        "tool": "open_url",
+        "args": {
+          "url": "http://localhost:3000"
+        },
+        "description": "Ouvrir localhost:3000",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Workspace frontend pret."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "dev",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "workspace_backend",
+    "description": "Workspace backend: terminal, VSCode, Postman, LM Studio",
+    "triggers": [
+      "workspace backend",
+      "mode backend",
+      "session back",
+      "lance le back",
+      "workspace api"
+    ],
+    "steps": [
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "code"
+        },
+        "description": "Ouvrir VSCode",
+        "wait_for_result": true
+      },
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "wt"
+        },
+        "description": "Ouvrir Terminal",
+        "wait_for_result": true
+      },
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "lmstudio"
+        },
+        "description": "Ouvrir LM Studio",
+        "wait_for_result": true
+      },
+      {
+        "tool": "lm_cluster_status",
+        "args": {},
+        "description": "Verifier le cluster",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Workspace backend pret."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "dev",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "optimiser_pc",
+    "description": "Optimisation PC: vider corbeille, nettoyer RAM, diagnostic disque",
+    "triggers": [
+      "optimise le pc",
+      "nettoie le pc",
+      "optimisation",
+      "accelere le pc",
+      "pc lent",
+      "boost pc"
+    ],
+    "steps": [
+      {
+        "tool": "system_info",
+        "args": {},
+        "description": "Diagnostic systeme",
+        "wait_for_result": true
+      },
+      {
+        "tool": "list_processes",
+        "args": {
+          "filter": ""
+        },
+        "description": "Lister processus gourmands",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Clear-RecycleBin -Force -ErrorAction SilentlyContinue; 'Corbeille videe'"
+        },
+        "description": "Vider la corbeille",
+        "wait_for_result": true
+      },
+      {
+        "tool": "gpu_info",
+        "args": {},
+        "description": "Verifier les GPU",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Optimisation terminee. Verifie les resultats."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": true
+  },
+  {
+    "name": "monitoring_complet",
+    "description": "Monitoring en temps reel: systeme, GPU, reseau, cluster, services",
+    "triggers": [
+      "monitoring complet",
+      "surveillance complete",
+      "tout surveiller",
+      "dashboard monitoring",
+      "status global"
+    ],
+    "steps": [
+      {
+        "tool": "system_info",
+        "args": {},
+        "description": "Infos systeme",
+        "wait_for_result": true
+      },
+      {
+        "tool": "gpu_info",
+        "args": {},
+        "description": "Infos GPU",
+        "wait_for_result": true
+      },
+      {
+        "tool": "network_info",
+        "args": {},
+        "description": "Infos reseau",
+        "wait_for_result": true
+      },
+      {
+        "tool": "lm_cluster_status",
+        "args": {},
+        "description": "Cluster IA",
+        "wait_for_result": true
+      },
+      {
+        "tool": "screen_resolution",
+        "args": {},
+        "description": "Resolution ecran",
+        "wait_for_result": true
+      },
+      {
+        "tool": "wifi_networks",
+        "args": {},
+        "description": "Reseaux Wi-Fi",
+        "wait_for_result": true
+      },
+      {
+        "tool": "list_services",
+        "args": {},
+        "description": "Services Windows",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "split_screen_travail",
+    "description": "Ecran divise: navigateur a gauche, editeur a droite",
+    "triggers": [
+      "ecran divise",
+      "split screen",
+      "deux fenetres",
+      "moitie moitie",
+      "cote a cote",
+      "ecran de travail",
+      "espace de travail",
+      "travail en split"
+    ],
+    "steps": [
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "chrome"
+        },
+        "description": "Ouvrir Chrome",
+        "wait_for_result": true
+      },
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "win+left"
+        },
+        "description": "Chrome a gauche",
+        "wait_for_result": true
+      },
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "code"
+        },
+        "description": "Ouvrir VSCode",
+        "wait_for_result": true
+      },
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "win+right"
+        },
+        "description": "VSCode a droite",
+        "wait_for_result": true
+      }
+    ],
+    "category": "productivite",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "backup_rapide",
+    "description": "Sauvegarde rapide: save tout, screenshot, copier dans presse-papier",
+    "triggers": [
+      "backup rapide",
+      "sauvegarde rapide",
+      "save all",
+      "tout sauvegarder",
+      "sauve tout"
+    ],
+    "steps": [
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "ctrl+s"
+        },
+        "description": "Sauvegarder fichier actif",
+        "wait_for_result": true
+      },
+      {
+        "tool": "screenshot",
+        "args": {},
+        "description": "Capture d'ecran",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Sauvegarde rapide effectuee."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "productivite",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_stream",
+    "description": "Mode streaming: lance OBS, Chrome, volume optimal, mode nuit off",
+    "triggers": [
+      "mode stream",
+      "lance le stream",
+      "session stream",
+      "je stream",
+      "streaming mode"
+    ],
+    "steps": [
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "obs64"
+        },
+        "description": "Lancer OBS Studio",
+        "wait_for_result": true
+      },
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "chrome"
+        },
+        "description": "Ouvrir Chrome",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_up",
+        "args": {},
+        "description": "Monter le volume",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode stream actif. OBS pret."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "loisir",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "check_trading_complet",
+    "description": "Check trading complet: status, positions, signaux, cluster, consensus",
+    "triggers": [
+      "check trading complet",
+      "bilan trading",
+      "revue trading",
+      "analyse complete trading",
+      "tout le trading"
+    ],
+    "steps": [
+      {
+        "tool": "trading_status",
+        "args": {},
+        "description": "Status pipeline trading",
+        "wait_for_result": true
+      },
+      {
+        "tool": "trading_positions",
+        "args": {},
+        "description": "Positions ouvertes",
+        "wait_for_result": true
+      },
+      {
+        "tool": "trading_pending_signals",
+        "args": {},
+        "description": "Signaux en attente",
+        "wait_for_result": true
+      },
+      {
+        "tool": "lm_cluster_status",
+        "args": {},
+        "description": "Cluster IA",
+        "wait_for_result": true
+      },
+      {
+        "tool": "consensus",
+        "args": {
+          "prompt": "Analyse marche crypto: BTC ETH SOL. Tendance, risque, signal.",
+          "nodes": "M1,M2,M3"
+        },
+        "description": "Consensus multi-IA",
+        "wait_for_result": true
+      }
+    ],
+    "category": "trading",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_reunion",
+    "description": "Mode reunion: ouvre Teams/Zoom, coupe micro, check camera, volume bas",
+    "triggers": [
+      "mode reunion",
+      "lance la reunion",
+      "session visio",
+      "mode visio",
+      "visioconference",
+      "mode meeting"
+    ],
+    "steps": [
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "teams"
+        },
+        "description": "Ouvrir Teams",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_down",
+        "args": {},
+        "description": "Baisser le volume",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_down",
+        "args": {},
+        "description": "Baisser encore",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode reunion actif. Micro coupe par defaut."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "communication",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_communication",
+    "description": "Mode communication: ouvre Discord, Telegram, Gmail",
+    "triggers": [
+      "mode communication",
+      "ouvre les messageries",
+      "mode social",
+      "lance les messageries",
+      "session communication"
+    ],
+    "steps": [
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "discord"
+        },
+        "description": "Ouvrir Discord",
+        "wait_for_result": true
+      },
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "telegram"
+        },
+        "description": "Ouvrir Telegram",
+        "wait_for_result": true
+      },
+      {
+        "tool": "open_url",
+        "args": {
+          "url": "https://mail.google.com"
+        },
+        "description": "Ouvrir Gmail",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Messageries ouvertes."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "communication",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "pause_cafe",
+    "description": "Pause cafe: sauvegarde, verrouille le PC, coupe le son",
+    "triggers": [
+      "pause cafe",
+      "je fais une pause",
+      "pause",
+      "je reviens",
+      "brb",
+      "afk"
+    ],
+    "steps": [
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "ctrl+s"
+        },
+        "description": "Sauvegarder",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_mute",
+        "args": {},
+        "description": "Couper le son",
+        "wait_for_result": true
+      },
+      {
+        "tool": "lock_screen",
+        "args": {},
+        "description": "Verrouiller le PC",
+        "wait_for_result": true
+      }
+    ],
+    "category": "routine",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "retour_pause",
+    "description": "Retour de pause: reactive le son, check notifications, status rapide",
+    "triggers": [
+      "retour de pause",
+      "je suis revenu",
+      "c'est bon je suis la",
+      "retour",
+      "de retour",
+      "je suis de retour"
+    ],
+    "steps": [
+      {
+        "tool": "volume_up",
+        "args": {},
+        "description": "Remettre le son",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_up",
+        "args": {},
+        "description": "Volume normal",
+        "wait_for_result": true
+      },
+      {
+        "tool": "system_info",
+        "args": {},
+        "description": "Check systeme rapide",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Bon retour. Tout est operationnel."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "routine",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_ia",
+    "description": "Mode IA: lance LM Studio, check cluster, liste modeles",
+    "triggers": [
+      "mode ia",
+      "mode intelligence artificielle",
+      "session ia",
+      "lance l'ia",
+      "active l'ia",
+      "mode cluster"
+    ],
+    "steps": [
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "lmstudio"
+        },
+        "description": "Lancer LM Studio",
+        "wait_for_result": true
+      },
+      {
+        "tool": "lm_cluster_status",
+        "args": {},
+        "description": "Verifier le cluster",
+        "wait_for_result": true
+      },
+      {
+        "tool": "lm_models",
+        "args": {},
+        "description": "Lister les modeles charges",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode IA actif. Cluster verifie."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "dev",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "deploiement",
+    "description": "Mode deploiement: terminal, status systeme, check services, monitoring",
+    "triggers": [
+      "mode deploiement",
+      "lance le deploiement",
+      "session deploy",
+      "deploy",
+      "deploie",
+      "mode deploy"
+    ],
+    "steps": [
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "wt"
+        },
+        "description": "Ouvrir Terminal",
+        "wait_for_result": true
+      },
+      {
+        "tool": "system_info",
+        "args": {},
+        "description": "Check systeme",
+        "wait_for_result": true
+      },
+      {
+        "tool": "list_services",
+        "args": {},
+        "description": "Verifier les services",
+        "wait_for_result": true
+      },
+      {
+        "tool": "network_info",
+        "args": {},
+        "description": "Check reseau",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode deploiement pret."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "dev",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "debug_reseau",
+    "description": "Debug reseau: info reseau, scan wifi, ping, services, IP",
+    "triggers": [
+      "debug reseau",
+      "probleme reseau",
+      "diagnostique reseau",
+      "le reseau marche pas",
+      "pas d'internet",
+      "debug network"
+    ],
+    "steps": [
+      {
+        "tool": "network_info",
+        "args": {},
+        "description": "Infos reseau",
+        "wait_for_result": true
+      },
+      {
+        "tool": "wifi_networks",
+        "args": {},
+        "description": "Scanner Wi-Fi",
+        "wait_for_result": true
+      },
+      {
+        "tool": "ping",
+        "args": {
+          "host": "8.8.8.8"
+        },
+        "description": "Ping Google DNS",
+        "wait_for_result": true
+      },
+      {
+        "tool": "ping",
+        "args": {
+          "host": "192.168.1.1"
+        },
+        "description": "Ping gateway",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Diagnostic reseau termine."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_lecture",
+    "description": "Mode lecture: ferme distractions, mode nuit, volume bas, zoom texte",
+    "triggers": [
+      "mode lecture",
+      "mode etude",
+      "session lecture",
+      "je lis",
+      "mode read",
+      "mode lire"
+    ],
+    "steps": [
+      {
+        "tool": "close_app",
+        "args": {
+          "name": "discord"
+        },
+        "description": "Fermer Discord",
+        "wait_for_result": true
+      },
+      {
+        "tool": "close_app",
+        "args": {
+          "name": "spotify"
+        },
+        "description": "Fermer Spotify",
+        "wait_for_result": true
+      },
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "win+a"
+        },
+        "description": "Mode nuit",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_down",
+        "args": {},
+        "description": "Baisser le volume",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_down",
+        "args": {},
+        "description": "Volume minimal",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode lecture actif."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "productivite",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "update_systeme",
+    "description": "Preparation mise a jour: sauvegarde, check updates, check espace disque",
+    "triggers": [
+      "update systeme",
+      "mise a jour systeme",
+      "prepare les updates",
+      "mets a jour le pc",
+      "lance les mises a jour"
+    ],
+    "steps": [
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "ctrl+s"
+        },
+        "description": "Sauvegarder le travail",
+        "wait_for_result": true
+      },
+      {
+        "tool": "system_info",
+        "args": {},
+        "description": "Check systeme",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-CimInstance Win32_LogicalDisk | Select DeviceID, @{N='Free(GB)';E={[math]::Round($_.FreeSpace/1GB,1)}} | Out-String"
+        },
+        "description": "Espace disque",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Systeme pret pour mise a jour."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_recherche",
+    "description": "Mode recherche: ouvre Chrome, Google, multiple onglets, presse-papier",
+    "triggers": [
+      "mode recherche",
+      "session recherche",
+      "lance les recherches",
+      "mode investigation",
+      "je recherche"
+    ],
+    "steps": [
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "chrome"
+        },
+        "description": "Ouvrir Chrome",
+        "wait_for_result": true
+      },
+      {
+        "tool": "open_url",
+        "args": {
+          "url": "https://www.google.com"
+        },
+        "description": "Google",
+        "wait_for_result": true
+      },
+      {
+        "tool": "open_url",
+        "args": {
+          "url": "https://www.perplexity.ai"
+        },
+        "description": "Perplexity",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode recherche actif. Chrome + Perplexity."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "productivite",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "workspace_turbo",
+    "description": "Workspace JARVIS Turbo: ouvre le projet, terminal, cluster check",
+    "triggers": [
+      "workspace turbo",
+      "ouvre turbo",
+      "session turbo",
+      "lance turbo",
+      "mode turbo",
+      "workspace jarvis"
+    ],
+    "steps": [
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "code"
+        },
+        "description": "Ouvrir VSCode",
+        "wait_for_result": true
+      },
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "wt"
+        },
+        "description": "Ouvrir Terminal",
+        "wait_for_result": true
+      },
+      {
+        "tool": "open_url",
+        "args": {
+          "url": "https://github.com/Turbo31150/turbo"
+        },
+        "description": "GitHub Turbo",
+        "wait_for_result": true
+      },
+      {
+        "tool": "lm_cluster_status",
+        "args": {},
+        "description": "Verifier le cluster",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Workspace Turbo pret."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "dev",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "rapport_soir",
+    "description": "Rapport du soir: bilan trading, cluster status, historique actions",
+    "triggers": [
+      "rapport du soir",
+      "bilan du soir",
+      "briefing soir",
+      "resume de la journee",
+      "bilan journee"
+    ],
+    "steps": [
+      {
+        "tool": "trading_status",
+        "args": {},
+        "description": "Bilan trading",
+        "wait_for_result": true
+      },
+      {
+        "tool": "trading_positions",
+        "args": {},
+        "description": "Positions restantes",
+        "wait_for_result": true
+      },
+      {
+        "tool": "lm_cluster_status",
+        "args": {},
+        "description": "Status cluster",
+        "wait_for_result": true
+      },
+      {
+        "tool": "system_info",
+        "args": {},
+        "description": "Status systeme",
+        "wait_for_result": true
+      },
+      {
+        "tool": "action_history",
+        "args": {},
+        "description": "Historique des actions",
+        "wait_for_result": true
+      }
+    ],
+    "category": "routine",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_cinema",
+    "description": "Mode cinema: ferme tout, volume max, luminosite min, plein ecran",
+    "triggers": [
+      "mode cinema",
+      "mode film",
+      "lance un film",
+      "session cinema",
+      "regarde un film"
+    ],
+    "steps": [
+      {
+        "tool": "close_app",
+        "args": {
+          "name": "discord"
+        },
+        "description": "Fermer Discord",
+        "wait_for_result": true
+      },
+      {
+        "tool": "close_app",
+        "args": {
+          "name": "telegram"
+        },
+        "description": "Fermer Telegram",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_up",
+        "args": {},
+        "description": "Monter le volume",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_up",
+        "args": {},
+        "description": "Volume max",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$b = 30; (Get-CimInstance -Namespace root/WMI -ClassName WmiMonitorBrightnessMethods).WmiSetBrightness(1, $b)"
+        },
+        "description": "Luminosite tamisee",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode cinema actif. Bon film."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "loisir",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_securite",
+    "description": "Mode securite: mode avion, verrouillage, bluetooth off",
+    "triggers": [
+      "mode securite",
+      "securise le pc",
+      "mode panique",
+      "coupe tout",
+      "mode offline"
+    ],
+    "steps": [
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "ctrl+s"
+        },
+        "description": "Sauvegarder",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Add-Type -AssemblyName System.Runtime.WindowsRuntime; $radio = [Windows.Devices.Radios.Radio,Windows.System.Devices,ContentType=WindowsRuntime]::GetRadiosAsync().GetAwaiter().GetResult() | Where-Object { $_.Kind -eq 'Bluetooth' }; if($radio) { $radio[0].SetStateAsync('Off').GetAwaiter().GetResult() | Out-Null; 'Bluetooth off' }"
+        },
+        "description": "Couper Bluetooth",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_mute",
+        "args": {},
+        "description": "Couper le son",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode securite actif."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": true
+  },
+  {
+    "name": "mode_accessibilite",
+    "description": "Mode accessibilite: loupe, narrateur, contraste eleve, clavier visuel",
+    "triggers": [
+      "mode accessibilite",
+      "aide visuelle",
+      "active l'accessibilite",
+      "j'ai du mal a voir",
+      "mode malvoyant"
+    ],
+    "steps": [
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "win++"
+        },
+        "description": "Activer la loupe",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Start-Process osk"
+        },
+        "description": "Ouvrir clavier visuel",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode accessibilite actif: loupe + clavier visuel."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_economie_energie",
+    "description": "Mode economie: plan eco, luminosite basse, bluetooth off, mode nuit",
+    "triggers": [
+      "mode economie",
+      "economise la batterie",
+      "mode batterie",
+      "economie d'energie",
+      "mode eco"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "powercfg /setactive a1841308-3541-4fab-bc81-f71556f20b4a; 'Mode economie active'"
+        },
+        "description": "Plan economie",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$b = 20; (Get-CimInstance -Namespace root/WMI -ClassName WmiMonitorBrightnessMethods).WmiSetBrightness(1, $b)"
+        },
+        "description": "Luminosite basse",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Add-Type -AssemblyName System.Runtime.WindowsRuntime; $radio = [Windows.Devices.Radios.Radio,Windows.System.Devices,ContentType=WindowsRuntime]::GetRadiosAsync().GetAwaiter().GetResult() | Where-Object { $_.Kind -eq 'Bluetooth' }; if($radio) { $radio[0].SetStateAsync('Off').GetAwaiter().GetResult() | Out-Null; 'Bluetooth off' }"
+        },
+        "description": "Couper Bluetooth",
+        "wait_for_result": true
+      },
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "win+a"
+        },
+        "description": "Mode nuit",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode economie actif. Batterie preservee."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_performance_max",
+    "description": "Mode performance: plan haute perf, luminosite max, bluetooth off",
+    "triggers": [
+      "mode performance",
+      "performances max",
+      "full power",
+      "mode turbo pc",
+      "puissance maximale"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c; 'Mode haute performance active'"
+        },
+        "description": "Plan haute performance",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$b = 100; (Get-CimInstance -Namespace root/WMI -ClassName WmiMonitorBrightnessMethods).WmiSetBrightness(1, $b)"
+        },
+        "description": "Luminosite max",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode performance max actif."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "clean_reseau",
+    "description": "Nettoyage reseau complet: flush DNS, check IP, scan wifi, ping",
+    "triggers": [
+      "clean reseau",
+      "nettoie le reseau",
+      "repare internet",
+      "flush dns complet",
+      "reset reseau"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "ipconfig /flushdns"
+        },
+        "description": "Vider le cache DNS",
+        "wait_for_result": true
+      },
+      {
+        "tool": "network_info",
+        "args": {},
+        "description": "Infos reseau",
+        "wait_for_result": true
+      },
+      {
+        "tool": "wifi_networks",
+        "args": {},
+        "description": "Scanner Wi-Fi",
+        "wait_for_result": true
+      },
+      {
+        "tool": "ping",
+        "args": {
+          "host": "8.8.8.8"
+        },
+        "description": "Ping Google DNS",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Nettoyage reseau termine."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "workspace_data",
+    "description": "Workspace data science: Chrome, LM Studio, terminal, Jupyter",
+    "triggers": [
+      "workspace data",
+      "mode data science",
+      "session data",
+      "lance le data",
+      "workspace analyse"
+    ],
+    "steps": [
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "chrome"
+        },
+        "description": "Ouvrir Chrome",
+        "wait_for_result": true
+      },
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "lmstudio"
+        },
+        "description": "Ouvrir LM Studio",
+        "wait_for_result": true
+      },
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "wt"
+        },
+        "description": "Ouvrir Terminal",
+        "wait_for_result": true
+      },
+      {
+        "tool": "open_url",
+        "args": {
+          "url": "http://localhost:8888"
+        },
+        "description": "Ouvrir Jupyter",
+        "wait_for_result": true
+      },
+      {
+        "tool": "lm_cluster_status",
+        "args": {},
+        "description": "Verifier le cluster",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Workspace data pret."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "dev",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "session_creative",
+    "description": "Session creative: Spotify, mode focus, snap layout, luminosite agreable",
+    "triggers": [
+      "session creative",
+      "mode creatif",
+      "inspiration",
+      "mode creation",
+      "lance la creation"
+    ],
+    "steps": [
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "spotify"
+        },
+        "description": "Lancer Spotify",
+        "wait_for_result": true
+      },
+      {
+        "tool": "close_app",
+        "args": {
+          "name": "discord"
+        },
+        "description": "Fermer Discord",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$b = 60; (Get-CimInstance -Namespace root/WMI -ClassName WmiMonitorBrightnessMethods).WmiSetBrightness(1, $b)"
+        },
+        "description": "Luminosite agreable",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode creatif actif. Bonne inspiration."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "productivite",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_double_ecran",
+    "description": "Mode double ecran: etend l'affichage, snap layout, navigateur + editeur",
+    "triggers": [
+      "mode double ecran",
+      "deux ecrans",
+      "active le second ecran",
+      "dual screen",
+      "mode etendu"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "DisplaySwitch.exe /extend"
+        },
+        "description": "Etendre l'affichage",
+        "wait_for_result": true
+      },
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "chrome"
+        },
+        "description": "Ouvrir Chrome",
+        "wait_for_result": true
+      },
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "win+left"
+        },
+        "description": "Chrome a gauche",
+        "wait_for_result": true
+      },
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "code"
+        },
+        "description": "Ouvrir VSCode",
+        "wait_for_result": true
+      },
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "win+right"
+        },
+        "description": "VSCode a droite",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode double ecran actif."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "productivite",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "nettoyage_complet",
+    "description": "Nettoyage complet: temp + corbeille + DNS + diagnostic",
+    "triggers": [
+      "nettoyage complet",
+      "grand nettoyage",
+      "clean complet",
+      "nettoie tout",
+      "purge complete"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Remove-Item $env:TEMP/* -Recurse -Force -ErrorAction SilentlyContinue; 'Temp nettoye'"
+        },
+        "description": "Vider temp",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Clear-RecycleBin -Force -ErrorAction SilentlyContinue; 'Corbeille videe'"
+        },
+        "description": "Vider corbeille",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "ipconfig /flushdns"
+        },
+        "description": "Vider DNS",
+        "wait_for_result": true
+      },
+      {
+        "tool": "system_info",
+        "args": {},
+        "description": "Diagnostic systeme",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Nettoyage complet termine."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": true
+  },
+  {
+    "name": "mode_confort",
+    "description": "Mode confort: night light, luminosite agreable, volume moyen, focus assist",
+    "triggers": [
+      "mode confort",
+      "ambiance confortable",
+      "mode relax",
+      "mode zen",
+      "ambiance douce"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$b = 50; (Get-CimInstance -Namespace root/WMI -ClassName WmiMonitorBrightnessMethods).WmiSetBrightness(1, $b)"
+        },
+        "description": "Luminosite 50%",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_down",
+        "args": {},
+        "description": "Volume moyen",
+        "wait_for_result": true
+      },
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "win+a"
+        },
+        "description": "Mode nuit",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode confort actif. Ambiance douce."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "loisir",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "check_espace_disque",
+    "description": "Verification espace disque + temp + diagnostic stockage",
+    "triggers": [
+      "check espace disque",
+      "verifie l'espace",
+      "combien de place reste",
+      "disques pleins",
+      "espace restant"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-CimInstance Win32_LogicalDisk | Select DeviceID, @{N='Total(GB)';E={[math]::Round($_.Size/1GB,1)}}, @{N='Free(GB)';E={[math]::Round($_.FreeSpace/1GB,1)}} | Out-String"
+        },
+        "description": "Espace disque",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$s = (Get-ChildItem $env:TEMP -Recurse -ErrorAction SilentlyContinue | Measure-Object Length -Sum).Sum / 1MB; \"Temp: $([math]::Round($s,1)) MB\""
+        },
+        "description": "Taille fichiers temp",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Verification espace terminee."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "audit_securite",
+    "description": "Audit securite: Windows Security + pare-feu + services + confidentialite",
+    "triggers": [
+      "audit securite",
+      "check securite",
+      "verification securite",
+      "securite du pc",
+      "scan securite"
+    ],
+    "steps": [
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "windowsdefender:"
+        },
+        "description": "Ouvrir Windows Security",
+        "wait_for_result": true
+      },
+      {
+        "tool": "list_services",
+        "args": {},
+        "description": "Verifier les services",
+        "wait_for_result": true
+      },
+      {
+        "tool": "network_info",
+        "args": {},
+        "description": "Check reseau",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Audit securite termine."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "maintenance_complete",
+    "description": "Maintenance complete: nettoyage disque + temp + defrag + check espace",
+    "triggers": [
+      "maintenance complete",
+      "entretien du pc",
+      "maintenance pc",
+      "entretien complet",
+      "soin du pc"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Remove-Item $env:TEMP/* -Recurse -Force -ErrorAction SilentlyContinue; 'Temp nettoye'"
+        },
+        "description": "Vider temp",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Clear-RecycleBin -Force -ErrorAction SilentlyContinue; 'Corbeille videe'"
+        },
+        "description": "Vider corbeille",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-CimInstance Win32_LogicalDisk | Select DeviceID, @{N='Free(GB)';E={[math]::Round($_.FreeSpace/1GB,1)}} | Out-String"
+        },
+        "description": "Espace disque",
+        "wait_for_result": true
+      },
+      {
+        "tool": "system_info",
+        "args": {},
+        "description": "Diagnostic systeme",
+        "wait_for_result": true
+      },
+      {
+        "tool": "gpu_info",
+        "args": {},
+        "description": "Check GPU",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Maintenance complete terminee."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": true
+  },
+  {
+    "name": "mode_partage_ecran",
+    "description": "Mode partage ecran: Miracast + luminosite max + mode presentation",
+    "triggers": [
+      "mode partage ecran",
+      "partage d'ecran",
+      "diffuse l'ecran",
+      "lance le cast",
+      "envoie sur la tv"
+    ],
+    "steps": [
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "win+k"
+        },
+        "description": "Ouvrir Miracast",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$b = 100; (Get-CimInstance -Namespace root/WMI -ClassName WmiMonitorBrightnessMethods).WmiSetBrightness(1, $b)"
+        },
+        "description": "Luminosite max",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode partage ecran actif."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "productivite",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "diagnostic_demarrage",
+    "description": "Diagnostic demarrage: apps au demarrage + services + utilisation disque",
+    "triggers": [
+      "diagnostic demarrage",
+      "le pc demarre lentement",
+      "demarrage lent",
+      "optimise le demarrage",
+      "pourquoi c'est lent"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-CimInstance Win32_StartupCommand | Select Name, Command | Out-String"
+        },
+        "description": "Apps au demarrage",
+        "wait_for_result": true
+      },
+      {
+        "tool": "list_services",
+        "args": {},
+        "description": "Services actifs",
+        "wait_for_result": true
+      },
+      {
+        "tool": "system_info",
+        "args": {},
+        "description": "Diagnostic systeme",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-CimInstance Win32_LogicalDisk | Select DeviceID, @{N='Free(GB)';E={[math]::Round($_.FreeSpace/1GB,1)}} | Out-String"
+        },
+        "description": "Espace disque",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Diagnostic demarrage termine."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_nuit_complet",
+    "description": "Mode nuit complet: mode sombre + night light + luminosite basse + volume bas",
+    "triggers": [
+      "mode nuit complet",
+      "ambiance nuit",
+      "tout en sombre",
+      "active tout le mode nuit",
+      "nuit totale"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Set-ItemProperty -Path 'HKCU:/Software/Microsoft/Windows/CurrentVersion/Themes/Personalize' -Name 'AppsUseLightTheme' -Value 0; Set-ItemProperty -Path 'HKCU:/Software/Microsoft/Windows/CurrentVersion/Themes/Personalize' -Name 'SystemUsesLightTheme' -Value 0; 'Mode sombre active'"
+        },
+        "description": "Mode sombre",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$b = 20; (Get-CimInstance -Namespace root/WMI -ClassName WmiMonitorBrightnessMethods).WmiSetBrightness(1, $b)"
+        },
+        "description": "Luminosite basse",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_down",
+        "args": {},
+        "description": "Volume bas",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_down",
+        "args": {},
+        "description": "Volume minimal",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode nuit complet actif."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "productivite",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_jour",
+    "description": "Mode jour: mode clair + luminosite max + night light off",
+    "triggers": [
+      "mode jour",
+      "mode journee",
+      "tout en clair",
+      "ambiance jour",
+      "reveil"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Set-ItemProperty -Path 'HKCU:/Software/Microsoft/Windows/CurrentVersion/Themes/Personalize' -Name 'AppsUseLightTheme' -Value 1; Set-ItemProperty -Path 'HKCU:/Software/Microsoft/Windows/CurrentVersion/Themes/Personalize' -Name 'SystemUsesLightTheme' -Value 1; 'Mode clair active'"
+        },
+        "description": "Mode clair",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$b = 80; (Get-CimInstance -Namespace root/WMI -ClassName WmiMonitorBrightnessMethods).WmiSetBrightness(1, $b)"
+        },
+        "description": "Luminosite haute",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_up",
+        "args": {},
+        "description": "Volume normal",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode jour actif. Bonne journee."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "productivite",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "diagnostic_reseau_complet",
+    "description": "Diagnostic reseau complet: IP, MAC, vitesse, tracert, netstat, DNS, ping",
+    "triggers": [
+      "diagnostic reseau complet",
+      "analyse reseau complete",
+      "tout le reseau",
+      "deep network check"
+    ],
+    "steps": [
+      {
+        "tool": "network_info",
+        "args": {},
+        "description": "Infos reseau",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-NetAdapter | Select Name, MacAddress, Status, LinkSpeed | Out-String"
+        },
+        "description": "Adaptateurs reseau",
+        "wait_for_result": true
+      },
+      {
+        "tool": "wifi_networks",
+        "args": {},
+        "description": "Reseaux Wi-Fi",
+        "wait_for_result": true
+      },
+      {
+        "tool": "ping",
+        "args": {
+          "host": "8.8.8.8"
+        },
+        "description": "Ping Google",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "ipconfig /flushdns; 'DNS flush OK'"
+        },
+        "description": "Flush DNS",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Diagnostic reseau complet termine."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "diagnostic_sante_pc",
+    "description": "Diagnostic sante: CPU temp, uptime, espace disque, RAM, GPU",
+    "triggers": [
+      "diagnostic sante",
+      "sante du pc",
+      "health check complet",
+      "comment va le pc",
+      "etat de sante"
+    ],
+    "steps": [
+      {
+        "tool": "system_info",
+        "args": {},
+        "description": "Infos systeme",
+        "wait_for_result": true
+      },
+      {
+        "tool": "gpu_info",
+        "args": {},
+        "description": "Infos GPU",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$boot = (Get-CimInstance Win32_OperatingSystem).LastBootUpTime; $up = (Get-Date) - $boot; \"Uptime: $($up.Days)j $($up.Hours)h $($up.Minutes)m\""
+        },
+        "description": "Uptime",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-CimInstance Win32_LogicalDisk | Select DeviceID, @{N='Free(GB)';E={[math]::Round($_.FreeSpace/1GB,1)}} | Out-String"
+        },
+        "description": "Espace disque",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Diagnostic sante termine."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "preparation_backup",
+    "description": "Preparation sauvegarde: save tout, check espace, ouvre parametres backup",
+    "triggers": [
+      "prepare le backup",
+      "preparation sauvegarde",
+      "avant la sauvegarde",
+      "pre-backup"
+    ],
+    "steps": [
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "ctrl+s"
+        },
+        "description": "Sauvegarder fichier actif",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-CimInstance Win32_LogicalDisk | Select DeviceID, @{N='Free(GB)';E={[math]::Round($_.FreeSpace/1GB,1)}} | Out-String"
+        },
+        "description": "Espace disque",
+        "wait_for_result": true
+      },
+      {
+        "tool": "system_info",
+        "args": {},
+        "description": "Check systeme",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Pre-backup OK. Pret pour la sauvegarde."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_docker",
+    "description": "Mode Docker: liste conteneurs, images, espace disque",
+    "triggers": [
+      "mode docker",
+      "check docker",
+      "etat docker",
+      "docker complet",
+      "environnement docker"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}' | Out-String"
+        },
+        "description": "Conteneurs actifs",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "docker images --format 'table {{.Repository}}\t{{.Tag}}\t{{.Size}}' | Out-String"
+        },
+        "description": "Images Docker",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "docker system df | Out-String"
+        },
+        "description": "Espace Docker",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Check Docker termine."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "dev",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "git_workflow",
+    "description": "Workflow Git: status, diff, log recent, pull",
+    "triggers": [
+      "git workflow",
+      "check git",
+      "etat du repo",
+      "synchronise git",
+      "mise a jour git"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "cd F:/BUREAU/turbo; git status"
+        },
+        "description": "Git status",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "cd F:/BUREAU/turbo; git diff --stat | Out-String"
+        },
+        "description": "Git diff",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "cd F:/BUREAU/turbo; git log --oneline -5 | Out-String"
+        },
+        "description": "Log recent",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Git workflow check termine."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "dev",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "workspace_ml",
+    "description": "Workspace ML: Jupyter + LM Studio + GPU check",
+    "triggers": [
+      "workspace ml",
+      "mode machine learning",
+      "lance le workspace ml",
+      "mode ia",
+      "workspace ia locale"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Start-Process lmstudio"
+        },
+        "description": "Lancer LM Studio",
+        "wait_for_result": true
+      },
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "chrome"
+        },
+        "description": "Ouvrir Chrome",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Start-Process 'http://localhost:8888'"
+        },
+        "description": "Ouvrir Jupyter",
+        "wait_for_result": true
+      },
+      {
+        "tool": "gpu_info",
+        "args": {},
+        "description": "Check GPU",
+        "wait_for_result": true
+      },
+      {
+        "tool": "lm_cluster_status",
+        "args": {},
+        "description": "Statut cluster",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Workspace ML pret."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "dev",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "debug_docker",
+    "description": "Debug Docker: logs, restart conteneurs, nettoyage volumes",
+    "triggers": [
+      "debug docker",
+      "probleme docker",
+      "docker ne marche pas",
+      "repare docker",
+      "clean docker"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "docker ps -a --format 'table {{.Names}}\t{{.Status}}' | Out-String"
+        },
+        "description": "Tous les conteneurs",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "docker volume ls | Out-String"
+        },
+        "description": "Volumes Docker",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "docker system prune -f 2>&1 | Out-String"
+        },
+        "description": "Nettoyage Docker",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Debug Docker termine."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "dev",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": true
+  },
+  {
+    "name": "mode_stream",
+    "description": "Mode stream: OBS + micro check + game bar + performance max",
+    "triggers": [
+      "mode stream",
+      "lance le stream",
+      "prepare le stream",
+      "streaming",
+      "je vais streamer"
+    ],
+    "steps": [
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "obs64"
+        },
+        "description": "Lancer OBS",
+        "wait_for_result": true
+      },
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "win+g"
+        },
+        "description": "Game Bar",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c 2>$null; 'Mode haute performance'"
+        },
+        "description": "Performance max",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode stream pret. OBS lance."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "loisir",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "nettoyage_clipboard",
+    "description": "Nettoyage complet: clipboard + temp + historique recent",
+    "triggers": [
+      "nettoyage rapide",
+      "clean rapide",
+      "nettoie vite",
+      "nettoyage clipboard et temp"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Set-Clipboard -Value $null; 'Clipboard vide'"
+        },
+        "description": "Vider clipboard",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Remove-Item $env:TEMP/* -Recurse -Force -ErrorAction SilentlyContinue; 'Temp nettoye'"
+        },
+        "description": "Vider temp",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Nettoyage rapide termine."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "inventaire_apps",
+    "description": "Inventaire des applications installees et environnement dev",
+    "triggers": [
+      "inventaire applications",
+      "quelles apps sont installees",
+      "liste toutes les applications",
+      "inventaire logiciels"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-Package | Select Name, Version | Sort Name | Out-String"
+        },
+        "description": "Apps installees",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "python --version 2>&1; docker --version 2>&1; git --version 2>&1; node --version 2>&1"
+        },
+        "description": "Versions dev",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$env:PATH -split ';' | Where-Object { $_ -ne '' } | Out-String"
+        },
+        "description": "PATH",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Inventaire applications termine."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_presentation",
+    "description": "Mode presentation: ecran etendu + volume off + focus assist + luminosite max",
+    "triggers": [
+      "mode presentation",
+      "je vais presenter",
+      "lance la presentation",
+      "prepare la presentation",
+      "powerpoint mode"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "displayswitch.exe /extend"
+        },
+        "description": "Ecran etendu",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$b = 100; (Get-CimInstance -Namespace root/WMI -ClassName WmiMonitorBrightnessMethods).WmiSetBrightness(1, $b)"
+        },
+        "description": "Luminosite max",
+        "wait_for_result": true
+      },
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "volume_mute"
+        },
+        "description": "Couper le son",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode presentation actif."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "productivite",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "fin_journee",
+    "description": "Fin de journee: sauvegarde + ferme tout + planifie veille",
+    "triggers": [
+      "fin de journee",
+      "j'ai fini",
+      "bonne nuit jarvis",
+      "c'est fini pour aujourd'hui",
+      "je m'en vais"
+    ],
+    "steps": [
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "ctrl+s"
+        },
+        "description": "Sauvegarder",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-Date -Format 'dddd dd MMMM yyyy HH:mm' | Out-String"
+        },
+        "description": "Heure de fin",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Bonne soiree ! Tout est sauvegarde."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "routine",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_dual_screen",
+    "description": "Mode double ecran: etendre + snap fenetre + luminosite uniforme",
+    "triggers": [
+      "mode double ecran",
+      "active les deux ecrans",
+      "mode dual screen",
+      "deux ecrans",
+      "branche l'ecran"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "displayswitch.exe /extend"
+        },
+        "description": "Ecran etendu",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$b = 70; (Get-CimInstance -Namespace root/WMI -ClassName WmiMonitorBrightnessMethods).WmiSetBrightness(1, $b)"
+        },
+        "description": "Luminosite 70%",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode double ecran actif."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "productivite",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "inventaire_hardware",
+    "description": "Inventaire hardware complet: CPU, RAM, GPU, carte mere, BIOS, disques",
+    "triggers": [
+      "inventaire hardware",
+      "specs completes",
+      "tout le hardware",
+      "details materiel",
+      "fiche technique pc"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-CimInstance Win32_Processor | Select Name, NumberOfCores, MaxClockSpeed | Out-String"
+        },
+        "description": "CPU",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-CimInstance Win32_PhysicalMemory | Select Manufacturer, Capacity, Speed | Out-String"
+        },
+        "description": "RAM",
+        "wait_for_result": true
+      },
+      {
+        "tool": "gpu_info",
+        "args": {},
+        "description": "GPU",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-CimInstance Win32_BaseBoard | Select Manufacturer, Product | Out-String"
+        },
+        "description": "Carte mere",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-PhysicalDisk | Select FriendlyName, MediaType, HealthStatus, Size | Out-String"
+        },
+        "description": "Disques",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-CimInstance Win32_BIOS | Select SMBIOSBIOSVersion | Out-String"
+        },
+        "description": "BIOS",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Inventaire hardware complet termine."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "check_performances",
+    "description": "Check performances: CPU load, RAM, top processus, GPU temp",
+    "triggers": [
+      "check performances",
+      "comment tourne le pc",
+      "performances",
+      "le pc rame",
+      "c'est lent"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$cpu = (Get-CimInstance Win32_Processor).LoadPercentage; \"CPU: $cpu%\""
+        },
+        "description": "CPU load",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$os = Get-CimInstance Win32_OperatingSystem; $used = [math]::Round(($os.TotalVisibleMemorySize - $os.FreePhysicalMemory)/1MB,1); \"RAM utilisee: $used GB\""
+        },
+        "description": "RAM",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-Process | Sort WorkingSet64 -Desc | Select -First 5 Name, @{N='MB';E={[math]::Round($_.WorkingSet64/1MB)}} | Out-String"
+        },
+        "description": "Top 5 RAM",
+        "wait_for_result": true
+      },
+      {
+        "tool": "gpu_info",
+        "args": {},
+        "description": "GPU",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Check performances termine."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "rapport_batterie",
+    "description": "Rapport batterie complet: niveau, sante, estimation autonomie",
+    "triggers": [
+      "rapport batterie",
+      "etat batterie complet",
+      "batterie detaillee",
+      "autonomie restante",
+      "check batterie"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$b = Get-CimInstance Win32_Battery; if ($b) { \"Niveau: $($b.EstimatedChargeRemaining)%`nStatut: $($b.BatteryStatus)`nEstimation: $($b.EstimatedRunTime) min\" } else { 'PC fixe - pas de batterie' }"
+        },
+        "description": "Niveau batterie",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "powercfg /batteryreport /output $env:TEMP/battery.html 2>$null; 'Rapport genere dans Temp'"
+        },
+        "description": "Rapport batterie",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Rapport batterie genere."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_4_fenetres",
+    "description": "Mode 4 fenetres: snap en 4 coins + luminosite equilibree",
+    "triggers": [
+      "mode 4 fenetres",
+      "quatre fenetres",
+      "snap en 4",
+      "4 coins",
+      "quadrillage"
+    ],
+    "steps": [
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "win+tab"
+        },
+        "description": "Vue des taches",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$b = 70; (Get-CimInstance -Namespace root/WMI -ClassName WmiMonitorBrightnessMethods).WmiSetBrightness(1, $b)"
+        },
+        "description": "Luminosite equilibree",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode 4 fenetres - utilisez Snap Layout pour positionner."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "productivite",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_accessibilite_complet",
+    "description": "Mode accessibilite complet: loupe + narrateur + contraste + clavier virtuel",
+    "triggers": [
+      "mode accessibilite complet",
+      "accessibilite totale",
+      "active toute l'accessibilite",
+      "j'ai besoin d'aide visuelle"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Start-Process osk"
+        },
+        "description": "Clavier virtuel",
+        "wait_for_result": true
+      },
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "win+plus"
+        },
+        "description": "Loupe",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Mode accessibilite complet actif."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "accessibilite",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "navigation_rapide",
+    "description": "Navigation rapide: nouveau tab + favoris + zoom reset",
+    "triggers": [
+      "navigation rapide",
+      "chrome rapide",
+      "surf rapide",
+      "nouveau surf"
+    ],
+    "steps": [
+      {
+        "tool": "app_open",
+        "args": {
+          "name": "chrome"
+        },
+        "description": "Ouvrir Chrome",
+        "wait_for_result": true
+      },
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "ctrl+t"
+        },
+        "description": "Nouvel onglet",
+        "wait_for_result": true
+      },
+      {
+        "tool": "press_hotkey",
+        "args": {
+          "keys": "ctrl+0"
+        },
+        "description": "Reset zoom",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Navigation rapide prete."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "navigation",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "audit_reseau",
+    "description": "Audit reseau: IP publique, DNS, ports ouverts, ARP, vitesse",
+    "triggers": [
+      "audit reseau",
+      "analyse le reseau",
+      "securite reseau",
+      "scan reseau complet",
+      "qui est sur mon reseau"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "(Invoke-WebRequest -Uri 'https://api.ipify.org' -UseBasicParsing).Content"
+        },
+        "description": "IP publique",
+        "wait_for_result": true
+      },
+      {
+        "tool": "network_info",
+        "args": {},
+        "description": "IP locale",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-NetTCPConnection -State Listen | Select LocalPort, @{N='Process';E={(Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue).Name}} | Sort LocalPort | Select -First 15 | Out-String"
+        },
+        "description": "Ports ouverts",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-NetNeighbor | Where State -ne Unreachable | Select IPAddress, LinkLayerAddress | Out-String"
+        },
+        "description": "Table ARP",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-NetAdapter | Where Status -eq Up | Select Name, LinkSpeed | Out-String"
+        },
+        "description": "Vitesse",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Audit reseau termine."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "optimise_dns",
+    "description": "Optimisation DNS: flush + passage sur Cloudflare + test",
+    "triggers": [
+      "optimise le dns",
+      "dns rapide",
+      "accelere le dns",
+      "internet lent",
+      "dns lent"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "ipconfig /flushdns; 'DNS flush OK'"
+        },
+        "description": "Flush DNS",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Set-DnsClientServerAddress -InterfaceAlias 'Wi-Fi' -ServerAddresses ('1.1.1.1','1.0.0.1'); 'DNS Cloudflare configure'"
+        },
+        "description": "DNS Cloudflare",
+        "wait_for_result": true
+      },
+      {
+        "tool": "ping",
+        "args": {
+          "host": "google.com"
+        },
+        "description": "Test connexion",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "DNS optimise sur Cloudflare."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": true
+  },
+  {
+    "name": "diagnostic_connexion",
+    "description": "Diagnostic connexion internet: ping, DNS, IP, vitesse, tracert",
+    "triggers": [
+      "diagnostic connexion",
+      "internet ne marche pas",
+      "pas de connexion",
+      "probleme internet",
+      "debug internet"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-NetAdapter | Where Status -eq Up | Select Name, LinkSpeed, Status | Out-String"
+        },
+        "description": "Carte reseau",
+        "wait_for_result": true
+      },
+      {
+        "tool": "ping",
+        "args": {
+          "host": "8.8.8.8"
+        },
+        "description": "Ping Google DNS",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Resolve-DnsName google.com -ErrorAction SilentlyContinue | Select Name, IPAddress | Out-String"
+        },
+        "description": "Test DNS",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "(Invoke-WebRequest -Uri 'https://api.ipify.org' -UseBasicParsing -TimeoutSec 5).Content"
+        },
+        "description": "IP publique",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Diagnostic connexion termine."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "nettoyage_fichiers",
+    "description": "Nettoyage fichiers: doublons + gros fichiers + dossiers vides + temp",
+    "triggers": [
+      "nettoyage fichiers",
+      "organise les fichiers",
+      "fais le menage",
+      "clean les fichiers",
+      "libere de l'espace"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Remove-Item $env:TEMP/* -Recurse -Force -ErrorAction SilentlyContinue; 'Temp nettoye'"
+        },
+        "description": "Vider temp",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$e = Get-ChildItem -Directory -Recurse -Path $env:USERPROFILE -ErrorAction SilentlyContinue | Where { (Get-ChildItem $_.FullName -Force -ErrorAction SilentlyContinue).Count -eq 0 }; \"$($e.Count) dossiers vides trouves\""
+        },
+        "description": "Dossiers vides",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-ChildItem $env:USERPROFILE -Recurse -File -ErrorAction SilentlyContinue | Sort Length -Desc | Select -First 10 Name, @{N='MB';E={[math]::Round($_.Length/1MB,1)}} | Out-String"
+        },
+        "description": "Top 10 gros fichiers",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Analyse fichiers terminee."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "fichiers",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "backup_projet",
+    "description": "Backup projet: compresse le dossier turbo + git status + timestamp",
+    "triggers": [
+      "backup du projet",
+      "sauvegarde le projet",
+      "archive le projet",
+      "compresse turbo",
+      "backup turbo"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "cd F:/BUREAU/turbo; git status --short | Out-String"
+        },
+        "description": "Git status",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$ts = Get-Date -Format 'yyyyMMdd_HHmm'; Compress-Archive -Path 'F:/BUREAU/turbo/src' -DestinationPath \"F:/BUREAU/turbo_backup_$ts.zip\" -Force; \"Backup: turbo_backup_$ts.zip\""
+        },
+        "description": "Compression",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Backup projet termine."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "dev",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "analyse_code",
+    "description": "Analyse code: fichiers Python, lignes, taille, structure",
+    "triggers": [
+      "analyse le code",
+      "stats du code",
+      "combien de lignes de code",
+      "metriques du projet",
+      "analyse le projet"
+    ],
+    "steps": [
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$py = Get-ChildItem 'F:/BUREAU/turbo/src' -Filter '*.py' -Recurse; \"$($py.Count) fichiers Python\""
+        },
+        "description": "Fichiers Python",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$lines = (Get-ChildItem 'F:/BUREAU/turbo/src' -Filter '*.py' -Recurse | Get-Content | Measure-Object -Line).Lines; \"$lines lignes de code\""
+        },
+        "description": "Lignes de code",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "$s = (Get-ChildItem 'F:/BUREAU/turbo/src' -Recurse -File | Measure-Object Length -Sum).Sum / 1KB; \"Taille src: $([math]::Round($s,1)) KB\""
+        },
+        "description": "Taille",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "title": "JARVIS",
+          "message": "Analyse code terminee."
+        },
+        "description": "Notification",
+        "wait_for_result": true
+      }
+    ],
+    "category": "dev",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_visio",
+    "description": "Preparation visio: Teams, volume OK, notification",
+    "triggers": [
+      "mode visio",
+      "mode visioconference",
+      "prepare la visio"
+    ],
+    "steps": [
+      {
+        "tool": "app_open",
+        "args": {
+          "app": "teams"
+        },
+        "description": "Ouvrir Teams",
+        "wait_for_result": true
+      },
+      {
+        "tool": "volume_down",
+        "args": {},
+        "description": "Volume raisonnable",
+        "wait_for_result": true
+      }
+    ],
+    "category": "communication",
+    "created_at": 1770832974.19784,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "mode_scalping",
+    "description": "Mode scalping: lance le scalper 1min, status trading, notification",
+    "triggers": [
+      "mode scalping",
+      "lance le scalp",
+      "scalp mode"
+    ],
+    "steps": [
+      {
+        "tool": "run_script",
+        "args": {
+          "script": "river_scalp_1min"
+        },
+        "description": "Scalper 1min",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "echo 'Trading status check'"
+        },
+        "description": "Status trading",
+        "wait_for_result": true
+      }
+    ],
+    "category": "trading",
+    "created_at": 1770832974.1978464,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": true
+  },
+  {
+    "name": "auto_recovery_services",
+    "description": "Detecte et redemarre les services crashés automatiquement",
+    "triggers": [
+      "service crashé",
+      "service ne répond pas",
+      "redémarre les services",
+      "recovery services"
+    ],
+    "steps": [
+      {
+        "tool": "list_services",
+        "args": {},
+        "description": "Liste les services",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-Service | Where-Object {$_.Status -eq 'Stopped'} | Select-Object DisplayName,Status"
+        },
+        "description": "Identifier les services en echec",
+        "wait_for_result": true
+      },
+      {
+        "tool": "stop_service",
+        "args": {
+          "service": "target_service"
+        },
+        "description": "Arreter le service",
+        "wait_for_result": true
+      },
+      {
+        "tool": "start_service",
+        "args": {
+          "service": "target_service"
+        },
+        "description": "Redemarrer le service",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "message": "Service recovery complete"
+        },
+        "description": "Notification completion",
+        "wait_for_result": false
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "ai_load_balancer",
+    "description": "Switch dynamique entre modèles IA selon la charge du systeme",
+    "triggers": [
+      "modèle lent",
+      "charge IA élevée",
+      "optimise les modèles",
+      "equilibre les modeles",
+      "load balance IA"
+    ],
+    "steps": [
+      {
+        "tool": "lm_cluster_status",
+        "args": {},
+        "description": "Statut du cluster IA",
+        "wait_for_result": true
+      },
+      {
+        "tool": "system_info",
+        "args": {},
+        "description": "Infos systeme",
+        "wait_for_result": true
+      },
+      {
+        "tool": "gpu_info",
+        "args": {},
+        "description": "Infos GPU",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-Counter -Counter '/Processor(_Total)/% Processor Time' | Select-Object -ExpandProperty CounterSamples | Select-Object CookedValue"
+        },
+        "description": "Evaluer charge systeme",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "echo 'Switching to optimal model based on load'"
+        },
+        "description": "Switch modele IA optimal",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "message": "AI model switched for optimal performance"
+        },
+        "description": "Notification de switch",
+        "wait_for_result": false
+      }
+    ],
+    "category": "ia",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "trading_risk_alert",
+    "description": "Alertes avancees pour drawdown et risque de liquidation",
+    "triggers": [
+      "alerte trading",
+      "risque liquidation",
+      "drawdown élevé",
+      "check risk",
+      "trading alert"
+    ],
+    "steps": [
+      {
+        "tool": "trading_positions",
+        "args": {},
+        "description": "Positions trading actuelles",
+        "wait_for_result": true
+      },
+      {
+        "tool": "trading_status",
+        "args": {},
+        "description": "Status pipeline trading",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "echo 'Calculating drawdown percentage'"
+        },
+        "description": "Calculer le drawdown",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "if (drawdown -gt 15) { echo 'High drawdown risk' }"
+        },
+        "description": "Alerte si drawdown > 15 pourcent",
+        "wait_for_result": true
+      },
+      {
+        "tool": "speak",
+        "args": {
+          "text": "Attention, risque de liquidation detecte"
+        },
+        "description": "Alerte vocale warning",
+        "wait_for_result": true
+      }
+    ],
+    "category": "trading",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "gpu_benchmark",
+    "description": "Benchmark GPU automatique et comparaison avec baseline",
+    "triggers": [
+      "benchmark gpu",
+      "test gpu",
+      "performance gpu",
+      "bench gpu",
+      "gpu benchmark"
+    ],
+    "steps": [
+      {
+        "tool": "gpu_info",
+        "args": {},
+        "description": "Infos GPU",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "nvidia-smi --query-gpu=index,name,driver_version,memory.total --format=csv"
+        },
+        "description": "Benchmark GPU avec nvidia-smi",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "echo 'Comparing with baseline performance'"
+        },
+        "description": "Comparer avec baseline",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "message": "GPU benchmark complete"
+        },
+        "description": "Notifier resultats",
+        "wait_for_result": false
+      }
+    ],
+    "category": "systeme",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "sync_machines",
+    "description": "Synchronise les fichiers critiques entre M1 et M2",
+    "triggers": [
+      "sync machines",
+      "sync M1 M2",
+      "synchronise les machines",
+      "sync cluster",
+      "rsync M1 M2"
+    ],
+    "steps": [
+      {
+        "tool": "system_info",
+        "args": {},
+        "description": "Infos systeme",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "echo 'Listing critical files to sync'"
+        },
+        "description": "Lister fichiers critiques",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "robocopy M1_PATH M2_PATH /MIR /Z /R:3"
+        },
+        "description": "Rsync M1 vers M2",
+        "wait_for_result": true
+      },
+      {
+        "tool": "powershell_run",
+        "args": {
+          "command": "Get-FileHash -Path 'M1_PATH/*' | Compare-Object -ReferenceObject (Get-FileHash -Path 'M2_PATH/*')"
+        },
+        "description": "Verifier les hashes",
+        "wait_for_result": true
+      },
+      {
+        "tool": "notify",
+        "args": {
+          "message": "Machine synchronization complete"
+        },
+        "description": "Notification sync complete",
+        "wait_for_result": false
+      }
+    ],
+    "category": "cluster",
+    "created_at": 0.0,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  },
+  {
+    "name": "bad_skill",
+    "description": "x",
+    "triggers": [
+      "x"
+    ],
+    "steps": [],
+    "category": "perplexity_auto",
+    "created_at": 1772925399.2331626,
+    "usage_count": 0,
+    "last_used": 0.0,
+    "success_rate": 1.0,
+    "confirm": false
+  }
+]

@@ -1,0 +1,11 @@
+[Unit]
+Description=OpenClaw Engine
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/node /home/turbo/jarvis-m1-ops/openclaw/openclaw.mjs
+WorkingDirectory=/home/turbo/jarvis-m1-ops/openclaw
+Restart=always
+
+[Install]
+WantedBy=default.target
