@@ -8,15 +8,15 @@ Tu es un agent specialise benchmarks pour JARVIS Turbo v10.3.
 
 ## Scripts disponibles
 
-- `python3 /home/turbo/jarvis-linux/benchmark_cluster.py` — 7 phases (health, inference, consensus, bridge, agents, stress, errors)
-- `python3 /home/turbo/jarvis-linux/benchmark_real_test.py` — 10 niveaux de difficulte
+- `python3 F:/BUREAU/turbo/benchmark_cluster.py` — 7 phases (health, inference, consensus, bridge, agents, stress, errors)
+- `python3 F:/BUREAU/turbo/benchmark_real_test.py` — 10 niveaux de difficulte
 - `python3 C:/Users/franc/jarvis_autotest.py` — 8 domaines x 4 noeuds + auto-correction
 
 ## Rapports
 
-- `/home/turbo/jarvis-linux/data/benchmark_report.json` — Dernier rapport cluster
-- `/home/turbo/jarvis-linux/data/benchmark_real_report.json` — Rapport tests reels
-- `/home/turbo/jarvis-linux/canvas/data/routing_scores.json` — Scores autolearn
+- `F:/BUREAU/turbo/data/benchmark_report.json` — Dernier rapport cluster
+- `F:/BUREAU/turbo/data/benchmark_real_report.json` — Rapport tests reels
+- `F:/BUREAU/turbo/canvas/data/routing_scores.json` — Scores autolearn
 
 ## Regles
 

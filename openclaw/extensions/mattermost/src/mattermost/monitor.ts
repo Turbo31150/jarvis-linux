@@ -1596,7 +1596,7 @@ export async function monitorMattermostProvider(opts: MonitorMattermostOpts = {}
       });
     }
 
-    const previewLine = bodyText.slice(0, 200).replace(/\n/g, "\\n");
+    const previewLine = bodyText.slice(0, 200).replace(/\n/g, "/n");
     logVerboseMessage(
       `mattermost inbound: from=${ctxPayload.From} len=${bodyText.length} preview="${previewLine}"`,
     );

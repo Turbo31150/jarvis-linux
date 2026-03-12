@@ -31,12 +31,12 @@ const IMAGE_EXTENSION_NAMES = [
 const IMAGE_EXTENSIONS = new Set(IMAGE_EXTENSION_NAMES.map((ext) => `.${ext}`));
 const IMAGE_EXTENSION_PATTERN = IMAGE_EXTENSION_NAMES.join("|");
 const MEDIA_ATTACHED_PATH_REGEX_SOURCE =
-  "^\\s*(.+?\\.(?:" + IMAGE_EXTENSION_PATTERN + "))\\s*(?:\\(|$|\\|)";
+  "^/s*(.+?/.(?:" + IMAGE_EXTENSION_PATTERN + "))/s*(?:/(|$|/|)";
 const MESSAGE_IMAGE_REGEX_SOURCE =
-  "\\[Image:\\s*source:\\s*([^\\]]+\\.(?:" + IMAGE_EXTENSION_PATTERN + "))\\]";
-const FILE_URL_REGEX_SOURCE = "file://[^\\s<>\"'`\\]]+\\.(?:" + IMAGE_EXTENSION_PATTERN + ")";
+  "/[Image:/s*source:/s*([^/]]+/.(?:" + IMAGE_EXTENSION_PATTERN + "))/]";
+const FILE_URL_REGEX_SOURCE = "file://[^/s<>\"'`/]]+/.(?:" + IMAGE_EXTENSION_PATTERN + ")";
 const PATH_REGEX_SOURCE =
-  "(?:^|\\s|[\"'`(])((\\.\\.?/|[~/])[^\\s\"'`()\\[\\]]*\\.(?:" + IMAGE_EXTENSION_PATTERN + "))";
+  "(?:^|/s|[\"'`(])((/./.?/|[~/])[^/s\"'`()/[/]]*/.(?:" + IMAGE_EXTENSION_PATTERN + "))";
 
 /**
  * Result of detecting an image reference in text.

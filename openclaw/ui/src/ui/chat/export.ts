@@ -13,7 +13,7 @@ export function normalizeSingleLineLabel(label: string, fallback = "Assistant"):
 export function sanitizeFilenameComponent(input: string): string {
   const normalized = normalizeSingleLineLabel(input, "assistant").normalize("NFKC");
   const sanitized = normalized
-    .replace(/[\\/]/g, "-")
+    .replace(/[//]/g, "-")
     .replace(/[^a-zA-Z0-9 _.-]/g, "")
     .replace(/\s+/g, " ")
     .replace(/-+/g, "-")

@@ -10,8 +10,8 @@ type HostEnvSecurityPolicy = {
 };
 
 function parseSwiftStringArray(source: string, marker: string): string[] {
-  const escapedMarker = marker.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const re = new RegExp(`${escapedMarker}[\\s\\S]*?=\\s*\\[([\\s\\S]*?)\\]`, "m");
+  const escapedMarker = marker.replace(/[.*+?^${}()|[\]/]/g, "/$&");
+  const re = new RegExp(`${escapedMarker}[/s/S]*?=/s*/[([/s/S]*?)/]`, "m");
   const match = source.match(re);
   if (!match) {
     throw new Error(`Failed to parse Swift array for marker: ${marker}`);

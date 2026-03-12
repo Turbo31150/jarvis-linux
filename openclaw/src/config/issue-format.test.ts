@@ -44,7 +44,7 @@ describe("config issue format", () => {
         },
         "-",
       ),
-    ).toBe("- gateway.\\nbind: bad\\r\\n\\tvalue");
+    ).toBe("- gateway./nbind: bad/r/n/tvalue");
   });
 
   it("normalizes issue metadata for machine output", () => {

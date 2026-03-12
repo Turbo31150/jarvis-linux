@@ -32,10 +32,10 @@ export function createUnsafeMountedBridge(params: {
     const relativePath =
       relFromRoot && !relFromRoot.startsWith("..") && !path.isAbsolute(relFromRoot)
         ? relFromRoot.split(path.sep).filter(Boolean).join(path.posix.sep)
-        : filePath.replace(/\\/g, "/");
+        : filePath.replace(///g, "/");
 
     const containerPath = filePath.startsWith("/")
-      ? filePath.replace(/\\/g, "/")
+      ? filePath.replace(///g, "/")
       : relativePath
         ? path.posix.join(workspaceContainerRoot, relativePath)
         : workspaceContainerRoot;

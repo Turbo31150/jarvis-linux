@@ -160,7 +160,7 @@ export const discordPlugin: ChannelPlugin<ResolvedDiscordAccount> = {
     resolveToolPolicy: resolveDiscordGroupToolPolicy,
   },
   mentions: {
-    stripPatterns: () => ["<@!?\\d+>"],
+    stripPatterns: () => ["<@!?/d+>"],
   },
   threading: {
     resolveReplyToMode: ({ cfg }) => cfg.channels?.discord?.replyToMode ?? "off",

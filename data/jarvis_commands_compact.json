@@ -2109,7 +2109,7 @@
      "recherche partout {terme}",
      "cherche partout {terme}"
     ],
-    "action": "Get-ChildItem -Path /\ -Recurse -Filter '*{terme}*' -ErrorAction SilentlyContinue | Select -First 20 FullName | Out-String"
+    "action": "Get-ChildItem -Path C:/ -Recurse -Filter '*{terme}*' -ErrorAction SilentlyContinue | Select -First 20 FullName | Out-String"
    },
    {
     "name": "tache_planifier",
@@ -2741,7 +2741,7 @@
      "montre le fichier hosts",
      "affiche hosts"
     ],
-    "action": "Get-Content /\Windows/System32/drivers/etc/hosts"
+    "action": "Get-Content C:/Windows/System32/drivers/etc/hosts"
    },
    {
     "name": "dxdiag",
@@ -3119,7 +3119,7 @@
      "pip list",
      "packages python"
     ],
-    "action": "& '/\Users/franc/.local/bin/uv.exe' run --directory F:/BUREAU/turbo pip list | Out-String"
+    "action": "& 'C:/Users/franc/.local/bin/uv.exe' run --directory F:/BUREAU/turbo pip list | Out-String"
    },
    {
     "name": "python_version",
@@ -3127,7 +3127,7 @@
      "version python",
      "quelle version python"
     ],
-    "action": "& '/\Users/franc/.local/bin/uv.exe' run --directory F:/BUREAU/turbo python --version; & '/\Users/franc/.local/bin/uv.exe' --version"
+    "action": "& 'C:/Users/franc/.local/bin/uv.exe' run --directory F:/BUREAU/turbo python --version; & 'C:/Users/franc/.local/bin/uv.exe' --version"
    },
    {
     "name": "ouvrir_n8n",

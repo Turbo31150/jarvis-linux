@@ -499,7 +499,7 @@ enum CommandResolver {
 
     private static func shellQuote(_ text: String) -> String {
         if text.isEmpty { return "''" }
-        let escaped = text.replacingOccurrences(of: "'", with: "'\\''")
+        let escaped = text.replacingOccurrences(of: "'", with: "'/''")
         return "'\(escaped)'"
     }
 

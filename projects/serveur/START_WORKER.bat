@@ -6,7 +6,7 @@ echo   Machine: %COMPUTERNAME%
 echo ========================================
 echo.
 
-cd /d /CLAUDE_WORKSPACE\SERVER_MANAGER\scripts
+cd /d C:\CLAUDE_WORKSPACE\SERVER_MANAGER\scripts
 
 python worker_server.py
 

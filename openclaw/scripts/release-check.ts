@@ -267,7 +267,7 @@ function checkPluginVersions() {
 }
 
 function extractTag(item: string, tag: string): string | null {
-  const escapedTag = tag.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const escapedTag = tag.replace(/[.*+?^${}()|[\]/]/g, "/$&");
   const regex = new RegExp(`<${escapedTag}>([^<]+)</${escapedTag}>`);
   return regex.exec(item)?.[1]?.trim() ?? null;
 }

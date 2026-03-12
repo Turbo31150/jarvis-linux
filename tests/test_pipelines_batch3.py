@@ -151,31 +151,31 @@ except Exception as e:
 print("\n[PLUGIN MANAGEMENT]")
 
 try:
-    out = ps("$s = Get-Content '/\Users/franc/.claude/settings.json' | ConvertFrom-Json; $count = ($s.plugins | Measure-Object).Count; Write-Output \"$count plugins actifs\"")
+    out = ps("$s = Get-Content 'C:/Users/franc/.claude/settings.json' | ConvertFrom-Json; $count = ($s.plugins | Measure-Object).Count; Write-Output \"$count plugins actifs\"")
     ok("plugin_list_enabled", out[:80])
 except Exception as e:
     fail("plugin_list_enabled", str(e)[:80])
 
 try:
-    out = ps("$p = '/\Users/franc/.claude/plugins/local/jarvis-turbo/plugin.json'; if (Test-Path $p) { $d = Get-Content $p | ConvertFrom-Json; Write-Output \"jarvis-turbo v$($d.version)\" } else { Write-Output 'non trouve' }")
+    out = ps("$p = 'C:/Users/franc/.claude/plugins/local/jarvis-turbo/plugin.json'; if (Test-Path $p) { $d = Get-Content $p | ConvertFrom-Json; Write-Output \"jarvis-turbo v$($d.version)\" } else { Write-Output 'non trouve' }")
     ok("plugin_jarvis_status", out[:80])
 except Exception as e:
     fail("plugin_jarvis_status", str(e)[:80])
 
 try:
-    out = ps("$local = if (Test-Path '/\Users/franc/.claude/plugins/local') { (Get-ChildItem '/\Users/franc/.claude/plugins/local' -Directory | Measure-Object).Count } else { 0 }; $cache = if (Test-Path '/\Users/franc/.claude/plugins/cache') { (Get-ChildItem '/\Users/franc/.claude/plugins/cache' -Directory | Measure-Object).Count } else { 0 }; Write-Output \"local: $local, cache: $cache\"")
+    out = ps("$local = if (Test-Path 'C:/Users/franc/.claude/plugins/local') { (Get-ChildItem 'C:/Users/franc/.claude/plugins/local' -Directory | Measure-Object).Count } else { 0 }; $cache = if (Test-Path 'C:/Users/franc/.claude/plugins/cache') { (Get-ChildItem 'C:/Users/franc/.claude/plugins/cache' -Directory | Measure-Object).Count } else { 0 }; Write-Output \"local: $local, cache: $cache\"")
     ok("plugin_health_check", out[:80])
 except Exception as e:
     fail("plugin_health_check", str(e)[:80])
 
 try:
-    out = ps("$mod = (Get-Item '/\Users/franc/.claude/settings.json').LastWriteTime; Write-Output \"settings.json modifie: $mod\"")
+    out = ps("$mod = (Get-Item 'C:/Users/franc/.claude/settings.json').LastWriteTime; Write-Output \"settings.json modifie: $mod\"")
     ok("plugin_reload_config", out[:80])
 except Exception as e:
     fail("plugin_reload_config", str(e)[:80])
 
 try:
-    out = ps("Get-ChildItem '/\Users/franc/.claude/plugins/local' -Directory -ErrorAction SilentlyContinue | ForEach-Object { $_.Name } | Out-String")
+    out = ps("Get-ChildItem 'C:/Users/franc/.claude/plugins/local' -Directory -ErrorAction SilentlyContinue | ForEach-Object { $_.Name } | Out-String")
     ok("plugin_config_show", out.replace("\n", ", ")[:80] if out else "aucun plugin local")
 except Exception as e:
     fail("plugin_config_show", str(e)[:80])
@@ -238,7 +238,7 @@ except Exception as e:
 print("\n[BRAIN LEARNING & MEMORY]")
 
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); total=c.execute('SELECT COUNT(*) FROM memories').fetchone()[0]; cats=c.execute('SELECT COUNT(DISTINCT category) FROM memories').fetchone()[0]; print(f'{total} memories, {cats} categories'); c.close()\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); total=c.execute('SELECT COUNT(*) FROM memories').fetchone()[0]; cats=c.execute('SELECT COUNT(DISTINCT category) FROM memories').fetchone()[0]; print(f'{total} memories, {cats} categories'); c.close()\" 2>&1")
     ok("brain_memory_status", out[:80])
 except Exception as e:
     fail("brain_memory_status", str(e)[:80])
@@ -250,19 +250,19 @@ except Exception as e:
     fail("brain_pattern_learn", str(e)[:80])
 
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); dupes=c.execute('SELECT key,COUNT(*) FROM memories GROUP BY key HAVING COUNT(*)>1').fetchall(); print(f'{len(dupes)} doublons'); c.close()\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); dupes=c.execute('SELECT key,COUNT(*) FROM memories GROUP BY key HAVING COUNT(*)>1').fetchall(); print(f'{len(dupes)} doublons'); c.close()\" 2>&1")
     ok("brain_memory_consolidate", out[:80])
 except Exception as e:
     fail("brain_memory_consolidate", str(e)[:80])
 
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); r=c.execute('SELECT COUNT(*) FROM memories').fetchone()[0]; print(f'{r} entries exportables'); c.close()\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); r=c.execute('SELECT COUNT(*) FROM memories').fetchone()[0]; print(f'{r} entries exportables'); c.close()\" 2>&1")
     ok("brain_memory_export", out[:80])
 except Exception as e:
     fail("brain_memory_export", str(e)[:80])
 
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); r=c.execute('SELECT category,key,value FROM memories ORDER BY ROWID DESC LIMIT 3').fetchall(); [print(f'  [{cat}] {k}: {v[:50]}') for cat,k,v in r]; c.close()\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); r=c.execute('SELECT category,key,value FROM memories ORDER BY ROWID DESC LIMIT 3').fetchall(); [print(f'  [{cat}] {k}: {v[:50]}') for cat,k,v in r]; c.close()\" 2>&1")
     ok("brain_pattern_search", out[:80])
 except Exception as e:
     fail("brain_pattern_search", str(e)[:80])

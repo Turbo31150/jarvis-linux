@@ -59,13 +59,13 @@ describe("detectCommandObfuscation", () => {
 
   describe("escape sequence obfuscation", () => {
     it("detects multiple octal escapes", () => {
-      const result = detectCommandObfuscation("$'\\143\\141\\164' /etc/passwd");
+      const result = detectCommandObfuscation("$'/143/141/164' /etc/passwd");
       expect(result.detected).toBe(true);
       expect(result.matchedPatterns).toContain("octal-escape");
     });
 
     it("detects multiple hex escapes", () => {
-      const result = detectCommandObfuscation("$'\\x63\\x61\\x74' /etc/passwd");
+      const result = detectCommandObfuscation("$'/x63/x61/x74' /etc/passwd");
       expect(result.detected).toBe(true);
       expect(result.matchedPatterns).toContain("hex-escape");
     });
@@ -114,7 +114,7 @@ describe("detectCommandObfuscation", () => {
 
   describe("alternative execution forms", () => {
     it("detects command substitution decode in shell -c", () => {
-      const result = detectCommandObfuscation('sh -c "$(base64 -d <<< \\"ZWNobyBoaQ==\\")"');
+      const result = detectCommandObfuscation('sh -c "$(base64 -d <<< /"ZWNobyBoaQ==/")"');
       expect(result.detected).toBe(true);
       expect(result.matchedPatterns).toContain("command-substitution-decode-exec");
     });

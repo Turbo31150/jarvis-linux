@@ -229,7 +229,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
   it("ignores node task script hints for gateway restart detection on Windows", () => {
     clearSupervisorHints();
     setPlatform("win32");
-    process.env.OPENCLAW_TASK_SCRIPT = "C:\\openclaw\\node.cmd";
+    process.env.OPENCLAW_TASK_SCRIPT = "C:/openclaw/node.cmd";
     process.env.OPENCLAW_TASK_SCRIPT_NAME = "node.cmd";
     process.env.OPENCLAW_SERVICE_MARKER = "openclaw";
     process.env.OPENCLAW_SERVICE_KIND = "node";

@@ -63,8 +63,8 @@ describe("normalizeInboundTextNewlines", () => {
 
   it("preserves literal backslash-n sequences (Windows paths)", () => {
     // Windows paths like C:\Work\nxxx should NOT have \n converted to newlines
-    expect(normalizeInboundTextNewlines("a\\nb")).toBe("a\\nb");
-    expect(normalizeInboundTextNewlines("C:\\Work\\nxxx")).toBe("C:\\Work\\nxxx");
+    expect(normalizeInboundTextNewlines("a/nb")).toBe("a/nb");
+    expect(normalizeInboundTextNewlines("C:/Work/nxxx")).toBe("C:/Work/nxxx");
   });
 });
 
@@ -135,16 +135,16 @@ describe("finalizeInboundContext", () => {
 
   it("preserves literal backslash-n in Windows paths", () => {
     const ctx: MsgContext = {
-      Body: "C:\\Work\\nxxx\\README.md",
-      RawBody: "C:\\Work\\nxxx\\README.md",
+      Body: "C:/Work/nxxx/README.md",
+      RawBody: "C:/Work/nxxx/README.md",
       ChatType: "direct",
       From: "web:user",
     };
 
     const out = finalizeInboundContext(ctx);
-    expect(out.Body).toBe("C:\\Work\\nxxx\\README.md");
-    expect(out.BodyForAgent).toBe("C:\\Work\\nxxx\\README.md");
-    expect(out.BodyForCommands).toBe("C:\\Work\\nxxx\\README.md");
+    expect(out.Body).toBe("C:/Work/nxxx/README.md");
+    expect(out.BodyForAgent).toBe("C:/Work/nxxx/README.md");
+    expect(out.BodyForCommands).toBe("C:/Work/nxxx/README.md");
   });
 
   it("can force BodyForCommands to follow updated CommandBody", () => {
@@ -397,7 +397,7 @@ describe("mention helpers", () => {
   it("builds regexes and skips invalid patterns", () => {
     const regexes = buildMentionRegexes({
       messages: {
-        groupChat: { mentionPatterns: ["\\bopenclaw\\b", "(invalid"] },
+        groupChat: { mentionPatterns: ["/bopenclaw/b", "(invalid"] },
       },
     });
     expect(regexes).toHaveLength(1);
@@ -410,7 +410,7 @@ describe("mention helpers", () => {
 
   it("matches patterns case-insensitively", () => {
     const regexes = buildMentionRegexes({
-      messages: { groupChat: { mentionPatterns: ["\\bopenclaw\\b"] } },
+      messages: { groupChat: { mentionPatterns: ["/bopenclaw/b"] } },
     });
     expect(matchesMentionPatterns("OPENCLAW: hi", regexes)).toBe(true);
   });
@@ -419,13 +419,13 @@ describe("mention helpers", () => {
     const regexes = buildMentionRegexes(
       {
         messages: {
-          groupChat: { mentionPatterns: ["\\bglobal\\b"] },
+          groupChat: { mentionPatterns: ["/bglobal/b"] },
         },
         agents: {
           list: [
             {
               id: "work",
-              groupChat: { mentionPatterns: ["\\bworkbot\\b"] },
+              groupChat: { mentionPatterns: ["/bworkbot/b"] },
             },
           ],
         },

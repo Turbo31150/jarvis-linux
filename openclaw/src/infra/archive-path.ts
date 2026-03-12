@@ -2,11 +2,11 @@ import path from "node:path";
 import { resolveSafeBaseDir } from "./path-safety.js";
 
 export function isWindowsDrivePath(value: string): boolean {
-  return /^[a-zA-Z]:[\\/]/.test(value);
+  return /^[a-zA-Z]:[//]/.test(value);
 }
 
 export function normalizeArchiveEntryPath(raw: string): string {
-  return raw.replaceAll("\\", "/");
+  return raw.replaceAll("/", "/");
 }
 
 export function validateArchiveEntryPath(

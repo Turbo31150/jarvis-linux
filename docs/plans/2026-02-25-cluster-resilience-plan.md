@@ -866,7 +866,7 @@ Expected: All 3 files exist.
 **Step 5: Final commit**
 
 ```bash
-cd /home/turbo/jarvis-linux && git add -A && git status
+cd F:/BUREAU/turbo && git add -A && git status
 ```
 If clean, we're done. If changes pending:
 ```bash

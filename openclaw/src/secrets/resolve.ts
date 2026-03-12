@@ -35,8 +35,8 @@ const DEFAULT_FILE_MAX_BYTES = 1024 * 1024;
 const DEFAULT_FILE_TIMEOUT_MS = 5_000;
 const DEFAULT_EXEC_TIMEOUT_MS = 5_000;
 const DEFAULT_EXEC_MAX_OUTPUT_BYTES = 1024 * 1024;
-const WINDOWS_ABS_PATH_PATTERN = /^[A-Za-z]:[\\/]/;
-const WINDOWS_UNC_PATH_PATTERN = /^\\\\[^\\]+\\[^\\]+/;
+const WINDOWS_ABS_PATH_PATTERN = /^[A-Za-z]:[//]/;
+const WINDOWS_UNC_PATH_PATTERN = /^//[^/]+/[^/]+/;
 
 export type SecretRefResolveCache = {
   resolvedByRefKey?: Map<string, Promise<unknown>>;

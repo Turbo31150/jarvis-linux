@@ -385,7 +385,7 @@ export async function monitorIMessageProvider(opts: MonitorIMessageOpts = {}): P
     });
 
     if (shouldLogVerbose()) {
-      const preview = truncateUtf16Safe(String(ctxPayload.Body ?? ""), 200).replace(/\n/g, "\\n");
+      const preview = truncateUtf16Safe(String(ctxPayload.Body ?? ""), 200).replace(/\n/g, "/n");
       logVerbose(
         `imessage inbound: chatId=${chatId ?? "unknown"} from=${ctxPayload.From} len=${
           String(ctxPayload.Body ?? "").length

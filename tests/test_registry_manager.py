@@ -228,9 +228,9 @@ class TestSearchValues:
         def mock_enum(key, index):
             call_count[0] += 1
             if call_count[0] == 1:
-                return ("PythonPath", "/\Python", winreg.REG_SZ)
+                return ("PythonPath", "C:/Python", winreg.REG_SZ)
             if call_count[0] == 2:
-                return ("JavaPath", "/\Java", winreg.REG_SZ)
+                return ("JavaPath", "C:/Java", winreg.REG_SZ)
             raise OSError("no more")
 
         with patch("src.registry_manager.winreg.OpenKey", return_value=mock_key), \

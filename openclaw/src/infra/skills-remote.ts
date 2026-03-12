@@ -196,7 +196,7 @@ function collectRequiredBins(entries: SkillEntry[], targetPlatform: string): str
 }
 
 function buildBinProbeScript(bins: string[]): string {
-  const escaped = bins.map((bin) => `'${bin.replace(/'/g, `'\\''`)}'`).join(" ");
+  const escaped = bins.map((bin) => `'${bin.replace(/'/g, `'/''`)}'`).join(" ");
   return `for b in ${escaped}; do if command -v "$b" >/dev/null 2>&1; then echo "$b"; fi; done`;
 }
 

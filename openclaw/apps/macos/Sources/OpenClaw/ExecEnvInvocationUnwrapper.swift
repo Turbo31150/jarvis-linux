@@ -4,7 +4,7 @@ enum ExecCommandToken {
     static func basenameLower(_ token: String) -> String {
         let trimmed = token.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return "" }
-        let normalized = trimmed.replacingOccurrences(of: "\\", with: "/")
+        let normalized = trimmed.replacingOccurrences(of: "/", with: "/")
         return normalized.split(separator: "/").last.map { String($0).lowercased() } ?? normalized.lowercased()
     }
 }

@@ -806,7 +806,7 @@ describe("config help copy quality", () => {
     expect(mode.includes('"safeguard"')).toBe(true);
 
     const historyShare = FIELD_HELP["agents.defaults.compaction.maxHistoryShare"];
-    expect(/0\\.1-0\\.9|fraction|share/i.test(historyShare)).toBe(true);
+    expect(/0/.1-0/.9|fraction|share/i.test(historyShare)).toBe(true);
 
     const identifierPolicy = FIELD_HELP["agents.defaults.compaction.identifierPolicy"];
     expect(identifierPolicy.includes('"strict"')).toBe(true);

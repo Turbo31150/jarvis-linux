@@ -10,7 +10,7 @@ describe("normalizeExecutableToken", () => {
   });
 
   test("normalizes path-qualified windows shims", () => {
-    expect(normalizeExecutableToken("C:\\tools\\bun.cmd")).toBe("bun");
+    expect(normalizeExecutableToken("C:/tools/bun.cmd")).toBe("bun");
     expect(normalizeExecutableToken("/tmp/deno.exe")).toBe("deno");
   });
 });

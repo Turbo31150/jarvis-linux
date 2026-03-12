@@ -7,10 +7,10 @@ function isLikelyPath(value: string): boolean {
   if (value.startsWith(".") || value.startsWith("~")) {
     return true;
   }
-  if (value.includes("/") || value.includes("\\")) {
+  if (value.includes("/") || value.includes("/")) {
     return true;
   }
-  return /^[A-Za-z]:[\\/]/.test(value);
+  return /^[A-Za-z]:[//]/.test(value);
 }
 
 export function isSafeExecutableValue(value: string | null | undefined): boolean {

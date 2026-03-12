@@ -13,7 +13,7 @@ from urllib.request import urlopen, Request
 from urllib.error import URLError
 
 # ── CONFIG ────────────────────────────────────────────────────────────
-BASE = Path("/home/turbo/jarvis-linux")
+BASE = Path("F:/BUREAU/turbo")
 LOG_FILE = BASE / "data" / "supervisor.log"
 ENV_FILE = BASE / ".env"
 CHAT_ID = "2010747443"

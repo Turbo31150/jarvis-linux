@@ -46,7 +46,7 @@ async function assertNoSymlinkTraversal(params: {
   relPath: string;
   originalPath: string;
 }): Promise<void> {
-  const parts = params.relPath.split(/[\\/]+/).filter(Boolean);
+  const parts = params.relPath.split(/[//]+/).filter(Boolean);
   let current = path.resolve(params.rootDir);
   for (const part of parts) {
     current = path.join(current, part);

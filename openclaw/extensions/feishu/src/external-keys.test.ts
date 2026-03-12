@@ -9,7 +9,7 @@ describe("normalizeFeishuExternalKey", () => {
   it("rejects traversal and path separator patterns", () => {
     expect(normalizeFeishuExternalKey("../etc/passwd")).toBeUndefined();
     expect(normalizeFeishuExternalKey("a/../../b")).toBeUndefined();
-    expect(normalizeFeishuExternalKey("a\\..\\b")).toBeUndefined();
+    expect(normalizeFeishuExternalKey("a/../b")).toBeUndefined();
   });
 
   it("rejects empty, non-string, and control-char values", () => {

@@ -346,7 +346,7 @@ const DOCKS: Record<ChatChannelId, ChannelDock> = {
       resolveToolPolicy: resolveDiscordGroupToolPolicy,
     },
     mentions: {
-      stripPatterns: () => ["<@!?\\d+>"],
+      stripPatterns: () => ["<@!?/d+>"],
     },
     threading: {
       resolveReplyToMode: ({ cfg }) => cfg.channels?.discord?.replyToMode ?? "off",

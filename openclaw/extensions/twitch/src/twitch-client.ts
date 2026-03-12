@@ -164,7 +164,7 @@ export class TwitchClientManager {
       if (handler) {
         const normalizedChannel = channelName.startsWith("#") ? channelName.slice(1) : channelName;
         const from = `twitch:${msg.userInfo.userName}`;
-        const preview = messageText.slice(0, 100).replace(/\n/g, "\\n");
+        const preview = messageText.slice(0, 100).replace(/\n/g, "/n");
         this.logger.debug?.(
           `twitch inbound: channel=${normalizedChannel} from=${from} len=${messageText.length} preview="${preview}"`,
         );

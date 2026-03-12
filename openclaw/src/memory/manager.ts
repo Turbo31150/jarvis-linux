@@ -563,7 +563,7 @@ export class MemoryIndexManager extends MemoryManagerEmbeddingOps implements Mem
     const absPath = path.isAbsolute(rawPath)
       ? path.resolve(rawPath)
       : path.resolve(this.workspaceDir, rawPath);
-    const relPath = path.relative(this.workspaceDir, absPath).replace(/\\/g, "/");
+    const relPath = path.relative(this.workspaceDir, absPath).replace(///g, "/");
     const inWorkspace =
       relPath.length > 0 && !relPath.startsWith("..") && !path.isAbsolute(relPath);
     const allowedWorkspace = inWorkspace && isMemoryPath(relPath);

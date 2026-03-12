@@ -124,7 +124,7 @@ function tokenizePattern(source: string): PatternToken[] {
   for (let i = 0; i < source.length; i += 1) {
     const ch = source[i];
 
-    if (ch === "\\") {
+    if (ch === "/") {
       i += 1;
       tokens.push({ kind: "simple-token" });
       continue;

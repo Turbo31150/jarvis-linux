@@ -9,7 +9,7 @@ import pytest
 
 # ─── Test splitMessage via Node.js ─────────────────────────────────────────────
 
-BOT_PATH = "/home/turbo/jarvis-linux/canvas/telegram-bot.js"
+BOT_PATH = "F:/BUREAU/turbo/canvas/telegram-bot.js"
 
 # On teste splitMessage en l'extrayant directement via Node
 SPLIT_JS = """
@@ -209,17 +209,17 @@ class TestEnvLoading:
     def test_env_file_exists(self):
         """Le fichier .env doit exister."""
         import os
-        assert os.path.exists("/home/turbo/jarvis-linux/.env")
+        assert os.path.exists("F:/BUREAU/turbo/.env")
 
     def test_env_has_telegram_token(self):
         """Le .env doit contenir TELEGRAM_TOKEN."""
-        with open("/home/turbo/jarvis-linux/.env") as f:
+        with open("F:/BUREAU/turbo/.env") as f:
             content = f.read()
         assert "TELEGRAM_TOKEN=" in content
 
     def test_env_has_telegram_chat(self):
         """Le .env doit contenir TELEGRAM_CHAT."""
-        with open("/home/turbo/jarvis-linux/.env") as f:
+        with open("F:/BUREAU/turbo/.env") as f:
             content = f.read()
         assert "TELEGRAM_CHAT=" in content
 

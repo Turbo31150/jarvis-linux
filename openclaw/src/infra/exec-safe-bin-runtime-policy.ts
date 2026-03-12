@@ -64,7 +64,7 @@ function normalizeSafeBinName(raw: string): string {
   if (!trimmed) {
     return "";
   }
-  const tail = trimmed.split(/[\\/]/).at(-1);
+  const tail = trimmed.split(/[//]/).at(-1);
   return tail ?? trimmed;
 }
 

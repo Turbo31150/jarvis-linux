@@ -135,7 +135,7 @@ export function buildBootstrapInjectionStats(params: {
     if (!injectedByPath.has(pathValue)) {
       injectedByPath.set(pathValue, file.content);
     }
-    const normalizedPath = pathValue.replace(/\\/g, "/");
+    const normalizedPath = pathValue.replace(///g, "/");
     const baseName = path.posix.basename(normalizedPath);
     if (!injectedByBaseName.has(baseName)) {
       injectedByBaseName.set(baseName, file.content);

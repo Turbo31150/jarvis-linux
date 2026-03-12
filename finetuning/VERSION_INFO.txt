@@ -319,7 +319,7 @@ STATUS:         Production ✓
 RELATED PROJECTS:
   - JARVIS Voice:           /home/turbo/jarvis-linux\voice\
   - JARVIS Cluster:         /home/turbo/jarvis-linux\cluster_startup.py
-  - JARVIS Trading:         /home/turbo\carV1\database\
+  - JARVIS Trading:         F:\BUREAU\carV1\database\
   - LM Studio Config:        127.0.0.1:1234
 
 ================================================================================

@@ -41,7 +41,7 @@ export const clamp = clampNumber;
  * Escapes special regex characters in a string so it can be used in a RegExp constructor.
  */
 export function escapeRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return value.replace(/[.*+?^${}()|[\]/]/g, "/$&");
 }
 
 /**
@@ -349,7 +349,7 @@ export function shortenHomePath(input: string): string {
   if (input === home) {
     return prefix;
   }
-  if (input.startsWith(`${home}/`) || input.startsWith(`${home}\\`)) {
+  if (input.startsWith(`${home}/`) || input.startsWith(`${home}/`)) {
     return `${prefix}${input.slice(home.length)}`;
   }
   return input;

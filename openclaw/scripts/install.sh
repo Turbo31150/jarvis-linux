@@ -538,7 +538,7 @@ npm_log_indicates_missing_build_tools() {
         return 1
     fi
 
-    grep -Eiq "(not found: make|make: command not found|cmake: command not found|CMAKE_MAKE_PROGRAM is not set|Could not find CMAKE|gyp ERR! find Python|no developer tools were found|is not able to compile a simple test program|Failed to build llama\\.cpp|It seems that \"make\" is not installed in your system|It seems that the used \"cmake\" doesn't work properly)" "$log"
+    grep -Eiq "(not found: make|make: command not found|cmake: command not found|CMAKE_MAKE_PROGRAM is not set|Could not find CMAKE|gyp ERR! find Python|no developer tools were found|is not able to compile a simple test program|Failed to build llama/.cpp|It seems that \"make\" is not installed in your system|It seems that the used \"cmake\" doesn't work properly)" "$log"
 }
 
 # Detect Arch-based distributions (Arch Linux, Manjaro, EndeavourOS, etc.)
@@ -1849,7 +1849,7 @@ warn_openclaw_not_found() {
     fi
     if [[ -n "$npm_bin" ]]; then
         echo -e "npm bin -g: ${INFO}${npm_bin}${NC}"
-        echo -e "If needed: ${INFO}export PATH=\"${npm_bin}:\\$PATH\"${NC}"
+        echo -e "If needed: ${INFO}export PATH=\"${npm_bin}:/$PATH\"${NC}"
     fi
 }
 

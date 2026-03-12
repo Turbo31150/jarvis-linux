@@ -111,7 +111,7 @@ asyncio.run(demo())
 **Icon ne change pas?**
 - Updates toutes les 5s
 - Vérifier GPU temp updates via WebSocket
-- Check logs: `/home/turbo/jarvis-linux/logs/tray.log`
+- Check logs: `F:/BUREAU/turbo/logs/tray.log`
 
 ## Tests
 
@@ -137,11 +137,11 @@ python integration_example.py
 ## Monitoring
 
 Logs:
-- `/home/turbo/jarvis-linux/logs/tray.log` - System tray events
-- `/home/turbo/jarvis-linux/logs/notifications.log` - Notifications
+- `F:/BUREAU/turbo/logs/tray.log` - System tray events
+- `F:/BUREAU/turbo/logs/notifications.log` - Notifications
 
 Base de données:
-- `/home/turbo/jarvis-linux/jarvis.db` - SQLite (auto-créée)
+- `F:/BUREAU/turbo/jarvis.db` - SQLite (auto-créée)
 
 ## Configuration avancée
 

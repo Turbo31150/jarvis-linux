@@ -192,13 +192,13 @@ Optionnels:
   • Peut étendre config.py avec settings custom
 
 Base de données:
-  • /home/turbo/jarvis-linux/jarvis.db (SQLite)
+  • F:/BUREAU/turbo/jarvis.db (SQLite)
   • Tables: preferences, notifications, filters
   • Auto-création si manquant
 
 Logs:
-  • /home/turbo/jarvis-linux/logs/tray.log
-  • /home/turbo/jarvis-linux/logs/notifications.log
+  • F:/BUREAU/turbo/logs/tray.log
+  • F:/BUREAU/turbo/logs/notifications.log
   • Format: [TIMESTAMP] [LOGGER] [LEVEL] message
 
 ================================================================================

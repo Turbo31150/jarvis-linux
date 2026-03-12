@@ -15,7 +15,7 @@ function splitCommandLine(value) {
       escaping = false;
       continue;
     }
-    if (ch === "\\" && quote !== "'") {
+    if (ch === "/" && quote !== "'") {
       escaping = true;
       continue;
     }
@@ -42,7 +42,7 @@ function splitCommandLine(value) {
   }
 
   if (escaping) {
-    current += "\\";
+    current += "/";
   }
   if (quote) {
     throw new Error("Invalid agent command: unterminated quote");

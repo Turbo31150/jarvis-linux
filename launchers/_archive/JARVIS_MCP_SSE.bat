@@ -21,6 +21,6 @@ echo Copiez l'URL HTTPS affichee ci-dessous dans Perplexity.
 echo Ajoutez /mcp/ a la fin de l'URL cloudflared.
 echo Exemple: https://xxxx-xx-xx.trycloudflare.com/mcp/
 echo.
-"/Program Files (x86)\cloudflared\cloudflared.exe" tunnel --url http://127.0.0.1:8901
+"C:\Program Files (x86)\cloudflared\cloudflared.exe" tunnel --url http://127.0.0.1:8901
 
 pause

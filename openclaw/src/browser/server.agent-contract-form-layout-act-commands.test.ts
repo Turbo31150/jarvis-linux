@@ -168,7 +168,7 @@ describe("browser control server", () => {
     expect(pwMocks.armFileUploadViaPlaywright).toHaveBeenCalledWith({
       cdpUrl: state.cdpBaseUrl,
       targetId: "abcd1234",
-      // The server resolves paths (which adds a drive letter on Windows for `\\tmp\\...` style roots).
+      // The server resolves paths (which adds a drive letter on Windows for `/tmp/...` style roots).
       paths: [path.resolve(DEFAULT_UPLOAD_DIR, "a.txt")],
       timeoutMs: 1234,
     });

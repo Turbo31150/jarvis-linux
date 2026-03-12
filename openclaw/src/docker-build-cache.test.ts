@@ -58,7 +58,7 @@ describe("docker build cache layout", () => {
 
   it("does not leave empty shell continuation lines in sandbox-common", async () => {
     const dockerfile = await readRepoFile("Dockerfile.sandbox-common");
-    expect(dockerfile).not.toContain("apt-get install -y --no-install-recommends ${PACKAGES} \\");
+    expect(dockerfile).not.toContain("apt-get install -y --no-install-recommends ${PACKAGES} /");
     expect(dockerfile).toContain(
       'RUN if [ "${INSTALL_PNPM}" = "1" ]; then npm install -g pnpm; fi',
     );
@@ -78,7 +78,7 @@ describe("docker build cache layout", () => {
       expect(
         dockerfile,
         `${path} should not have blank lines after a trailing backslash`,
-      ).not.toMatch(/\\\n\s*\n/);
+      ).not.toMatch(//\n\s*\n/);
     }
   });
 

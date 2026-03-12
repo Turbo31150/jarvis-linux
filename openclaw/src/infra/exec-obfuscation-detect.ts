@@ -31,7 +31,7 @@ const OBFUSCATION_PATTERNS: ObfuscationPattern[] = [
   {
     id: "printf-pipe-exec",
     description: "printf with escape sequences piped to shell execution",
-    regex: /printf\s+.*\\x[0-9a-f]{2}.*\|\s*(?:sh|bash|zsh|dash|ksh|fish)\b/i,
+    regex: /printf\s+.*/x[0-9a-f]{2}.*\|\s*(?:sh|bash|zsh|dash|ksh|fish)\b/i,
   },
   {
     id: "eval-decode",
@@ -52,7 +52,7 @@ const OBFUSCATION_PATTERNS: ObfuscationPattern[] = [
     id: "command-substitution-decode-exec",
     description: "Shell -c with command substitution decode/obfuscation",
     regex:
-      /(?:sh|bash|zsh|dash|ksh|fish)\s+-c\s+["'][^"']*\$\([^)]*(?:base64\s+(?:-d|--decode)|xxd\s+-r|printf\s+.*\\x[0-9a-f]{2})[^)]*\)[^"']*["']/i,
+      /(?:sh|bash|zsh|dash|ksh|fish)\s+-c\s+["'][^"']*\$\([^)]*(?:base64\s+(?:-d|--decode)|xxd\s+-r|printf\s+.*/x[0-9a-f]{2})[^)]*\)[^"']*["']/i,
   },
   {
     id: "process-substitution-remote-exec",
@@ -72,12 +72,12 @@ const OBFUSCATION_PATTERNS: ObfuscationPattern[] = [
   {
     id: "octal-escape",
     description: "Bash octal escape sequences (potential command obfuscation)",
-    regex: /\$'(?:[^']*\\[0-7]{3}){2,}/,
+    regex: /\$'(?:[^']*/[0-7]{3}){2,}/,
   },
   {
     id: "hex-escape",
     description: "Bash hex escape sequences (potential command obfuscation)",
-    regex: /\$'(?:[^']*\\x[0-9a-fA-F]{2}){2,}/,
+    regex: /\$'(?:[^']*/x[0-9a-fA-F]{2}){2,}/,
   },
   {
     id: "python-exec-encoded",

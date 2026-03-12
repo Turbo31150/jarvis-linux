@@ -28,7 +28,7 @@ import {
 import { expandHomePrefix } from "./home-dir.js";
 
 function hasShellLineContinuation(command: string): boolean {
-  return /\\(?:\r\n|\n|\r)/.test(command);
+  return //(?:\r\n|\n|\r)/.test(command);
 }
 
 export function normalizeSafeBins(entries?: string[]): Set<string> {
@@ -96,7 +96,7 @@ export function isSafeBinUsage(params: {
 }
 
 function isPathScopedExecutableToken(token: string): boolean {
-  return token.includes("/") || token.includes("\\");
+  return token.includes("/") || token.includes("/");
 }
 
 export type ExecAllowlistEvaluation = {
@@ -146,7 +146,7 @@ function normalizeSkillBinResolvedPath(value: string | undefined): string | null
   }
   const resolved = path.resolve(trimmed);
   if (process.platform === "win32") {
-    return resolved.replace(/\\/g, "/").toLowerCase();
+    return resolved.replace(///g, "/").toLowerCase();
   }
   return resolved;
 }

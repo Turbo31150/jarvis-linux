@@ -27,18 +27,18 @@ const watchers = new Map<string, SkillsWatchState>();
 let globalVersion = 0;
 
 export const DEFAULT_SKILLS_WATCH_IGNORED: RegExp[] = [
-  /(^|[\\/])\.git([\\/]|$)/,
-  /(^|[\\/])node_modules([\\/]|$)/,
-  /(^|[\\/])dist([\\/]|$)/,
+  /(^|[//])\.git([//]|$)/,
+  /(^|[//])node_modules([//]|$)/,
+  /(^|[//])dist([//]|$)/,
   // Python virtual environments and caches
-  /(^|[\\/])\.venv([\\/]|$)/,
-  /(^|[\\/])venv([\\/]|$)/,
-  /(^|[\\/])__pycache__([\\/]|$)/,
-  /(^|[\\/])\.mypy_cache([\\/]|$)/,
-  /(^|[\\/])\.pytest_cache([\\/]|$)/,
+  /(^|[//])\.venv([//]|$)/,
+  /(^|[//])venv([//]|$)/,
+  /(^|[//])__pycache__([//]|$)/,
+  /(^|[//])\.mypy_cache([//]|$)/,
+  /(^|[//])\.pytest_cache([//]|$)/,
   // Build artifacts and caches
-  /(^|[\\/])build([\\/]|$)/,
-  /(^|[\\/])\.cache([\\/]|$)/,
+  /(^|[//])build([//]|$)/,
+  /(^|[//])\.cache([//]|$)/,
 ];
 
 function bumpVersion(current: number): number {
@@ -78,7 +78,7 @@ function resolveWatchPaths(workspaceDir: string, config?: OpenClawConfig): strin
 function toWatchGlobRoot(raw: string): string {
   // Chokidar treats globs as POSIX-ish patterns. Normalize Windows separators
   // so `*` works consistently across platforms.
-  return raw.replaceAll("\\", "/").replace(/\/+$/, "");
+  return raw.replaceAll("/", "/").replace(/\/+$/, "");
 }
 
 function resolveWatchTargets(workspaceDir: string, config?: OpenClawConfig): string[] {

@@ -14,7 +14,7 @@
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "/\",
+        "C:/",
         "F:/"
       ]
     },

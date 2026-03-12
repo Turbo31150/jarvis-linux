@@ -171,7 +171,7 @@ except Exception as e:
     fail("cluster_failover_test", str(e)[:80])
 
 try:
-    out = ps("$lms = '/\Users/franc/.lmstudio/bin/lms.exe'; if (Test-Path $lms) { & $lms version 2>$null } else { 'lms not found' }")
+    out = ps("$lms = 'C:/Users/franc/.lmstudio/bin/lms.exe'; if (Test-Path $lms) { & $lms version 2>$null } else { 'lms not found' }")
     ok("cluster_lms_version", f"LMS: {out[:60]}")
 except Exception as e:
     fail("cluster_lms_version", str(e)[:80])
@@ -180,13 +180,13 @@ except Exception as e:
 print("\n[DATABASE MANAGEMENT]")
 
 try:
-    out = ps("python3 -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); r=c.execute('SELECT name FROM sqlite_master WHERE type=/\"table/\"').fetchall(); print(len(r),'tables:',','.join(x[0] for x in r)); c.close()\"")
+    out = ps("python3 -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); r=c.execute('SELECT name FROM sqlite_master WHERE type=/\"table/\"').fetchall(); print(len(r),'tables:',','.join(x[0] for x in r)); c.close()\"")
     ok("db_etoile_status", out[:80])
 except Exception as e:
     fail("db_etoile_status", str(e)[:80])
 
 try:
-    out = ps("python3 -c \"import sqlite3,os; p='/home/turbo/jarvis-linux/data/etoile.db'; s=os.path.getsize(p)/1024; c=sqlite3.connect(p); t=c.execute('SELECT COUNT(*) FROM map').fetchone()[0]; print(f'{s:.0f}KB {t} entries'); c.close()\"")
+    out = ps("python3 -c \"import sqlite3,os; p='F:/BUREAU/turbo/data/etoile.db'; s=os.path.getsize(p)/1024; c=sqlite3.connect(p); t=c.execute('SELECT COUNT(*) FROM map').fetchone()[0]; print(f'{s:.0f}KB {t} entries'); c.close()\"")
     ok("db_etoile_integrity", out[:80])
 except Exception as e:
     fail("db_etoile_integrity", str(e)[:80])
@@ -198,13 +198,13 @@ except Exception as e:
     fail("db_list_all", str(e)[:80])
 
 try:
-    out = ps("python3 -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); r=c.execute('SELECT category, COUNT(*) FROM memories GROUP BY category').fetchall(); print(dict(r)); c.close()\"")
+    out = ps("python3 -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); r=c.execute('SELECT category, COUNT(*) FROM memories GROUP BY category').fetchall(); print(dict(r)); c.close()\"")
     ok("db_memories_stats", out[:80])
 except Exception as e:
     fail("db_memories_stats", str(e)[:80])
 
 try:
-    out = ps("python3 -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); c.execute('PRAGMA integrity_check'); print('integrity: OK'); c.close()\"")
+    out = ps("python3 -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); c.execute('PRAGMA integrity_check'); print('integrity: OK'); c.close()\"")
     ok("db_backup_check", out[:80])
 except Exception as e:
     fail("db_backup_check", str(e)[:80])
@@ -251,7 +251,7 @@ except Exception as e:
     fail("agent_sdk_version", str(e)[:80])
 
 try:
-    out = ps("python3 -c \"import sys; sys.path.insert(0,'/home/turbo/jarvis-linux'); from agents import AGENTS; print(len(AGENTS),'agents')\" 2>$null")
+    out = ps("python3 -c \"import sys; sys.path.insert(0,'F:/BUREAU/turbo'); from agents import AGENTS; print(len(AGENTS),'agents')\" 2>$null")
     if not out:
         out = ps("if (Test-Path 'F:/BUREAU/turbo/agents.py') { 'agents.py present' } else { 'not found' }")
     ok("agent_list", out[:60])
@@ -259,7 +259,7 @@ except Exception as e:
     fail("agent_list", str(e)[:80])
 
 try:
-    out = ps("python3 -c \"import sys; sys.path.insert(0,'/home/turbo/jarvis-linux/src'); from tools import TOOLS; print(len(TOOLS),'outils MCP')\" 2>$null")
+    out = ps("python3 -c \"import sys; sys.path.insert(0,'F:/BUREAU/turbo/src'); from tools import TOOLS; print(len(TOOLS),'outils MCP')\" 2>$null")
     if not out:
         out = ps("if (Test-Path 'F:/BUREAU/turbo/src/tools.py') { 'tools.py present' } else { 'not found' }")
     ok("agent_tools_count", out[:60])
@@ -303,7 +303,7 @@ except Exception as e:
 print("\n[TRADING AVANCE]")
 
 try:
-    out = ps("python3 -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); r=c.execute('SELECT COUNT(*) FROM map WHERE entity_type=/\"trading_strategy/\"').fetchone()[0]; print(r,'strategies'); c.close()\" 2>$null")
+    out = ps("python3 -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); r=c.execute('SELECT COUNT(*) FROM map WHERE entity_type=/\"trading_strategy/\"').fetchone()[0]; print(r,'strategies'); c.close()\" 2>$null")
     if not out:
         out = "strategies check done"
     ok("trading_strategies", out[:60])
@@ -332,19 +332,19 @@ except Exception as e:
 print("\n[SKILL MANAGEMENT]")
 
 try:
-    out = ps("python3 -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); r=c.execute('SELECT COUNT(*) FROM map WHERE entity_type=/\"skill/\"').fetchone()[0]; print(r,'skills'); c.close()\"")
+    out = ps("python3 -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); r=c.execute('SELECT COUNT(*) FROM map WHERE entity_type=/\"skill/\"').fetchone()[0]; print(r,'skills'); c.close()\"")
     ok("skill_inventory", out[:60])
 except Exception as e:
     fail("skill_inventory", str(e)[:80])
 
 try:
-    out = ps("python3 -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); r=c.execute('SELECT parent, COUNT(*) FROM map WHERE entity_type=/\"skill/\" GROUP BY parent').fetchall(); print(dict(r)); c.close()\"")
+    out = ps("python3 -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); r=c.execute('SELECT parent, COUNT(*) FROM map WHERE entity_type=/\"skill/\" GROUP BY parent').fetchall(); print(dict(r)); c.close()\"")
     ok("skill_categories", out[:80])
 except Exception as e:
     fail("skill_categories", str(e)[:80])
 
 try:
-    out = ps("python3 -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); r=c.execute('SELECT entity_name FROM map WHERE entity_type=/\"skill/\" ORDER BY ROWID DESC LIMIT 5').fetchall(); print([x[0] for x in r]); c.close()\"")
+    out = ps("python3 -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); r=c.execute('SELECT entity_name FROM map WHERE entity_type=/\"skill/\" ORDER BY ROWID DESC LIMIT 5').fetchall(); print([x[0] for x in r]); c.close()\"")
     ok("skill_recent", out[:80])
 except Exception as e:
     fail("skill_recent", str(e)[:80])

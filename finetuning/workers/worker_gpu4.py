@@ -57,7 +57,7 @@ except Exception as e:
 MODEL = "Qwen/Qwen3-8B"
 TRAIN_FILE = r"/home/turbo/jarvis-linux\finetuning\dataset\vocal_chunk_4.jsonl"
 EVAL_FILE = None
-OUTPUT_DIR = Path(r"/home/turbo/jarvis-linux/finetuning/output")
+OUTPUT_DIR = Path(r"F:/BUREAU/turbo/finetuning/output")
 
 _extras = ['F:/BUREAU/turbo/finetuning/dataset/jarvis_trading_augmented.jsonl', 'F:/BUREAU/turbo/finetuning/dataset/jarvis_cot.jsonl', 'F:/BUREAU/turbo/finetuning/dataset/jarvis_augmented_multistep.jsonl', 'F:/BUREAU/turbo/finetuning/dataset/jarvis_memory_enrichment.jsonl']
 _lines = open(TRAIN_FILE, 'r', encoding='utf-8').readlines()

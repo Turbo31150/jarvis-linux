@@ -4,7 +4,7 @@ import { buildTelegramMessageContextForTest } from "./bot-message-context.test-h
 const transcribeFirstAudioMock = vi.fn();
 const DEFAULT_MODEL = "anthropic/claude-opus-4-5";
 const DEFAULT_WORKSPACE = "/tmp/openclaw";
-const DEFAULT_MENTION_PATTERN = "\\bbot\\b";
+const DEFAULT_MENTION_PATTERN = "/bbot/b";
 
 vi.mock("../media-understanding/audio-preflight.js", () => ({
   transcribeFirstAudio: (...args: unknown[]) => transcribeFirstAudioMock(...args),

@@ -11,7 +11,7 @@ const { markdownTheme, searchableSelectListTheme, selectListTheme, theme } =
   await import("./theme.js");
 
 const stripAnsi = (str: string) =>
-  str.replace(new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, "g"), "");
+  str.replace(new RegExp(`${String.fromCharCode(27)}/[[0-9;]*m`, "g"), "");
 
 function relativeLuminance(hex: string): number {
   const channels = hex

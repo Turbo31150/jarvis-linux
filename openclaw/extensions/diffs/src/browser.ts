@@ -477,8 +477,8 @@ function commonExecutablePathsForPlatform(): string[] {
 
   if (process.platform === "win32") {
     const localAppData = process.env.LOCALAPPDATA ?? "";
-    const programFiles = process.env.ProgramFiles ?? "C:\\Program Files";
-    const programFilesX86 = process.env["ProgramFiles(x86)"] ?? "C:\\Program Files (x86)";
+    const programFiles = process.env.ProgramFiles ?? "C:/Program Files";
+    const programFilesX86 = process.env["ProgramFiles(x86)"] ?? "C:/Program Files (x86)";
     return [
       path.join(localAppData, "Google", "Chrome", "Application", "chrome.exe"),
       path.join(programFiles, "Google", "Chrome", "Application", "chrome.exe"),

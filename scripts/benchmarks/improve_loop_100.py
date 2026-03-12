@@ -194,7 +194,7 @@ def _query_node(node: dict, prompt: str) -> dict[str, Any]:
 
         elif node["type"] == "gemini":
             r = subprocess.run(
-                ["node", "/home/turbo/jarvis-linux/gemini-proxy.js", prompt[:2000]],
+                ["node", "F:/BUREAU/turbo/gemini-proxy.js", prompt[:2000]],
                 capture_output=True, text=True, timeout=timeout,
             )
             if r.returncode == 0 and r.stdout.strip():
@@ -206,7 +206,7 @@ def _query_node(node: dict, prompt: str) -> dict[str, Any]:
 
         elif node["type"] == "claude":
             r = subprocess.run(
-                ["node", "/home/turbo/jarvis-linux/claude-proxy.js", prompt[:2000]],
+                ["node", "F:/BUREAU/turbo/claude-proxy.js", prompt[:2000]],
                 capture_output=True, text=True, timeout=timeout,
             )
             if r.returncode == 0 and r.stdout.strip():

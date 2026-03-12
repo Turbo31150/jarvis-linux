@@ -110,7 +110,7 @@ final class CanvasWindowController: NSWindowController, WKNavigationDelegate, NS
                   ' session=' + sessionKey +
                   ' surface=' + userAction.surfaceId +
                   ' component=' + (userAction.sourceComponentId || '-') +
-                  ' host=' + machineName.replace(/\\s+/g, '_') +
+                  ' host=' + machineName.replace(//s+/g, '_') +
                   ' instance=' + instanceId +
                   ctx +
                   ' default=update_canvas';

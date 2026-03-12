@@ -107,16 +107,16 @@ export function isBotMentioned(
 
   // Check for ship mention
   const normalizedBotShip = normalizeShip(botShipName);
-  const escapedShip = normalizedBotShip.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const mentionPattern = new RegExp(`(^|\\s)${escapedShip}(?=\\s|$)`, "i");
+  const escapedShip = normalizedBotShip.replace(/[.*+?^${}()|[\]/]/g, "/$&");
+  const mentionPattern = new RegExp(`(^|/s)${escapedShip}(?=/s|$)`, "i");
   if (mentionPattern.test(messageText)) {
     return true;
   }
 
   // Check for nickname mention (case-insensitive, word boundary)
   if (nickname) {
-    const escapedNickname = nickname.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const nicknamePattern = new RegExp(`(^|\\s)${escapedNickname}(?=\\s|$|[,!?.])`, "i");
+    const escapedNickname = nickname.replace(/[.*+?^${}()|[\]/]/g, "/$&");
+    const nicknamePattern = new RegExp(`(^|/s)${escapedNickname}(?=/s|$|[,!?.])`, "i");
     if (nicknamePattern.test(messageText)) {
       return true;
     }

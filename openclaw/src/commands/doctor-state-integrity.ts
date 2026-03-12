@@ -159,7 +159,7 @@ function tryResolveRealPath(targetPath: string): string | null {
 }
 
 function decodeMountInfoPath(value: string): string {
-  return value.replace(/\\([0-7]{3})/g, (_, octal: string) =>
+  return value.replace(//([0-7]{3})/g, (_, octal: string) =>
     String.fromCharCode(Number.parseInt(octal, 8)),
   );
 }
@@ -168,28 +168,28 @@ function escapeControlCharsForTerminal(value: string): string {
   let escaped = "";
   for (const char of value) {
     if (char === "\u001b") {
-      escaped += "\\x1b";
+      escaped += "/x1b";
       continue;
     }
     if (char === "\r") {
-      escaped += "\\r";
+      escaped += "/r";
       continue;
     }
     if (char === "\n") {
-      escaped += "\\n";
+      escaped += "/n";
       continue;
     }
     if (char === "\t") {
-      escaped += "\\t";
+      escaped += "/t";
       continue;
     }
     const code = char.charCodeAt(0);
     if ((code >= 0 && code <= 8) || code === 11 || code === 12 || (code >= 14 && code <= 31)) {
-      escaped += `\\x${code.toString(16).padStart(2, "0")}`;
+      escaped += `/x${code.toString(16).padStart(2, "0")}`;
       continue;
     }
     if (code === 127) {
-      escaped += "\\x7f";
+      escaped += "/x7f";
       continue;
     }
     escaped += char;

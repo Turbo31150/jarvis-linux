@@ -260,7 +260,7 @@ describe("skills-cli", () => {
 
       expect(parsed.skills[0]?.emoji).toBe("📧");
       expect(parsed.skills[0]?.description).toBe("desc colored");
-      expect(output).not.toContain("\\u001b");
+      expect(output).not.toContain("/u001b");
     });
 
     it("sanitizes skills info JSON output", () => {

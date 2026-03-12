@@ -56,7 +56,7 @@ describe("dns cli", () => {
       const program = new Command();
       registerDnsCli(program);
       await program.parseAsync(["dns", "setup", "--domain", "openclaw.internal"], { from: "user" });
-      const output = log.mock.calls.map((call) => call.join(" ")).join("\\n");
+      const output = log.mock.calls.map((call) => call.join(" ")).join("/n");
       expect(output).toContain("DNS setup");
       expect(output).toContain("openclaw.internal");
     } finally {

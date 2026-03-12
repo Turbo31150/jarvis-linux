@@ -20,7 +20,7 @@ function isSafeRelativeModulePath(raw: string): boolean {
   if (value.includes(":")) {
     return false;
   }
-  const parts = value.split(/[\\/]+/g);
+  const parts = value.split(/[//]+/g);
   if (parts.some((part) => part === "..")) {
     return false;
   }

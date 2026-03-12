@@ -16,8 +16,8 @@ describe("splitSandboxBindSpec", () => {
   });
 
   it("preserves Windows drive-letter host paths", () => {
-    expect(splitSandboxBindSpec("C:\\Users\\kai\\workspace:/workspace:ro")).toEqual({
-      host: "C:\\Users\\kai\\workspace",
+    expect(splitSandboxBindSpec("C:/Users/kai/workspace:/workspace:ro")).toEqual({
+      host: "C:/Users/kai/workspace",
       container: "/workspace",
       options: "ro",
     });

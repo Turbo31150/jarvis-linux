@@ -273,7 +273,7 @@ uv run python finetuning/analyze_results.py
 
 ### Fine-tuné
 - **Type**: LoRA adapters
-- **Chemin**: `/home/turbo/jarvis-linux/finetuning/output/*/final/`
+- **Chemin**: `F:/BUREAU/turbo/finetuning/output/*/final/`
 - **Détection**: Automatique (dernier dossier)
 - **Format**: adapter_config.json + adapter_model.bin
 

@@ -6,10 +6,10 @@ const globRegexCache = new Map<string, RegExp>();
 
 function normalizeMatchTarget(value: string): string {
   if (process.platform === "win32") {
-    const stripped = value.replace(/^\\\\[?.]\\/, "");
-    return stripped.replace(/\\/g, "/").toLowerCase();
+    const stripped = value.replace(/^//[?.]//, "");
+    return stripped.replace(///g, "/").toLowerCase();
   }
-  return value.replace(/\\\\/g, "/");
+  return value.replace(////g, "/");
 }
 
 function tryRealpath(value: string): string | null {
@@ -21,7 +21,7 @@ function tryRealpath(value: string): string | null {
 }
 
 function escapeRegExpLiteral(input: string): string {
-  return input.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return input.replace(/[.*+?^${}()|[\]/]/g, "/$&");
 }
 
 function compileGlobRegex(pattern: string): RegExp {

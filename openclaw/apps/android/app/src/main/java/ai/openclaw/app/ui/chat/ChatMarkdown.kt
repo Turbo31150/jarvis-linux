@@ -76,7 +76,7 @@ import org.commonmark.node.ThematicBreak
 import org.commonmark.parser.Parser
 
 private const val LIST_INDENT_DP = 14
-private val dataImageRegex = Regex("^data:image/([a-zA-Z0-9+.-]+);base64,([A-Za-z0-9+/=\\n\\r]+)$")
+private val dataImageRegex = Regex("^data:image/([a-zA-Z0-9+.-]+);base64,([A-Za-z0-9+/=/n/r]+)$")
 
 private val markdownParser: Parser by lazy {
   val extensions: List<Extension> =

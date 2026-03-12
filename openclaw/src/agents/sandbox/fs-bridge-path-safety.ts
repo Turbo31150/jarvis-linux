@@ -256,7 +256,7 @@ export class SandboxFsPathGuard {
       '  cursor="$parent"',
       "done",
       'canonical=$(readlink -f -- "$cursor")',
-      'printf "%s%s\\n" "$canonical" "$suffix"',
+      'printf "%s%s/n" "$canonical" "$suffix"',
     ].join("\n");
     const result = await this.runCommand(script, {
       args: [params.containerPath, params.allowFinalSymlinkForUnlink ? "1" : "0"],

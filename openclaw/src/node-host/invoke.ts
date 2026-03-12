@@ -291,7 +291,7 @@ function resolveEnvPath(env?: Record<string, string>): string[] {
 }
 
 function resolveExecutable(bin: string, env?: Record<string, string>) {
-  if (bin.includes("/") || bin.includes("\\")) {
+  if (bin.includes("/") || bin.includes("/")) {
     return null;
   }
   const extensions =

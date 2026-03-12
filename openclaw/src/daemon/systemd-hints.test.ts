@@ -18,7 +18,7 @@ describe("isSystemdUnavailableDetail", () => {
 describe("renderSystemdUnavailableHints", () => {
   it("renders WSL2-specific recovery hints", () => {
     expect(renderSystemdUnavailableHints({ wsl: true })).toEqual([
-      "WSL2 needs systemd enabled: edit /etc/wsl.conf with [boot]\\nsystemd=true",
+      "WSL2 needs systemd enabled: edit /etc/wsl.conf with [boot]/nsystemd=true",
       "Then run: wsl --shutdown (from PowerShell) and reopen your distro.",
       "Verify: systemctl --user status",
     ]);

@@ -9,7 +9,7 @@ import sys
 import time
 from pathlib import Path
 
-TURBO = Path("/home/turbo/jarvis-linux")
+TURBO = Path("F:/BUREAU/turbo")
 PYTHON = str(TURBO / ".venv" / "Scripts" / "python.exe")
 SCRIPT = str(TURBO / "cowork" / "dev" / "autonomous_cluster_pipeline.py")
 ARGS = ["--cycles", "100", "--batch", "5", "--pause", "3", "--log"]

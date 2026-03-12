@@ -74,12 +74,12 @@ try:
 except Exception as e: fail("collab_sync_status", str(e)[:80])
 
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"from src.commands_pipelines import PIPELINE_COMMANDS; print(f'{len(PIPELINE_COMMANDS)} pipelines exportables')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"from src.commands_pipelines import PIPELINE_COMMANDS; print(f'{len(PIPELINE_COMMANDS)} pipelines exportables')\" 2>&1")
     ok("collab_commands_export", out[:80])
 except Exception as e: fail("collab_commands_export", str(e)[:80])
 
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); r=c.execute('PRAGMA integrity_check').fetchone()[0]; print(f'integrity: {r}')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); r=c.execute('PRAGMA integrity_check').fetchone()[0]; print(f'integrity: {r}')\" 2>&1")
     ok("collab_db_merge_check", out[:80])
 except Exception as e: fail("collab_db_merge_check", str(e)[:80])
 

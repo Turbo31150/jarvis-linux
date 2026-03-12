@@ -79,7 +79,7 @@ describe("cron protocol conformance", () => {
     for (const relPath of swiftModelFiles) {
       const content = await fs.readFile(path.join(cwd, relPath), "utf-8");
       for (const mode of modes) {
-        const pattern = new RegExp(`\\bcase\\s+${mode}\\b`);
+        const pattern = new RegExp(`/bcase/s+${mode}/b`);
         expect(pattern.test(content), `${relPath} missing case ${mode}`).toBe(true);
       }
     }

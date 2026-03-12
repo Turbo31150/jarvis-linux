@@ -28,7 +28,7 @@ export function resolveMentionTargets(msg: WebInboundMsg, authDir?: string): Men
     ? msg.mentionedJids.map((jid) => jidToE164(jid, jidOptions) ?? jid).filter(Boolean)
     : [];
   const selfE164 = msg.selfE164 ?? (msg.selfJid ? jidToE164(msg.selfJid, jidOptions) : null);
-  const selfJid = msg.selfJid ? msg.selfJid.replace(/:\\d+/, "") : null;
+  const selfJid = msg.selfJid ? msg.selfJid.replace(/:/d+/, "") : null;
   return { normalizedMentions, selfE164, selfJid };
 }
 
@@ -73,7 +73,7 @@ export function isBotMentionedFromTargets(
         return true;
       }
       const bodyNoSpace = msg.body.replace(/[\s-]/g, "");
-      const pattern = new RegExp(`\\+?${selfDigits}`, "i");
+      const pattern = new RegExp(`/+?${selfDigits}`, "i");
       if (pattern.test(bodyNoSpace)) {
         return true;
       }

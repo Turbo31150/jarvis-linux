@@ -434,20 +434,20 @@ class TestClipboard:
 
 class TestFilesAndFolders:
     def test_open_folder(self, mock_subprocess_run):
-        mock_subprocess_run.return_value = _ok("Dossier ouvert: /\Users")
-        result = win.open_folder("/\Users")
+        mock_subprocess_run.return_value = _ok("Dossier ouvert: C:/Users")
+        result = win.open_folder("C:/Users")
         assert "Dossier ouvert" in result
 
     def test_list_folder(self, mock_subprocess_run):
         mock_subprocess_run.return_value = _ok("file1.txt  file2.txt")
-        result = win.list_folder("/\temp", "*.txt")
+        result = win.list_folder("C:/temp", "*.txt")
         assert "file1" in result
         cmd = mock_subprocess_run.call_args[0][0][4]
         assert "*.txt" in cmd
 
     def test_create_folder(self, mock_subprocess_run):
-        mock_subprocess_run.return_value = _ok("/\new_folder")
-        result = win.create_folder("/\new_folder")
+        mock_subprocess_run.return_value = _ok("C:/new_folder")
+        result = win.create_folder("C:/new_folder")
         assert "new_folder" in result
 
     def test_copy_item(self, mock_subprocess_run):
@@ -467,7 +467,7 @@ class TestFilesAndFolders:
 
     def test_read_file(self, mock_subprocess_run):
         mock_subprocess_run.return_value = _ok("line1\nline2")
-        result = win.read_file("/\test.txt", lines=10)
+        result = win.read_file("C:/test.txt", lines=10)
         assert "line1" in result
         cmd = mock_subprocess_run.call_args[0][0][4]
         assert "-TotalCount 10" in cmd
@@ -478,8 +478,8 @@ class TestFilesAndFolders:
         assert "Ecrit" in result
 
     def test_search_files(self, mock_subprocess_run):
-        mock_subprocess_run.return_value = _ok("/\dir/found.py")
-        result = win.search_files("/\dir", "*.py")
+        mock_subprocess_run.return_value = _ok("C:/dir/found.py")
+        result = win.search_files("C:/dir", "*.py")
         assert "found.py" in result
 
 
@@ -507,12 +507,12 @@ class TestAudio:
 
 class TestScreen:
     def test_screenshot_default_filename(self, mock_subprocess_run):
-        mock_subprocess_run.return_value = _ok("/\Desktop/capture.png")
+        mock_subprocess_run.return_value = _ok("C:/Desktop/capture.png")
         result = win.screenshot()
         assert "capture" in result
 
     def test_screenshot_custom_filename(self, mock_subprocess_run):
-        mock_subprocess_run.return_value = _ok("/\Desktop/my_shot.png")
+        mock_subprocess_run.return_value = _ok("C:/Desktop/my_shot.png")
         result = win.screenshot("my_shot.png")
         assert "my_shot" in result
         cmd = mock_subprocess_run.call_args[0][0][4]

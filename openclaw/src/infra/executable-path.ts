@@ -61,7 +61,7 @@ export function resolveExecutablePath(
   options?: { cwd?: string; env?: NodeJS.ProcessEnv },
 ): string | undefined {
   const expanded = rawExecutable.startsWith("~") ? expandHomePrefix(rawExecutable) : rawExecutable;
-  if (expanded.includes("/") || expanded.includes("\\")) {
+  if (expanded.includes("/") || expanded.includes("/")) {
     if (path.isAbsolute(expanded)) {
       return isExecutableFile(expanded) ? expanded : undefined;
     }

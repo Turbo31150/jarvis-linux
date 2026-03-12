@@ -673,7 +673,7 @@ describe("createTelegramBot", () => {
     const expectedTimestamp = formatEnvelopeTimestamp(new Date("2025-01-09T00:00:00Z"));
     const timestampPattern = escapeRegExp(expectedTimestamp);
     expect(payload.Body).toMatch(
-      new RegExp(`^\\[Telegram Ops id:42 (\\+\\d+[smhd] )?${timestampPattern}\\]`),
+      new RegExp(`^/[Telegram Ops id:42 (/+/d+[smhd] )?${timestampPattern}/]`),
     );
     expect(payload.SenderName).toBe("Ada Lovelace");
     expect(payload.SenderId).toBe("99");

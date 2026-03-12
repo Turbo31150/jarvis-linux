@@ -101,7 +101,7 @@ function fileNameFromPathLike(pathLike: string): string | undefined {
     // Not a URL; continue with path-like parsing.
   }
 
-  const normalized = value.replaceAll("\\", "/");
+  const normalized = value.replaceAll("/", "/");
   const candidate = normalized.split("/").filter(Boolean).at(-1);
   return candidate && candidate.length > 0 ? candidate : undefined;
 }

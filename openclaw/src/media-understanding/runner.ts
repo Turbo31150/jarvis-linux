@@ -126,7 +126,7 @@ function expandHomeDir(value: string): string {
 }
 
 function hasPathSeparator(value: string): boolean {
-  return value.includes("/") || value.includes("\\");
+  return value.includes("/") || value.includes("/");
 }
 
 function candidateBinaryNames(name: string): string[] {

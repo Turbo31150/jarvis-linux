@@ -21,7 +21,7 @@ import signal
 from pathlib import Path
 from datetime import datetime
 
-FINETUNING_DIR = Path("/home/turbo/jarvis-linux/finetuning")
+FINETUNING_DIR = Path("F:/BUREAU/turbo/finetuning")
 DATASET_DIR = FINETUNING_DIR / "dataset"
 
 # === GPU DISPATCH CONFIG ===
@@ -202,8 +202,8 @@ except Exception as e:
 MODEL_NAME = "{config["model"]}"
 TRAIN_FILE = r"{config["dataset"]}"
 {eval_setup}
-OUTPUT_DIR = Path(r"/home/turbo/jarvis-linux/finetuning/output")
-OFFLOAD_DIR = r"/home/turbo/jarvis-linux/finetuning/offload/{config["name"]}"
+OUTPUT_DIR = Path(r"F:/BUREAU/turbo/finetuning/output")
+OFFLOAD_DIR = r"F:/BUREAU/turbo/finetuning/offload/{config["name"]}"
 os.makedirs(OFFLOAD_DIR, exist_ok=True)
 
 MAX_STEPS = {config["max_steps"]}

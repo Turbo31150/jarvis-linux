@@ -6,7 +6,7 @@ import Testing
 @Suite struct GatewayEndpointIDTests {
     @Test func stableIDForServiceDecodesAndNormalizesName() {
         let endpoint = NWEndpoint.service(
-            name: "OpenClaw\\032Gateway   \\032  Node\n",
+            name: "OpenClaw/032Gateway   /032  Node\n",
             type: "_openclaw-gw._tcp",
             domain: "local.",
             interface: nil)
@@ -21,13 +21,13 @@ import Testing
 
     @Test func prettyDescriptionDecodesBonjourEscapes() {
         let endpoint = NWEndpoint.service(
-            name: "OpenClaw\\032Gateway",
+            name: "OpenClaw/032Gateway",
             type: "_openclaw-gw._tcp",
             domain: "local.",
             interface: nil)
 
         let pretty = GatewayEndpointID.prettyDescription(endpoint)
         #expect(pretty == BonjourEscapes.decode(String(describing: endpoint)))
-        #expect(!pretty.localizedCaseInsensitiveContains("\\032"))
+        #expect(!pretty.localizedCaseInsensitiveContains("/032"))
     }
 }

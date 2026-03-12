@@ -466,7 +466,7 @@ describe("event creation edge cases", () => {
   it("handles JSON special characters in content", () => {
     const profile: NostrProfile = {
       name: 'test"user',
-      about: "line1\nline2\ttab\\backslash",
+      about: "line1\nline2\ttab/backslash",
     };
 
     const event = createProfileEvent(TEST_SK, profile);
@@ -475,6 +475,6 @@ describe("event creation edge cases", () => {
     expect(parsed.name).toBe('test"user');
     expect(parsed.about).toContain("\n");
     expect(parsed.about).toContain("\t");
-    expect(parsed.about).toContain("\\");
+    expect(parsed.about).toContain("/");
   });
 });

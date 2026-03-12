@@ -48,7 +48,7 @@ export function formatExecCommand(argv: string[]): string {
       if (!needsQuotes) {
         return arg;
       }
-      return `"${arg.replace(/"/g, '\\"')}"`;
+      return `"${arg.replace(/"/g, '/"')}"`;
     })
     .join(" ");
 }

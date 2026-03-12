@@ -57,7 +57,7 @@ CONVERSATIONS = [
         "**Systeme** : Windows 11 Pro, uptime 3j 14h, CPU i9-13900K a 12% d'utilisation.\n"
         "**RAM** : 31.2 GB utilises sur 64 GB (49%) — correct, pas de pression memoire.\n"
         "**GPU** : 5 GPU detectes, GPU 0 a 42°C, 18.56 GB VRAM occupes par qwen3-30b, GPU 1-4 en idle.\n"
-        "**Disques** : /\ 82 GB libres sur 476 GB, F:/ 104 GB libres sur 446 GB.\n\n"
+        "**Disques** : C:/ 82 GB libres sur 476 GB, F:/ 104 GB libres sur 446 GB.\n\n"
         "Verdict : tout est nominal. Aucune intervention requise."
     ),
     make_entry(
@@ -346,9 +346,9 @@ CONVERSATIONS = [
         "Regarde l'espace disque, et si C: a moins de 50 GB libres, lance le disk cleaner",
         "Je verifie l'espace disque.\n\n"
         "**Etape 1** — `system_info` : verification des disques.\n"
-        "  - /\ : 82 GB libres sur 476 GB (17% utilise)\n"
+        "  - C:/ : 82 GB libres sur 476 GB (17% utilise)\n"
         "  - F:/ : 104 GB libres sur 446 GB (77% utilise)\n\n"
-        "/\ a 82 GB de libre, c'est au-dessus du seuil de 50 GB. "
+        "C:/ a 82 GB de libre, c'est au-dessus du seuil de 50 GB. "
         "Pas besoin de lancer le disk cleaner pour le moment.\n\n"
         "F:/ est plus charge avec 77% d'utilisation, principalement a cause du cache de modeles "
         "LM Studio (~300 GB dans `F:/models lmsqtudio`). Si tu veux liberer de l'espace sur F:/, "
@@ -647,7 +647,7 @@ CONVERSATIONS = [
         "  `powershell_run(Remove-Item $env:TEMP/* -Recurse -Force)`\n"
         "  1,847 fichiers supprimes, 3.1 GB liberes.\n\n"
         "**Etape 3 — Verification disques** :\n"
-        "  /\ : 85 GB libres (+3 GB)\n"
+        "  C:/ : 85 GB libres (+3 GB)\n"
         "  F:/ : 104 GB libres\n\n"
         "**Score de sante global : 8.5/10**\n"
         "- CPU : 10/10 (9% utilisation)\n"

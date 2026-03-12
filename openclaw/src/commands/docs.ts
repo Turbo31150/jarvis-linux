@@ -113,7 +113,7 @@ function parseSearchOutput(raw: string): DocResult[] {
 }
 
 function escapeMarkdown(text: string): string {
-  return text.replace(/[()[\]]/g, "\\$&");
+  return text.replace(/[()[\]]/g, "/$&");
 }
 
 function buildMarkdown(query: string, results: DocResult[]): string {

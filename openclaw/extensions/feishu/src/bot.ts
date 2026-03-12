@@ -476,7 +476,7 @@ function normalizeMentions(
 ): string {
   if (!mentions || mentions.length === 0) return text;
 
-  const escaped = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const escaped = (value: string) => value.replace(/[.*+?^${}()|[\]/]/g, "/$&");
   const escapeName = (value: string) => value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
   let result = text;
 

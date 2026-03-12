@@ -31,7 +31,7 @@
   },
   "cloud": {
     "provider": "gemini_cli",
-    "path": "/\Users/franc/AppData/Roaming/npm/gemini.cmd"
+    "path": "C:/Users/franc/AppData/Roaming/npm/gemini.cmd"
   },
   "database": "F:/BUREAU/TRADING_V2_PRODUCTION/database/trading.db",
   "telegram": {

@@ -4,13 +4,13 @@ import { assertSafeWindowsShellArgs, shouldUseShellForCommand } from "../../scri
 describe("scripts/ui windows spawn behavior", () => {
   it("enables shell for Windows command launchers that require cmd.exe", () => {
     expect(
-      shouldUseShellForCommand("C:\\Users\\dev\\AppData\\Local\\pnpm\\pnpm.CMD", "win32"),
+      shouldUseShellForCommand("C:/Users/dev/AppData/Local/pnpm/pnpm.CMD", "win32"),
     ).toBe(true);
-    expect(shouldUseShellForCommand("C:\\tools\\pnpm.bat", "win32")).toBe(true);
+    expect(shouldUseShellForCommand("C:/tools/pnpm.bat", "win32")).toBe(true);
   });
 
   it("does not enable shell for non-shell launchers", () => {
-    expect(shouldUseShellForCommand("C:\\Program Files\\nodejs\\node.exe", "win32")).toBe(false);
+    expect(shouldUseShellForCommand("C:/Program Files/nodejs/node.exe", "win32")).toBe(false);
     expect(shouldUseShellForCommand("/usr/local/bin/pnpm", "linux")).toBe(false);
   });
 

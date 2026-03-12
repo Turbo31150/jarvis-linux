@@ -4,9 +4,9 @@ import { isBunRuntime, isNodeRuntime } from "./runtime-binary.js";
 describe("isNodeRuntime", () => {
   it("recognizes standard node binaries", () => {
     expect(isNodeRuntime("/usr/bin/node")).toBe(true);
-    expect(isNodeRuntime("C:\\Program Files\\nodejs\\node.exe")).toBe(true);
+    expect(isNodeRuntime("C:/Program Files/nodejs/node.exe")).toBe(true);
     expect(isNodeRuntime("/usr/bin/nodejs")).toBe(true);
-    expect(isNodeRuntime("C:\\nodejs.exe")).toBe(true);
+    expect(isNodeRuntime("C:/nodejs.exe")).toBe(true);
   });
 
   it("recognizes versioned node binaries with and without dashes", () => {
@@ -14,13 +14,13 @@ describe("isNodeRuntime", () => {
     expect(isNodeRuntime("/usr/bin/node-24")).toBe(true);
     expect(isNodeRuntime("/usr/bin/node24.1")).toBe(true);
     expect(isNodeRuntime("/usr/bin/node-24.1")).toBe(true);
-    expect(isNodeRuntime("C:\\node24.exe")).toBe(true);
-    expect(isNodeRuntime("C:\\node-24.exe")).toBe(true);
+    expect(isNodeRuntime("C:/node24.exe")).toBe(true);
+    expect(isNodeRuntime("C:/node-24.exe")).toBe(true);
   });
 
   it("handles quotes and casing", () => {
     expect(isNodeRuntime('"/usr/bin/node24"')).toBe(true);
-    expect(isNodeRuntime("'C:\\Program Files\\nodejs\\NODE.EXE'")).toBe(true);
+    expect(isNodeRuntime("'C:/Program Files/nodejs/NODE.EXE'")).toBe(true);
   });
 
   it("rejects non-node runtimes", () => {
@@ -34,7 +34,7 @@ describe("isNodeRuntime", () => {
 describe("isBunRuntime", () => {
   it("recognizes bun binaries", () => {
     expect(isBunRuntime("/usr/bin/bun")).toBe(true);
-    expect(isBunRuntime("C:\\BUN.EXE")).toBe(true);
+    expect(isBunRuntime("C:/BUN.EXE")).toBe(true);
     expect(isBunRuntime('"/opt/homebrew/bin/bun"')).toBe(true);
   });
 

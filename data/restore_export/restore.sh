@@ -643,7 +643,7 @@ cat > .mcp.json << 'MCPEOF'
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "/\",
+        "C:/",
         "F:/"
       ]
     },

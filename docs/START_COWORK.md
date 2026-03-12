@@ -180,7 +180,7 @@ print(f"Queue: {status['queue_size']}")
 
 Les logs sont ecrits dans :
 - **Console** : Tous les evenements importants
-- **Fichier** : `/home/turbo/jarvis-linux/logs/cowork.log`
+- **Fichier** : `F:/BUREAU/turbo/logs/cowork.log`
 - **Event bus** : Events `cowork/task_completed` et `cowork/task_failed`
 
 ---

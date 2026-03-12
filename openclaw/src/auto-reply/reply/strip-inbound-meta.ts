@@ -29,7 +29,7 @@ const [CONVERSATION_INFO_SENTINEL, SENDER_INFO_SENTINEL] = INBOUND_META_SENTINEL
 // Pre-compiled fast-path regex — avoids line-by-line parse when no blocks present.
 const SENTINEL_FAST_RE = new RegExp(
   [...INBOUND_META_SENTINELS, UNTRUSTED_CONTEXT_HEADER]
-    .map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .map((s) => s.replace(/[.*+?^${}()|[\]/]/g, "/$&"))
     .join("|"),
 );
 

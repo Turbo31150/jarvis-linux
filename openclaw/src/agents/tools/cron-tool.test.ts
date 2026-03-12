@@ -268,8 +268,8 @@ describe("cron tool", () => {
     expect(historyParams?.limit).toBe(10);
 
     const text = readCronPayloadText(1);
-    expect(text).not.toMatch(/Message 1\\b/);
-    expect(text).not.toMatch(/Message 2\\b/);
+    expect(text).not.toMatch(/Message 1/b/);
+    expect(text).not.toMatch(/Message 2/b/);
     expect(text).toContain("Message 3");
     expect(text).toContain("Message 12");
   });

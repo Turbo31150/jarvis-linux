@@ -72,7 +72,7 @@ Gateway 网关通过 `config.schema` 暴露配置的 JSON Schema 表示，供 UI
 ```bash
 openclaw gateway call config.get --params '{}' # capture payload.hash
 openclaw gateway call config.apply --params '{
-  "raw": "{\\n  agents: { defaults: { workspace: \\"~/.openclaw/workspace\\" } }\\n}\\n",
+  "raw": "{/n  agents: { defaults: { workspace: /"~/.openclaw/workspace/" } }/n}/n",
   "baseHash": "<hash-from-config.get>",
   "sessionKey": "agent:main:whatsapp:dm:+15555550123",
   "restartDelayMs": 1000
@@ -103,7 +103,7 @@ openclaw gateway call config.apply --params '{
 ```bash
 openclaw gateway call config.get --params '{}' # capture payload.hash
 openclaw gateway call config.patch --params '{
-  "raw": "{\\n  channels: { telegram: { groups: { \\"*\\": { requireMention: false } } } }\\n}\\n",
+  "raw": "{/n  channels: { telegram: { groups: { /"*/": { requireMention: false } } } }/n}/n",
   "baseHash": "<hash-from-config.get>",
   "sessionKey": "agent:main:whatsapp:dm:+15555550123",
   "restartDelayMs": 1000
@@ -475,8 +475,8 @@ OpenClaw 在以下位置存储**每个智能体的**认证配置文件（OAuth +
     redactSensitive: "tools",
     redactPatterns: [
       // 示例：用自定义规则覆盖默认值。
-      "\\bTOKEN\\b\\s*[=:]\\s*([\"']?)([^\\s\"']+)\\1",
-      "/\\bsk-[A-Za-z0-9_-]{8,}\\b/gi",
+      "/bTOKEN/b/s*[=:]/s*([\"']?)([^/s\"']+)/1",
+      "//bsk-[A-Za-z0-9_-]{8,}/b/gi",
     ],
   },
 }
@@ -644,8 +644,8 @@ OpenClaw 在以下位置存储**每个智能体的**认证配置文件（OAuth +
 {
   agents: {
     list: [
-      { id: "work", groupChat: { mentionPatterns: ["@workbot", "\\+15555550123"] } },
-      { id: "personal", groupChat: { mentionPatterns: ["@homebot", "\\+15555550999"] } },
+      { id: "work", groupChat: { mentionPatterns: ["@workbot", "/+15555550123"] } },
+      { id: "personal", groupChat: { mentionPatterns: ["@homebot", "/+15555550999"] } },
     ],
   },
 }

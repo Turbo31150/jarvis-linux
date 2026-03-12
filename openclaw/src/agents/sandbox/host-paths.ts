@@ -2,10 +2,10 @@ import { posix } from "node:path";
 import { resolvePathViaExistingAncestorSync } from "../../infra/boundary-path.js";
 
 function stripWindowsNamespacePrefix(input: string): string {
-  if (input.startsWith("\\\\?\\")) {
+  if (input.startsWith("//?/")) {
     const withoutPrefix = input.slice(4);
-    if (withoutPrefix.toUpperCase().startsWith("UNC\\")) {
-      return `\\\\${withoutPrefix.slice(4)}`;
+    if (withoutPrefix.toUpperCase().startsWith("UNC/")) {
+      return `//${withoutPrefix.slice(4)}`;
     }
     return withoutPrefix;
   }
@@ -27,7 +27,7 @@ export function normalizeSandboxHostPath(raw: string): string {
   if (!trimmed) {
     return "/";
   }
-  const normalized = posix.normalize(trimmed.replaceAll("\\", "/"));
+  const normalized = posix.normalize(trimmed.replaceAll("/", "/"));
   return normalized.replace(/\/+$/, "") || "/";
 }
 

@@ -38,10 +38,10 @@
     {
       "name": "shell wrapper positional argv carrier accepts canonical full argv raw command",
       "command": ["/bin/sh", "-lc", "$0 \"$1\"", "/usr/bin/touch", "/tmp/marker"],
-      "rawCommand": "/bin/sh -lc \"$0 \\\"$1\\\"\" /usr/bin/touch /tmp/marker",
+      "rawCommand": "/bin/sh -lc \"$0 /\"$1/\"\" /usr/bin/touch /tmp/marker",
       "expected": {
         "valid": true,
-        "displayCommand": "/bin/sh -lc \"$0 \\\"$1\\\"\" /usr/bin/touch /tmp/marker"
+        "displayCommand": "/bin/sh -lc \"$0 /\"$1/\"\" /usr/bin/touch /tmp/marker"
       }
     },
     {

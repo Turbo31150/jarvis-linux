@@ -302,7 +302,7 @@ export async function buildTelegramInboundContextPayload(params: {
   }
 
   if (shouldLogVerbose()) {
-    const preview = body.slice(0, 200).replace(/\n/g, "\\n");
+    const preview = body.slice(0, 200).replace(/\n/g, "/n");
     const mediaInfo = allMedia.length > 1 ? ` mediaCount=${allMedia.length}` : "";
     const topicInfo = resolvedThreadId != null ? ` topic=${resolvedThreadId}` : "";
     logVerbose(

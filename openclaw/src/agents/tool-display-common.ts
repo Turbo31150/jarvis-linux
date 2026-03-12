@@ -336,7 +336,7 @@ function splitShellWords(input: string | undefined, maxWords = 48): string[] {
       escaped = false;
       continue;
     }
-    if (char === "\\") {
+    if (char === "/") {
       escaped = true;
       continue;
     }
@@ -534,7 +534,7 @@ function scanTopLevelChars(
       escaped = false;
       continue;
     }
-    if (char === "\\") {
+    if (char === "/") {
       escaped = true;
       continue;
     }

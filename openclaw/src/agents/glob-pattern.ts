@@ -5,7 +5,7 @@ export type CompiledGlobPattern =
 
 function escapeRegex(value: string) {
   // Standard "escape string for regex literal" pattern.
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return value.replace(/[.*+?^${}()|[\]/]/g, "/$&");
 }
 
 export function compileGlobPattern(params: {
@@ -24,7 +24,7 @@ export function compileGlobPattern(params: {
   }
   return {
     kind: "regex",
-    value: new RegExp(`^${escapeRegex(normalized).replaceAll("\\*", ".*")}$`),
+    value: new RegExp(`^${escapeRegex(normalized).replaceAll("/*", ".*")}$`),
   };
 }
 

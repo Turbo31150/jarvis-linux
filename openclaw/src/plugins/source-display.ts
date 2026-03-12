@@ -17,14 +17,14 @@ function tryRelative(root: string, filePath: string): string | null {
   if (rel === "..") {
     return null;
   }
-  if (rel.startsWith(`..${path.sep}`) || rel.startsWith("../") || rel.startsWith("..\\")) {
+  if (rel.startsWith(`..${path.sep}`) || rel.startsWith("../") || rel.startsWith("../")) {
     return null;
   }
   if (path.isAbsolute(rel)) {
     return null;
   }
   // Normalize to forward slashes for display (path.relative uses backslashes on Windows)
-  return rel.replaceAll("\\", "/");
+  return rel.replaceAll("/", "/");
 }
 
 export function resolvePluginSourceRoots(params: { workspaceDir?: string }): PluginSourceRoots {

@@ -2,7 +2,7 @@
 middleware.py - Middleware FastAPI JARVIS
 JSON structured logging, error handling, metrics collector, health probes,
 request tracing, GZIP compression
-Pour /home/turbo/jarvis-linux/src/
+Pour F:/BUREAU/turbo/src/
 """
 
 import asyncio

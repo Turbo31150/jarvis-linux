@@ -167,7 +167,7 @@ async def main():
 
     report = {"ts": datetime.now().isoformat(), "total_s": round(total, 1),
               "ok": ok, "fail": fail, "rankings": ranked, "details": RESULTS}
-    out = "/home/turbo/jarvis-linux/data/bench_round2.json"
+    out = "F:/BUREAU/turbo/data/bench_round2.json"
     with open(out, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2, ensure_ascii=False, default=str)
     print(f"  Sauvegarde: {out}")

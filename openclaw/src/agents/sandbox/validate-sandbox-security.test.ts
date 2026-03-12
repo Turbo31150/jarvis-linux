@@ -124,7 +124,7 @@ describe("validateBindMounts", () => {
 
   it("blocks symlink-parent escapes with non-existent leaf outside allowed roots", () => {
     if (process.platform === "win32") {
-      // Windows source paths (e.g. C:\\...) are intentionally rejected as non-POSIX.
+      // Windows source paths (e.g. C:/...) are intentionally rejected as non-POSIX.
       return;
     }
     const dir = mkdtempSync(join(tmpdir(), "openclaw-sbx-"));
@@ -144,7 +144,7 @@ describe("validateBindMounts", () => {
 
   it("blocks symlink-parent escapes into blocked paths when leaf does not exist", () => {
     if (process.platform === "win32") {
-      // Windows source paths (e.g. C:\\...) are intentionally rejected as non-POSIX.
+      // Windows source paths (e.g. C:/...) are intentionally rejected as non-POSIX.
       return;
     }
     const dir = mkdtempSync(join(tmpdir(), "openclaw-sbx-"));

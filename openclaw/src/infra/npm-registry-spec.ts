@@ -60,7 +60,7 @@ function parseRegistryNpmSpecInternal(
   if (!selector) {
     return { ok: false, error: "unsupported npm spec: missing version/tag after @" };
   }
-  if (/[\\/]/.test(selector)) {
+  if (/[//]/.test(selector)) {
     return { ok: false, error: "unsupported npm spec: invalid version/tag" };
   }
   const exactVersionMatch = EXACT_SEMVER_VERSION_RE.exec(selector);

@@ -127,7 +127,7 @@ object ToolDisplayRegistry {
     val cleaned = name.replace("_", " ").trim()
     if (cleaned.isEmpty()) return "Tool"
     return cleaned
-      .split(Regex("\\s+"))
+      .split(Regex("/s+"))
       .joinToString(" ") { part ->
         val upper = part.uppercase()
         if (part.length <= 2 && part == upper) part

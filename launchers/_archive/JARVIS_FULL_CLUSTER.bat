@@ -31,7 +31,7 @@ timeout /t 2 /nobreak >nul
 echo [5/5] MCP Server + Cloudflare Tunnel (Perplexity)...
 start "JARVIS-MCP" /MIN /home/turbo\.local\bin\uv.exe run python -m src.mcp_server_sse --port 8901 --full
 timeout /t 5 /nobreak >nul
-start "JARVIS-Tunnel" /MIN "/Program Files (x86)\cloudflared\cloudflared.exe" tunnel --url http://127.0.0.1:8901
+start "JARVIS-Tunnel" /MIN "C:\Program Files (x86)\cloudflared\cloudflared.exe" tunnel --url http://127.0.0.1:8901
 
 echo.
 echo ============================================================

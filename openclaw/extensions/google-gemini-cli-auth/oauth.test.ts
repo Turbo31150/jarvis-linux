@@ -37,7 +37,7 @@ vi.mock("node:fs", async (importOriginal) => {
 
 describe("extractGeminiCliCredentials", () => {
   const normalizePath = (value: string) =>
-    value.replace(/\\/g, "/").replace(/\/+$/, "").toLowerCase();
+    value.replace(///g, "/").replace(/\/+$/, "").toLowerCase();
   const rootDir = parse(process.cwd()).root || "/";
   const FAKE_CLIENT_ID = "123456789-abcdef.apps.googleusercontent.com";
   const FAKE_CLIENT_SECRET = "GOCSPX-FakeSecretValue123";

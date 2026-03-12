@@ -145,7 +145,7 @@ export async function materializeSubagentAttachments(params: {
       if (!name) {
         fail("attachments_invalid_name (empty)");
       }
-      if (name.includes("/") || name.includes("\\") || name.includes("\u0000")) {
+      if (name.includes("/") || name.includes("/") || name.includes("\u0000")) {
         fail(`attachments_invalid_name (${name})`);
       }
       // eslint-disable-next-line no-control-regex

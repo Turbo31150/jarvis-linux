@@ -3,7 +3,7 @@ import type { ExecApprovalRequestPayload } from "./exec-approvals.js";
 const UNICODE_FORMAT_CHAR_REGEX = /\p{Cf}/gu;
 
 function formatCodePointEscape(char: string): string {
-  return `\\u{${char.codePointAt(0)?.toString(16).toUpperCase() ?? "FFFD"}}`;
+  return `/u{${char.codePointAt(0)?.toString(16).toUpperCase() ?? "FFFD"}}`;
 }
 
 export function sanitizeExecApprovalDisplayText(commandText: string): string {

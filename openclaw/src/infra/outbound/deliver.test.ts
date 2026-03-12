@@ -502,7 +502,7 @@ describe("deliverOutboundPayloads", () => {
     const cfg: OpenClawConfig = {
       channels: { signal: { textChunkLimit: 20 } },
     };
-    const text = `Intro\\n\\n\`\`\`\`md\\n${"y".repeat(60)}\\n\`\`\`\\n\\nOutro`;
+    const text = `Intro/n/n\`\`\`\`md/n${"y".repeat(60)}/n\`\`\`/n/nOutro`;
     const expectedChunks = markdownToSignalTextChunks(text, 20);
 
     await deliverOutboundPayloads({

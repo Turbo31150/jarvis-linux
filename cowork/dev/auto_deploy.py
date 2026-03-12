@@ -7,7 +7,7 @@ import socket
 import time
 import sys
 
-TURBO_DIR = "/home/turbo/jarvis-linux"
+TURBO_DIR = "F:/BUREAU/turbo"
 SERVICES = {
     "WS": {"port": 9742, "host": "127.0.0.1"},
     "LMStudio": {"port": 1234, "host": "127.0.0.1"},

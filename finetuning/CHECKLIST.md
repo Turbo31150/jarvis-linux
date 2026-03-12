@@ -163,7 +163,7 @@ uv run python finetuning/analyze_results.py
 - [ ] Considérer CPU fallback
 
 ### Si adaptateur LoRA non trouvé
-- [ ] Vérifier chemin: `/home/turbo/jarvis-linux/finetuning/output/*/final/`
+- [ ] Vérifier chemin: `F:/BUREAU/turbo/finetuning/output/*/final/`
 - [ ] Vérifier `adapter_config.json` existe
 - [ ] Benchmark fonctionne sans (modèle base seul)
 

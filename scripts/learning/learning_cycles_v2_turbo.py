@@ -73,7 +73,7 @@ SCENARIOS = [
     {"id":10,"cat":"fichiers","cmd":"affiche la taille du dossier turbo","expected":"Measure-Object","ps":"(Get-ChildItem F:/BUREAU/turbo -Recurse | Measure-Object -Property Length -Sum).Sum / 1MB"},
     {"id":11,"cat":"fichiers","cmd":"cree un fichier texte avec du contenu","expected":"Set-Content","ps":"Set-Content -Path note.txt -Value 'Hello JARVIS'"},
     {"id":12,"cat":"fichiers","cmd":"deplace tous les PNG dans un dossier images","expected":"Move-Item","ps":"Move-Item *.png ./images/ -Force"},
-    {"id":13,"cat":"fichiers","cmd":"affiche les 10 plus gros fichiers du disque","expected":"Sort-Object","ps":"Get-ChildItem /\ -Recurse -File | Sort-Object Length -Desc | Select -First 10"},
+    {"id":13,"cat":"fichiers","cmd":"affiche les 10 plus gros fichiers du disque","expected":"Sort-Object","ps":"Get-ChildItem C:/ -Recurse -File | Sort-Object Length -Desc | Select -First 10"},
     {"id":14,"cat":"fichiers","cmd":"vide la corbeille","expected":"Clear-RecycleBin","ps":"Clear-RecycleBin -Force"},
     {"id":15,"cat":"fichiers","cmd":"ouvre le fichier config.json dans notepad","expected":"notepad","ps":"Start-Process notepad config.json"},
     {"id":16,"cat":"processus","cmd":"liste les processus qui consomment le plus de memoire","expected":"Get-Process","ps":"Get-Process | Sort WorkingSet64 -Desc | Select -First 10"},
@@ -112,7 +112,7 @@ SCENARIOS = [
     {"id":49,"cat":"systeme","cmd":"affiche la RAM disponible","expected":"Get-CimInstance","ps":"Get-CimInstance Win32_OperatingSystem | Select FreePhysicalMemory, TotalVisibleMemorySize"},
     {"id":50,"cat":"systeme","cmd":"affiche la temperature GPU","expected":"nvidia-smi","ps":"nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader"},
     {"id":51,"cat":"systeme","cmd":"affiche les variables d'environnement","expected":"Env:","ps":"Get-ChildItem Env: | Sort Name"},
-    {"id":52,"cat":"systeme","cmd":"ajoute un chemin au PATH","expected":"Environment","ps":"[Environment]::SetEnvironmentVariable('Path', $env:Path+';/\New', 'User')"},
+    {"id":52,"cat":"systeme","cmd":"ajoute un chemin au PATH","expected":"Environment","ps":"[Environment]::SetEnvironmentVariable('Path', $env:Path+';C:/New', 'User')"},
     {"id":53,"cat":"systeme","cmd":"planifie un redemarrage dans 1 heure","expected":"shutdown","ps":"shutdown /r /t 3600"},
     {"id":54,"cat":"systeme","cmd":"annule le redemarrage planifie","expected":"shutdown /a","ps":"shutdown /a"},
     {"id":55,"cat":"systeme","cmd":"affiche les evenements systeme recents","expected":"Get-EventLog","ps":"Get-EventLog -LogName System -Newest 10"},
@@ -205,7 +205,7 @@ async def call_gemini(prompt, sem):
         t0 = time.time()
         try:
             proc = await asyncio.create_subprocess_exec(
-                "node", "/home/turbo/jarvis-linux/gemini-proxy.js", prompt,
+                "node", "F:/BUREAU/turbo/gemini-proxy.js", prompt,
                 stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
             stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=TIMEOUT)
             content = stdout.decode("utf-8", errors="replace").strip()
@@ -335,7 +335,7 @@ async def run():
         "stats": dict(stats),
         "results": full_results
     }
-    outpath = Path("/home/turbo/jarvis-linux/data") / f"learning_v2_{datetime.now().strftime('%Y%m%d_%H%M')}.json"
+    outpath = Path("F:/BUREAU/turbo/data") / f"learning_v2_{datetime.now().strftime('%Y%m%d_%H%M')}.json"
     outpath.parent.mkdir(exist_ok=True)
     outpath.write_text(json.dumps(report, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
     print(f"\nRapport: {outpath}", flush=True)

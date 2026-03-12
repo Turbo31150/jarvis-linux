@@ -217,7 +217,7 @@ def collect_infra_metrics():
                 "F:/", None, None, ctypes.pointer(free))
             metrics["disk_f_free_gb"] = round(free.value / (1024**3), 1)
             ctypes.windll.kernel32.GetDiskFreeSpaceExW(
-                "/\", None, None, ctypes.pointer(free))
+                "C:/", None, None, ctypes.pointer(free))
             metrics["disk_c_free_gb"] = round(free.value / (1024**3), 1)
     except Exception:
         pass

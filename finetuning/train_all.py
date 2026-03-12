@@ -21,7 +21,7 @@ import time
 from pathlib import Path
 from datetime import datetime
 
-FINETUNING_DIR = Path("/home/turbo/jarvis-linux/finetuning")
+FINETUNING_DIR = Path("F:/BUREAU/turbo/finetuning")
 DATASET_DIR = FINETUNING_DIR / "dataset"
 OUTPUT_DIR = FINETUNING_DIR / "output"
 PYTHON_EXE = r"/home/turbo\AppData\Local\Programs\Python\Python312\python.exe"
@@ -210,7 +210,7 @@ except Exception as e:
 MODEL = "Qwen/Qwen3-8B"
 TRAIN_FILE = r"{cfg['dataset']}"
 {eval_line}
-OUTPUT_DIR = Path(r"/home/turbo/jarvis-linux/finetuning/output")
+OUTPUT_DIR = Path(r"F:/BUREAU/turbo/finetuning/output")
 {extra_merge}
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 run_name = f"jarvis-qwen3-8b-{name}-{{timestamp}}"

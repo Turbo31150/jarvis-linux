@@ -130,7 +130,7 @@ Le script détecte automatiquement le dernier adaptateur LoRA créé:
 Pour forcer un adaptateur spécifique, éditer:
 ```python
 # Dans benchmark.py, ligne ~80
-self.lora_adapter_path = Path("/home/turbo/jarvis-linux/finetuning/output/checkpoint-XXX/final")
+self.lora_adapter_path = Path("F:/BUREAU/turbo/finetuning/output/checkpoint-XXX/final")
 ```
 
 ## Interprétation des résultats

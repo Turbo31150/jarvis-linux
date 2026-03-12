@@ -90,7 +90,7 @@ def main():
         print("  OK")
 
     # Clean lock file
-    lock = "/home/turbo/jarvis-linux/data/.linkedin-scheduler.lock"
+    lock = "F:/BUREAU/turbo/data/.linkedin-scheduler.lock"
     try:
         os.unlink(lock)
         print(f"\nLock file removed: {lock}")

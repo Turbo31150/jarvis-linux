@@ -16,7 +16,7 @@ Usage:
 import json
 from pathlib import Path
 
-TURBO_DIR = Path("/home/turbo/jarvis-linux")
+TURBO_DIR = Path("F:/BUREAU/turbo")
 OUTPUT_DIR = TURBO_DIR / "finetuning" / "dataset"
 
 SYSTEM_PROMPT = (
@@ -62,7 +62,7 @@ COT_ROUTING = [
             "1. 'Ca rame' = probleme de performance systeme\n"
             "2. Je dois diagnostiquer: CPU, RAM, disque, GPU\n"
             "3. Outils disponibles: powershell_execute pour Get-Process, nvidia-smi\n"
-            "4. Verifier aussi l'espace disque (F:/ et /\)\n"
+            "4. Verifier aussi l'espace disque (F:/ et C:/)\n"
             "5. Commencer par les processus les plus gourmands en CPU/RAM\n"
             "6. Utiliser le sous-agent ia-system (Haiku) pour un diagnostic rapide"
         ),
@@ -71,7 +71,7 @@ COT_ROUTING = [
             "Verification en cours:\n"
             "1. Processus les plus gourmands (CPU/RAM)\n"
             "2. Utilisation VRAM des 5 GPUs\n"
-            "3. Espace disque /\ et F:/\n"
+            "3. Espace disque C:/ et F:/\n"
             "4. Services en arriere-plan\n\n"
             "Je t'affiche les resultats dans quelques secondes."
         ),
@@ -501,7 +501,7 @@ COT_MULTISTEP = [
             "L'utilisateur manque d'espace disque. "
             "Chaine de reflexion:\n"
             "1. Verifier quel disque est plein:\n"
-            "   - /\ devrait avoir 82+ GB libre\n"
+            "   - C:/ devrait avoir 82+ GB libre\n"
             "   - F:/ devrait avoir 104+ GB libre\n"
             "2. Sources de fichiers volumineux:\n"
             "   - Cache HuggingFace: ~/.cache/huggingface (~300 GB de modeles)\n"
@@ -521,7 +521,7 @@ COT_MULTISTEP = [
         "response": (
             "Je lance un audit d'espace disque.\n\n"
             "Verification en cours:\n"
-            "1. Espace libre /\ et F:/\n"
+            "1. Espace libre C:/ et F:/\n"
             "2. Plus gros dossiers (cache modeles, archives)\n"
             "3. Fichiers temporaires nettoyables\n\n"
             "Je te proposerai les actions de nettoyage avec les tailles avant de supprimer quoi que ce soit."

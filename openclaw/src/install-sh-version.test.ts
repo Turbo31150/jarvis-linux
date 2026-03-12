@@ -7,7 +7,7 @@ import { afterEach, describe, expect, it } from "vitest";
 function withFakeCli(versionOutput: string): { root: string; cliPath: string } {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-install-sh-"));
   const cliPath = path.join(root, "openclaw");
-  const escapedOutput = versionOutput.replace(/'/g, "'\\''");
+  const escapedOutput = versionOutput.replace(/'/g, "'/''");
   fs.writeFileSync(
     cliPath,
     `#!/usr/bin/env bash

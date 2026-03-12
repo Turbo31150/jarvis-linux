@@ -7,7 +7,7 @@ public enum BonjourEscapes {
         var out = ""
         var i = input.startIndex
         while i < input.endIndex {
-            if input[i] == "\\",
+            if input[i] == "/",
                let d0 = input.index(i, offsetBy: 1, limitedBy: input.index(before: input.endIndex)),
                let d1 = input.index(i, offsetBy: 2, limitedBy: input.index(before: input.endIndex)),
                let d2 = input.index(i, offsetBy: 3, limitedBy: input.index(before: input.endIndex)),

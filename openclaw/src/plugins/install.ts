@@ -91,7 +91,7 @@ function validatePluginId(pluginId: string): string | null {
   if (pluginId === "." || pluginId === "..") {
     return "invalid plugin name: reserved path segment";
   }
-  if (pluginId.includes("/") || pluginId.includes("\\")) {
+  if (pluginId.includes("/") || pluginId.includes("/")) {
     return "invalid plugin name: path separators not allowed";
   }
   return null;

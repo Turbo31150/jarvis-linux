@@ -779,7 +779,7 @@ export function createConfigIO(overrides: ConfigIoDeps = {}) {
           .join("\n");
         if (!loggedInvalidConfigs.has(configPath)) {
           loggedInvalidConfigs.add(configPath);
-          deps.logger.error(`Invalid config at ${configPath}:\\n${details}`);
+          deps.logger.error(`Invalid config at ${configPath}:/n${details}`);
         }
         const error = new Error(`Invalid config at ${configPath}:\n${details}`);
         (error as { code?: string; details?: string }).code = "INVALID_CONFIG";
@@ -793,7 +793,7 @@ export function createConfigIO(overrides: ConfigIoDeps = {}) {
               `- ${sanitizeTerminalText(iss.path || "<root>")}: ${sanitizeTerminalText(iss.message)}`,
           )
           .join("\n");
-        deps.logger.warn(`Config warnings:\\n${details}`);
+        deps.logger.warn(`Config warnings:/n${details}`);
       }
       warnIfConfigFromFuture(validated.config, deps.logger);
       const cfg = applyTalkConfigNormalization(

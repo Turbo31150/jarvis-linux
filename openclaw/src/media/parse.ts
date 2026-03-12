@@ -11,10 +11,10 @@ export function normalizeMediaSource(src: string) {
 }
 
 function cleanCandidate(raw: string) {
-  return raw.replace(/^[`"'[{(]+/, "").replace(/[`"'\\})\],]+$/, "");
+  return raw.replace(/^[`"'[{(]+/, "").replace(/[`"'/})\],]+$/, "");
 }
 
-const WINDOWS_DRIVE_RE = /^[a-zA-Z]:[\\/]/;
+const WINDOWS_DRIVE_RE = /^[a-zA-Z]:[//]/;
 const SCHEME_RE = /^[a-zA-Z][a-zA-Z0-9+.-]*:/;
 const HAS_FILE_EXT = /\.\w{1,10}$/;
 
@@ -28,8 +28,8 @@ function isLikelyLocalPath(candidate: string): boolean {
     candidate.startsWith("../") ||
     candidate.startsWith("~") ||
     WINDOWS_DRIVE_RE.test(candidate) ||
-    candidate.startsWith("\\\\") ||
-    (!SCHEME_RE.test(candidate) && (candidate.includes("/") || candidate.includes("\\")))
+    candidate.startsWith("//") ||
+    (!SCHEME_RE.test(candidate) && (candidate.includes("/") || candidate.includes("/")))
   );
 }
 

@@ -186,7 +186,7 @@ const SOURCE_RULES: SourceRule[] = [
     ruleId: "obfuscated-code",
     severity: "warn",
     message: "Hex-encoded string sequence detected (possible obfuscation)",
-    pattern: /(\\x[0-9a-fA-F]{2}){6,}/,
+    pattern: /(/x[0-9a-fA-F]{2}){6,}/,
   },
   {
     ruleId: "obfuscated-code",

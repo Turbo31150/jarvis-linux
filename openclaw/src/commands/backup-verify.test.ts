@@ -174,7 +174,7 @@ describe("backupVerifyCommand", () => {
     const payloadPath = path.join(tempDir, "payload.txt");
     try {
       const rootName = "2026-03-09T00-00-00.000Z-openclaw-backup";
-      const invalidPath = `${rootName}/payload\\..\\escaped.txt`;
+      const invalidPath = `${rootName}/payload/../escaped.txt`;
       const manifest = {
         schemaVersion: 1,
         createdAt: "2026-03-09T00:00:00.000Z",

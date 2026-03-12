@@ -2030,12 +2030,12 @@
     "issue": {
       "file": "src/domino_executor.py",
       "line": 1241,
-      "context": "    import subprocess\n    try:\n        r = subprocess.run(\"git status --short\", shell=True, capture_output=True, text=True, timeout=5, cwd=\"/home/turbo/jarvis-linux\")\n        lines = r.stdout.strip().split(\"/n\") if r.stdout.strip() else []\n        return f\"{len(lines)} files modified\" if lines else \"Working tree clean\"",
+      "context": "    import subprocess\n    try:\n        r = subprocess.run(\"git status --short\", shell=True, capture_output=True, text=True, timeout=5, cwd=\"F:/BUREAU/turbo\")\n        lines = r.stdout.strip().split(\"/n\") if r.stdout.strip() else []\n        return f\"{len(lines)} files modified\" if lines else \"Working tree clean\"",
       "issue": "subprocess with shell=True (injection risk)"
     },
     "suggestion": {
-      "old": "    import subprocess\n    try:\n        r = subprocess.run(\"git status --short\", shell=True, capture_output=True, text=True, timeout=5, cwd=\"/home/turbo/jarvis-linux\")\n        lines = r.stdout.strip().split(\"/n\") if r.stdout.strip() else []\n        return f\"{len(lines)} files modified\" if lines else \"Working tree clean\"",
-      "new": "    import subprocess\n    try:\n        r = subprocess.run(['git', 'status', '--short'], capture_output=True, text=True, timeout=5, cwd=\"/home/turbo/jarvis-linux\")\n        lines = r.stdout.strip().split(\"/n\") if r.stdout.strip() else []\n        return f\"{len(lines)} files modified\" if lines else \"Working tree clean\"",
+      "old": "    import subprocess\n    try:\n        r = subprocess.run(\"git status --short\", shell=True, capture_output=True, text=True, timeout=5, cwd=\"F:/BUREAU/turbo\")\n        lines = r.stdout.strip().split(\"/n\") if r.stdout.strip() else []\n        return f\"{len(lines)} files modified\" if lines else \"Working tree clean\"",
+      "new": "    import subprocess\n    try:\n        r = subprocess.run(['git', 'status', '--short'], capture_output=True, text=True, timeout=5, cwd=\"F:/BUREAU/turbo\")\n        lines = r.stdout.strip().split(\"/n\") if r.stdout.strip() else []\n        return f\"{len(lines)} files modified\" if lines else \"Working tree clean\"",
       "action": "Remplacer l'utilisation de shell=True par une liste d'arguments pour Ã©viter les risques d'injection"
     },
     "applied": true,
@@ -2492,12 +2492,12 @@
     "issue": {
       "file": "src/domino_executor.py",
       "line": 1253,
-      "context": "    import subprocess\n    try:\n        r = subprocess.run(\"git log --oneline --since='1 day ago'\", shell=True, capture_output=True, text=True, timeout=5, cwd=\"/home/turbo/jarvis-linux\")\n        lines = r.stdout.strip().split(\"/n\") if r.stdout.strip() else []\n        return f\"{len(lines)} commits today: {'; '.join(lines[:5])}\" if lines else \"No commits today\"",
+      "context": "    import subprocess\n    try:\n        r = subprocess.run(\"git log --oneline --since='1 day ago'\", shell=True, capture_output=True, text=True, timeout=5, cwd=\"F:/BUREAU/turbo\")\n        lines = r.stdout.strip().split(\"/n\") if r.stdout.strip() else []\n        return f\"{len(lines)} commits today: {'; '.join(lines[:5])}\" if lines else \"No commits today\"",
       "issue": "subprocess with shell=True (injection risk)"
     },
     "suggestion": {
-      "old": "    import subprocess\n    try:\n        r = subprocess.run(\"git log --oneline --since='1 day ago'\", shell=True, capture_output=True, text=True, timeout=5, cwd=\"/home/turbo/jarvis-linux\")\n        lines = r.stdout.strip().split(\"/n\") if r.stdout.strip() else []\n        return f\"{len(lines)} commits today: {'; '.join(lines[:5])}\" if lines else \"No commits today\"\n    except Exception as e:\n        print(f\"Error executing git log: {e}\")",
-      "new": "    import subprocess\n    try:\n        r = subprocess.run(['git', 'log', '--oneline', '--since=1 day ago'], capture_output=True, text=True, timeout=5, cwd='/home/turbo/jarvis-linux')\n        lines = r.stdout.strip().split('/n') if r.stdout.strip() else []\n        return f'{len(lines)} commits today: {\"; \".join(lines[:5])}' if lines else 'No commits today'\n    except Exception as e:\n        print(f'Error executing git log: {e}')",
+      "old": "    import subprocess\n    try:\n        r = subprocess.run(\"git log --oneline --since='1 day ago'\", shell=True, capture_output=True, text=True, timeout=5, cwd=\"F:/BUREAU/turbo\")\n        lines = r.stdout.strip().split(\"/n\") if r.stdout.strip() else []\n        return f\"{len(lines)} commits today: {'; '.join(lines[:5])}\" if lines else \"No commits today\"\n    except Exception as e:\n        print(f\"Error executing git log: {e}\")",
+      "new": "    import subprocess\n    try:\n        r = subprocess.run(['git', 'log', '--oneline', '--since=1 day ago'], capture_output=True, text=True, timeout=5, cwd='F:/BUREAU/turbo')\n        lines = r.stdout.strip().split('/n') if r.stdout.strip() else []\n        return f'{len(lines)} commits today: {\"; \".join(lines[:5])}' if lines else 'No commits today'\n    except Exception as e:\n        print(f'Error executing git log: {e}')",
       "action": "Remplacer shell=True par une liste de commandes pour Ã©viter l'injection de commande"
     },
     "applied": false,
@@ -3425,12 +3425,12 @@
     "issue": {
       "file": "src/domino_executor.py",
       "line": 1290,
-      "context": "    import subprocess\n    try:\n        r = subprocess.run(\"git log --oneline -5\", shell=True, capture_output=True, text=True, timeout=5, cwd=\"/home/turbo/jarvis-linux\")\n        return r.stdout.strip() if r.stdout.strip() else \"No commits\"\n    except (subprocess.TimeoutExpired, OSError):",
+      "context": "    import subprocess\n    try:\n        r = subprocess.run(\"git log --oneline -5\", shell=True, capture_output=True, text=True, timeout=5, cwd=\"F:/BUREAU/turbo\")\n        return r.stdout.strip() if r.stdout.strip() else \"No commits\"\n    except (subprocess.TimeoutExpired, OSError):",
       "issue": "subprocess with shell=True (injection risk)"
     },
     "suggestion": {
-      "old": "    import subprocess\n    try:\n        r = subprocess.run(\"git log --oneline -5\", shell=True, capture_output=True, text=True, timeout=5, cwd=\"/home/turbo/jarvis-linux\")\n        return r.stdout.strip() if r.stdout.strip() else \"No commits\"\n    except (subprocess.TimeoutExpired, OSError):",
-      "new": "    import subprocess\n    try:\n        r = subprocess.run(['git', 'log', '--oneline', '-5'], capture_output=True, text=True, timeout=5, cwd=\"/home/turbo/jarvis-linux\")\n        return r.stdout.strip() if r.stdout.strip() else \"No commits\"\n    except (subprocess.TimeoutExpired, OSError):",
+      "old": "    import subprocess\n    try:\n        r = subprocess.run(\"git log --oneline -5\", shell=True, capture_output=True, text=True, timeout=5, cwd=\"F:/BUREAU/turbo\")\n        return r.stdout.strip() if r.stdout.strip() else \"No commits\"\n    except (subprocess.TimeoutExpired, OSError):",
+      "new": "    import subprocess\n    try:\n        r = subprocess.run(['git', 'log', '--oneline', '-5'], capture_output=True, text=True, timeout=5, cwd=\"F:/BUREAU/turbo\")\n        return r.stdout.strip() if r.stdout.strip() else \"No commits\"\n    except (subprocess.TimeoutExpired, OSError):",
       "action": "Utilisation de la liste d'arguments au lieu de shell=True pour Ã©viter les risques d'injection"
     },
     "applied": true,
@@ -3870,12 +3870,12 @@
     "issue": {
       "file": "src/domino_executor.py",
       "line": 1301,
-      "context": "    import subprocess\n    try:\n        r = subprocess.run(\"ls .github/workflows/*.yml 2>/dev/null | wc -l\", shell=True, capture_output=True, text=True, timeout=5, cwd=\"/home/turbo/jarvis-linux\")\n        count = r.stdout.strip()\n        return f\"GitHub workflows: {count}\"",
+      "context": "    import subprocess\n    try:\n        r = subprocess.run(\"ls .github/workflows/*.yml 2>/dev/null | wc -l\", shell=True, capture_output=True, text=True, timeout=5, cwd=\"F:/BUREAU/turbo\")\n        count = r.stdout.strip()\n        return f\"GitHub workflows: {count}\"",
       "issue": "subprocess with shell=True (injection risk)"
     },
     "suggestion": {
-      "old": "    import subprocess\n    try:\n        r = subprocess.run(\"ls .github/workflows/*.yml 2>/dev/null | wc -l\", shell=True, capture_output=True, text=True, timeout=5, cwd=\"/home/turbo/jarvis-linux\")\n        count = r.stdout.strip()\n        return f\"GitHub workflows: {count}\"",
-      "new": "    import subprocess\n    try:\n        cmd = ['ls', '.github/workflows/*.yml', '2>/dev/null', '|', 'wc', '-l']\n        r = subprocess.run(cmd, capture_output=True, text=True, timeout=5, cwd=\"/home/turbo/jarvis-linux\")\n        count = r.stdout.strip()\n        return f\"GitHub workflows: {count}\"",
+      "old": "    import subprocess\n    try:\n        r = subprocess.run(\"ls .github/workflows/*.yml 2>/dev/null | wc -l\", shell=True, capture_output=True, text=True, timeout=5, cwd=\"F:/BUREAU/turbo\")\n        count = r.stdout.strip()\n        return f\"GitHub workflows: {count}\"",
+      "new": "    import subprocess\n    try:\n        cmd = ['ls', '.github/workflows/*.yml', '2>/dev/null', '|', 'wc', '-l']\n        r = subprocess.run(cmd, capture_output=True, text=True, timeout=5, cwd=\"F:/BUREAU/turbo\")\n        count = r.stdout.strip()\n        return f\"GitHub workflows: {count}\"",
       "action": "Remplacer shell=True par une liste de commandes pour Ã©viter les risques d'injection"
     },
     "applied": true,

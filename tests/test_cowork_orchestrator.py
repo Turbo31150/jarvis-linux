@@ -255,9 +255,9 @@ class TestValidateResult:
 class TestExtractFilePaths:
     def test_finds_paths(self):
         orch = CoworkOrchestrator()
-        code = "Created /home/turbo/jarvis-linux/src/new_module.py and /home/turbo/jarvis-linux/src/utils/helper.py"
+        code = "Created F:/BUREAU/turbo/src/new_module.py and F:/BUREAU/turbo/src/utils/helper.py"
         paths = orch._extract_file_paths(code)
-        assert "/home/turbo/jarvis-linux/src/new_module.py" in paths
+        assert "F:/BUREAU/turbo/src/new_module.py" in paths
 
     def test_no_paths(self):
         orch = CoworkOrchestrator()
@@ -266,7 +266,7 @@ class TestExtractFilePaths:
 
     def test_deduplicates(self):
         orch = CoworkOrchestrator()
-        code = "/home/turbo/jarvis-linux/src/mod.py and /home/turbo/jarvis-linux/src/mod.py again"
+        code = "F:/BUREAU/turbo/src/mod.py and F:/BUREAU/turbo/src/mod.py again"
         paths = orch._extract_file_paths(code)
         assert len(paths) == 1
 

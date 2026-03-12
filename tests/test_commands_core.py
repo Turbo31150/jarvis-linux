@@ -52,7 +52,7 @@ def commands_module():
 
     # Mock src.config.PATHS
     mock_config = MagicMock()
-    mock_config.PATHS = {"turbo": "/home/turbo/jarvis-linux"}
+    mock_config.PATHS = {"turbo": "F:/BUREAU/turbo"}
 
     # Mock sqlite3 to return empty results (no DB needed)
     mock_sqlite3 = MagicMock()

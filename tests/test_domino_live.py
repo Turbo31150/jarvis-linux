@@ -171,7 +171,7 @@ except Exception as e: fail("domino_bonne_nuit", str(e)[:80])
 # === DEBUG DB — domino_debug_db ===
 print("\n[DOMINO] debug_cascade: domino_debug_db")
 try:
-    integrity = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); print(c.execute('PRAGMA integrity_check').fetchone()[0])\" 2>&1")
+    integrity = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); print(c.execute('PRAGMA integrity_check').fetchone()[0])\" 2>&1")
     print(f"    Integrity: {integrity}")
     size = ps("(Get-Item 'F:/BUREAU/turbo/data/etoile.db').Length")
     print(f"    Size: {size} bytes")

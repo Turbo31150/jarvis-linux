@@ -17,7 +17,7 @@ async function resolveCliEntrypointPathForService(): Promise<string> {
 
   const normalized = path.resolve(argv1);
   const resolvedPath = await resolveRealpathSafe(normalized);
-  const looksLikeDist = /[/\\]dist[/\\].+\.(cjs|js|mjs)$/.test(resolvedPath);
+  const looksLikeDist = /[//]dist[//].+\.(cjs|js|mjs)$/.test(resolvedPath);
   if (looksLikeDist) {
     await fs.access(resolvedPath);
     // Prefer the original (possibly symlinked) path over the resolved realpath.
@@ -25,7 +25,7 @@ async function resolveCliEntrypointPathForService(): Promise<string> {
     // since symlinks like node_modules/openclaw -> .pnpm/openclaw@X.Y.Z/...
     // are automatically updated by pnpm, while the resolved path contains
     // version-specific directories that break after updates.
-    const normalizedLooksLikeDist = /[/\\]dist[/\\].+\.(cjs|js|mjs)$/.test(normalized);
+    const normalizedLooksLikeDist = /[//]dist[//].+\.(cjs|js|mjs)$/.test(normalized);
     if (normalizedLooksLikeDist && normalized !== resolvedPath) {
       try {
         await fs.access(normalized);

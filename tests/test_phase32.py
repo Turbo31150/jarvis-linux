@@ -178,7 +178,7 @@ class TestShareManager:
 
     def test_share_info_dataclass(self):
         from src.share_manager import ShareInfo
-        si = ShareInfo(name="Documents", path="/\Users/Public")
+        si = ShareInfo(name="Documents", path="C:/Users/Public")
         assert si.name == "Documents"
         assert si.remark == ""
         assert si.share_type == ""
@@ -197,8 +197,8 @@ class TestShareManager:
     def test_search_with_mock(self):
         sm = self._make()
         sm.list_shares = lambda: [
-            {"name": "Documents", "path": "/\Docs"},
-            {"name": "Music", "path": "/\Music"},
+            {"name": "Documents", "path": "C:/Docs"},
+            {"name": "Music", "path": "C:/Music"},
         ]
         results = sm.search_shares("doc")
         assert len(results) == 1
@@ -206,7 +206,7 @@ class TestShareManager:
     def test_search_no_match(self):
         sm = self._make()
         sm.list_shares = lambda: [
-            {"name": "Documents", "path": "/\Docs"},
+            {"name": "Documents", "path": "C:/Docs"},
         ]
         results = sm.search_shares("video")
         assert len(results) == 0

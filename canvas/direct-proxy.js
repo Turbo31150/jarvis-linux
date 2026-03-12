@@ -456,7 +456,7 @@ const SYS_PROMPTS = {
     '- **write_file**: Ecrire/creer un fichier\n' +
     '- **edit_file**: Modifier un fichier existant (old→new)\n' +
     '- **list_dir**: Lister un dossier\n' +
-    '- **query_db**: SQL SELECT sur etoile.db, jarvis.db, sniper.db (chemin: /home/turbo/jarvis-linux/data/)\n' +
+    '- **query_db**: SQL SELECT sur etoile.db, jarvis.db, sniper.db (chemin: F:/BUREAU/turbo/data/)\n' +
     '- **mkdir, delete**: Creer/supprimer dossiers/fichiers\n' +
     '- **pipeline**: Lancer un launcher/script JARVIS\n\n' +
     '## AUTONOMIE — REGLES ABSOLUES\n' +
@@ -472,14 +472,14 @@ const SYS_PROMPTS = {
     '5. query_db: SELECT COUNT(*) as total_rows FROM map → etoile.db\n' +
     '6. Rapport structure: Cluster OK/KO, GPU temps, services UP/DOWN, DB stats\n\n' +
     '## CHEMINS IMPORTANTS\n' +
-    '- Projet: /home/turbo/jarvis-linux/\n' +
-    '- Sources: /home/turbo/jarvis-linux/src/\n' +
-    '- Scripts: /home/turbo/jarvis-linux/scripts/\n' +
-    '- Data/DB: /home/turbo/jarvis-linux/data/ (etoile.db, jarvis.db, sniper.db, scheduler.db)\n' +
-    '- Canvas: /home/turbo/jarvis-linux/canvas/\n' +
-    '- Launchers: /home/turbo/jarvis-linux/launchers/\n' +
-    '- Cowork: /home/turbo/jarvis-linux/cowork/dev/\n' +
-    '- Boot: /home/turbo/jarvis-linux/jarvis_unified_boot.py\n\n' +
+    '- Projet: F:/BUREAU/turbo/\n' +
+    '- Sources: F:/BUREAU/turbo/src/\n' +
+    '- Scripts: F:/BUREAU/turbo/scripts/\n' +
+    '- Data/DB: F:/BUREAU/turbo/data/ (etoile.db, jarvis.db, sniper.db, scheduler.db)\n' +
+    '- Canvas: F:/BUREAU/turbo/canvas/\n' +
+    '- Launchers: F:/BUREAU/turbo/launchers/\n' +
+    '- Cowork: F:/BUREAU/turbo/cowork/dev/\n' +
+    '- Boot: F:/BUREAU/turbo/jarvis_unified_boot.py\n\n' +
     '## SHELL = cmd.exe (CRITIQUE)\n' +
     'exec utilise cmd.exe. PAS PowerShell, PAS bash.\n' +
     'INTERDIT en direct: Get-Process, Get-WmiObject, Get-CimInstance, Select-Object, Sort-Object, Where-Object, $env:.\n' +
@@ -495,7 +495,7 @@ const SYS_PROMPTS = {
     '## SELF-IMPROVE\n' +
     'Quand Turbo dit "ameliore-toi" ou "auto-improve":\n' +
     '1. query_db: SELECT * FROM self_improve_log ORDER BY rowid DESC LIMIT 5 → derniers cycles\n' +
-    '2. exec: python /home/turbo/jarvis-linux/src/self_improve_engine.py → lancer un cycle\n' +
+    '2. exec: python F:/BUREAU/turbo/src/self_improve_engine.py → lancer un cycle\n' +
     '3. Analyser les resultats et reporter\n\n' +
     '## STYLE\n' +
     '- Concis mais complet. Pas de blabla.\n' +
@@ -613,7 +613,7 @@ const TOOLS = {
     try {
       const output = execSync(cmd, {
         timeout: 60000, maxBuffer: 1024 * 1024,
-        cwd: args.cwd || '/\Users/franc',
+        cwd: args.cwd || 'C:/Users/franc',
         encoding: 'utf8', shell: true, windowsHide: true
       });
       return { ok: true, output: output.slice(0, 50000), cmd };
@@ -891,7 +891,7 @@ const COCKPIT_TOOLS_PROMPT = [
   '- Processes: tasklist /fo csv /nh',
   '- Disk:      wmic logicaldisk get size,freespace,caption',
   '- RAM:       tasklist /fi "memusage gt 100000" /fo csv',
-  '- Boot diag: python /home/turbo/jarvis-linux/scripts/jarvis_boot_telegram.py',
+  '- Boot diag: python F:/BUREAU/turbo/scripts/jarvis_boot_telegram.py',
   '',
   '=== OUTILS SYSTEME (OBLIGATOIRE) ===',
   'Tu as acces au systeme Windows. Pour TOUTE action (lire fichier, lister dossier, executer commande, etc.),',
@@ -901,13 +901,13 @@ const COCKPIT_TOOLS_PROMPT = [
   '[TOOL:nom:argument]',
   '',
   'Exemples:',
-  '[TOOL:list_dir:/\Users/franc/Desktop]',
-  '[TOOL:exec:dir /\Users/franc/Desktop]',
+  '[TOOL:list_dir:C:/Users/franc/Desktop]',
+  '[TOOL:exec:dir C:/Users/franc/Desktop]',
   '[TOOL:read_file:F:/BUREAU/turbo/README.md]',
-  '[TOOL:write_file:{"path":"/\Users/franc/Desktop/test.txt","content":"hello"}]',
+  '[TOOL:write_file:{"path":"C:/Users/franc/Desktop/test.txt","content":"hello"}]',
   '[TOOL:edit_file:{"path":"fichier.py","old":"ancien","new":"nouveau"}]',
-  '[TOOL:mkdir:/\Users/franc/Desktop/MonDossier]',
-  '[TOOL:delete:/\Users/franc/Desktop/test.txt]',
+  '[TOOL:mkdir:C:/Users/franc/Desktop/MonDossier]',
+  '[TOOL:delete:C:/Users/franc/Desktop/test.txt]',
   '[TOOL:query_db:SELECT * FROM map LIMIT 5]',
   '[TOOL:pipeline:trading-scan]',
   '[TOOL:web_search:bitcoin prix aujourd hui]',
@@ -917,7 +917,7 @@ const COCKPIT_TOOLS_PROMPT = [
   '- Attends le resultat avant de continuer',
   '- NE FABRIQUE JAMAIS de donnees. Si on demande des fichiers, utilise list_dir ou exec.',
   '- Quand tu as le resultat et que tu as fini, reponds normalement SANS [TOOL:]',
-  '- Contexte: Windows 11, user franc, /\ et F:/, JARVIS: F:/BUREAU/turbo, Bureau: /\Users/franc/Desktop',
+  '- Contexte: Windows 11, user franc, C:/ et F:/, JARVIS: F:/BUREAU/turbo, Bureau: C:/Users/franc/Desktop',
   '',
   'DB etoile.db disponible via query_db. Tables principales: map, agents, api_keys, memories, metrics, sessions, agent_dispatch_log, agent_patterns, cowork_script_mapping, benchmark_results.',
   'Pour connaitre les colonnes d\'une table, fais: query_db "PRAGMA table_info(nom_table)"'

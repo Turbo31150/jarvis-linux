@@ -345,7 +345,7 @@ function extractExecutableFromExecLine(execLine: string): string | null {
     if (token === "env") {
       continue;
     }
-    if (token.includes("=") && !token.startsWith("/") && !token.includes("\\")) {
+    if (token.includes("=") && !token.startsWith("/") && !token.includes("/")) {
       continue;
     }
     return token.replace(/^["']|["']$/g, "");
@@ -400,7 +400,7 @@ function resolveLinuxExecutablePath(command: string): string | null {
 function readWindowsProgId(): string | null {
   const output = execText("reg", [
     "query",
-    "HKCU\\Software\\Microsoft\\Windows\\Shell\\Associations\\UrlAssociations\\http\\UserChoice",
+    "HKCU/Software/Microsoft/Windows/Shell/Associations/UrlAssociations/http/UserChoice",
     "/v",
     "ProgId",
   ]);
@@ -414,8 +414,8 @@ function readWindowsProgId(): string | null {
 function readWindowsCommandForProgId(progId: string): string | null {
   const key =
     progId === "http"
-      ? "HKCR\\http\\shell\\open\\command"
-      : `HKCR\\${progId}\\shell\\open\\command`;
+      ? "HKCR/http/shell/open/command"
+      : `HKCR/${progId}/shell/open/command`;
   const output = execText("reg", ["query", key, "/ve"]);
   if (!output) {
     return null;
@@ -432,11 +432,11 @@ function expandWindowsEnvVars(value: string): string {
 }
 
 function extractWindowsExecutablePath(command: string): string | null {
-  const quoted = command.match(/"([^"]+\\.exe)"/i);
+  const quoted = command.match(/"([^"]+/.exe)"/i);
   if (quoted?.[1]) {
     return quoted[1];
   }
-  const unquoted = command.match(/([^\\s]+\\.exe)/i);
+  const unquoted = command.match(/([^/s]+/.exe)/i);
   if (unquoted?.[1]) {
     return unquoted[1];
   }
@@ -527,9 +527,9 @@ export function findChromeExecutableLinux(): BrowserExecutable | null {
 
 export function findChromeExecutableWindows(): BrowserExecutable | null {
   const localAppData = process.env.LOCALAPPDATA ?? "";
-  const programFiles = process.env.ProgramFiles ?? "C:\\Program Files";
+  const programFiles = process.env.ProgramFiles ?? "C:/Program Files";
   // Must use bracket notation: variable name contains parentheses
-  const programFilesX86 = process.env["ProgramFiles(x86)"] ?? "C:\\Program Files (x86)";
+  const programFilesX86 = process.env["ProgramFiles(x86)"] ?? "C:/Program Files (x86)";
 
   const joinWin = path.win32.join;
   const candidates: Array<BrowserExecutable> = [];

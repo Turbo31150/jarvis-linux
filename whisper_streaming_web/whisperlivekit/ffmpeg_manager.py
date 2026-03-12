@@ -22,8 +22,8 @@ brew install ffmpeg
 
 # Windows:
 # 1. Download the latest static build from https://ffmpeg.org/download.html
-# 2. Extract the archive (e.g., to C:\\FFmpeg).
-# 3. Add the 'bin' directory (e.g., C:\\FFmpeg\\bin) to your system's PATH environment variable.
+# 2. Extract the archive (e.g., to C:/FFmpeg).
+# 3. Add the 'bin' directory (e.g., C:/FFmpeg/bin) to your system's PATH environment variable.
 
 After installation, please restart the application.
 {'='*50}

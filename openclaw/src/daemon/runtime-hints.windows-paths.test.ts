@@ -9,8 +9,8 @@ describe("buildPlatformRuntimeLogHints", () => {
   it("strips windows drive prefixes from darwin display paths", async () => {
     vi.doMock("./launchd.js", () => ({
       resolveGatewayLogPaths: () => ({
-        stdoutPath: "C:\\tmp\\openclaw-state\\logs\\gateway.log",
-        stderrPath: "C:\\tmp\\openclaw-state\\logs\\gateway.err.log",
+        stdoutPath: "C:/tmp/openclaw-state/logs/gateway.log",
+        stderrPath: "C:/tmp/openclaw-state/logs/gateway.err.log",
       }),
     }));
 

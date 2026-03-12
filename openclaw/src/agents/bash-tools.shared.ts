@@ -148,7 +148,7 @@ function mapContainerWorkdirToHost(params: {
 }
 
 function normalizeContainerPath(input: string): string {
-  const normalized = input.trim().replace(/\\/g, "/");
+  const normalized = input.trim().replace(///g, "/");
   if (!normalized) {
     return ".";
   }
@@ -265,7 +265,7 @@ export function deriveSessionName(command: string): string | undefined {
 }
 
 function tokenizeCommand(command: string): string[] {
-  const matches = command.match(/(?:[^\s"']+|"(?:\\.|[^"])*"|'(?:\\.|[^'])*')+/g) ?? [];
+  const matches = command.match(/(?:[^\s"']+|"(?:/.|[^"])*"|'(?:/.|[^'])*')+/g) ?? [];
   return matches.map((token) => stripQuotes(token)).filter(Boolean);
 }
 

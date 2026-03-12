@@ -250,7 +250,7 @@ describe("lobster plugin tool", () => {
     await createWindowsCmdShimFixture({
       shimPath,
       scriptPath: shimScriptPath,
-      shimLine: `"%dp0%\\..\\shim-dist\\lobster-cli.cjs" %*`,
+      shimLine: `"%dp0%/../shim-dist/lobster-cli.cjs" %*`,
     });
     process.env.PATHEXT = ".CMD;.EXE";
     process.env.PATH = `${path.dirname(shimPath)};${process.env.PATH ?? ""}`;

@@ -197,7 +197,7 @@ class GatewayDiscovery(
   }
 
   private fun normalizeName(raw: String): String {
-    return raw.trim().split(Regex("\\s+")).joinToString(" ")
+    return raw.trim().split(Regex("/s+")).joinToString(" ")
   }
 
   private fun txt(info: NsdServiceInfo, key: String): String? {

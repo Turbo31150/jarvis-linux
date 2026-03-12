@@ -82,7 +82,7 @@ except Exception as e: fail("embedding_cache_prewarm", str(e)[:80])
 # BRAIN COMPLETION (1)
 print("\n[BRAIN COMPLETION]")
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); r=c.execute('SELECT COUNT(*) FROM memories').fetchone()[0]; print(f'memories importables: {r}')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); r=c.execute('SELECT COUNT(*) FROM memories').fetchone()[0]; print(f'memories importables: {r}')\" 2>&1")
     ok("brain_memory_import", out[:80])
 except Exception as e: fail("brain_memory_import", str(e)[:80])
 
@@ -123,17 +123,17 @@ except Exception as e: fail("rag_context_prepare", str(e)[:80])
 # DB OPTIMIZATION COMPLETIONS (3)
 print("\n[DB OPTIMIZATION COMPLETIONS]")
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); c.execute('VACUUM'); print('defragment: OK')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); c.execute('VACUUM'); print('defragment: OK')\" 2>&1")
     ok("db_defragment_intensive", out[:80])
 except Exception as e: fail("db_defragment_intensive", str(e)[:80])
 
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); fk=c.execute('PRAGMA foreign_key_check').fetchall(); ic=c.execute('PRAGMA integrity_check').fetchone()[0]; print(f'deep: {ic}, fk_issues: {len(fk)}')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); fk=c.execute('PRAGMA foreign_key_check').fetchall(); ic=c.execute('PRAGMA integrity_check').fetchone()[0]; print(f'deep: {ic}, fk_issues: {len(fk)}')\" 2>&1")
     ok("db_consistency_check_deep", out[:80])
 except Exception as e: fail("db_consistency_check_deep", str(e)[:80])
 
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); tables=c.execute(/\"SELECT name FROM sqlite_master WHERE type='table'/\").fetchall(); print(f'tables archivables: {len(tables)}')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); tables=c.execute(/\"SELECT name FROM sqlite_master WHERE type='table'/\").fetchall(); print(f'tables archivables: {len(tables)}')\" 2>&1")
     ok("db_split_archive", out[:80])
 except Exception as e: fail("db_split_archive", str(e)[:80])
 
@@ -245,7 +245,7 @@ try:
 except Exception as e: fail("doc_self_heal_broken", str(e)[:80])
 
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"from src.commands_pipelines import PIPELINE_COMMANDS; broken=[c for c in PIPELINE_COMMANDS if not c.triggers]; print(f'broken commands: {len(broken)}')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"from src.commands_pipelines import PIPELINE_COMMANDS; broken=[c for c in PIPELINE_COMMANDS if not c.triggers]; print(f'broken commands: {len(broken)}')\" 2>&1")
     ok("self_heal_broken_command", out[:80])
 except Exception as e: fail("self_heal_broken_command", str(e)[:80])
 

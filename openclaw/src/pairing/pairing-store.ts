@@ -65,7 +65,7 @@ function safeChannelKey(channel: PairingChannel): string {
   if (!raw) {
     throw new Error("invalid pairing channel");
   }
-  const safe = raw.replace(/[\\/:*?"<>|]/g, "_").replace(/\.\./g, "_");
+  const safe = raw.replace(/[//:*?"<>|]/g, "_").replace(/\.\./g, "_");
   if (!safe || safe === "_") {
     throw new Error("invalid pairing channel");
   }
@@ -81,7 +81,7 @@ function safeAccountKey(accountId: string): string {
   if (!raw) {
     throw new Error("invalid pairing account id");
   }
-  const safe = raw.replace(/[\\/:*?"<>|]/g, "_").replace(/\.\./g, "_");
+  const safe = raw.replace(/[//:*?"<>|]/g, "_").replace(/\.\./g, "_");
   if (!safe || safe === "_") {
     throw new Error("invalid pairing account id");
   }

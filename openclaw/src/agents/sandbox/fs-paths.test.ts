@@ -27,8 +27,8 @@ describe("parseSandboxBindMount", () => {
   });
 
   it("parses Windows drive-letter host paths", () => {
-    expect(parseSandboxBindMount("C:\\Users\\kai\\workspace:/workspace:ro")).toEqual({
-      hostRoot: path.resolve("C:\\Users\\kai\\workspace"),
+    expect(parseSandboxBindMount("C:/Users/kai/workspace:/workspace:ro")).toEqual({
+      hostRoot: path.resolve("C:/Users/kai/workspace"),
       containerRoot: "/workspace",
       writable: false,
     });

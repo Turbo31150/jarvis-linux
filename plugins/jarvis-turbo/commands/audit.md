@@ -10,7 +10,7 @@ Lance l'audit systeme distribue JARVIS. Argument `$ARGUMENTS` :
 - `save` → audit complet + sauvegarde JSON
 
 ```bash
-cd "/home/turbo/jarvis-linux" && uv run python scripts/system_audit.py $ARGUMENTS_FLAGS 2>&1
+cd "F:/BUREAU/turbo" && uv run python scripts/system_audit.py $ARGUMENTS_FLAGS 2>&1
 ```
 
 Ou $ARGUMENTS_FLAGS :

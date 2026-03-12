@@ -24,12 +24,12 @@ from src.pagefile_manager import (
 
 
 USAGE_JSON = json.dumps([
-    {"Name": "/\pagefile.sys", "AllocatedBaseSize": 8192,
+    {"Name": "C:/pagefile.sys", "AllocatedBaseSize": 8192,
      "CurrentUsage": 1024, "PeakUsage": 2048},
 ])
 
 SETTINGS_JSON = json.dumps([
-    {"Name": "/\pagefile.sys", "InitialSize": 4096, "MaximumSize": 8192},
+    {"Name": "C:/pagefile.sys", "InitialSize": 4096, "MaximumSize": 8192},
 ])
 
 VIRTUAL_MEM_JSON = json.dumps({
@@ -46,7 +46,7 @@ VIRTUAL_MEM_JSON = json.dumps({
 
 class TestDataclasses:
     def test_pagefile_info(self):
-        p = PagefileInfo(name="/\pagefile.sys")
+        p = PagefileInfo(name="C:/pagefile.sys")
         assert p.allocated_mb == 0
         assert p.current_usage_mb == 0
         assert p.peak_usage_mb == 0
@@ -69,7 +69,7 @@ class TestGetUsage:
         with patch("subprocess.run", return_value=mock_result):
             pages = pm.get_usage()
         assert len(pages) == 1
-        assert pages[0]["name"] == "/\pagefile.sys"
+        assert pages[0]["name"] == "C:/pagefile.sys"
         assert pages[0]["allocated_mb"] == 8192
         assert pages[0]["current_usage_mb"] == 1024
 

@@ -12,7 +12,7 @@ function getSilentExactRegex(token: string): RegExp {
     return cached;
   }
   const escaped = escapeRegExp(token);
-  const regex = new RegExp(`^\\s*${escaped}\\s*$`);
+  const regex = new RegExp(`^/s*${escaped}/s*$`);
   silentExactRegexByToken.set(token, regex);
   return regex;
 }
@@ -23,7 +23,7 @@ function getSilentTrailingRegex(token: string): RegExp {
     return cached;
   }
   const escaped = escapeRegExp(token);
-  const regex = new RegExp(`(?:^|\\s+|\\*+)${escaped}\\s*$`);
+  const regex = new RegExp(`(?:^|/s+|/*+)${escaped}/s*$`);
   silentTrailingRegexByToken.set(token, regex);
   return regex;
 }

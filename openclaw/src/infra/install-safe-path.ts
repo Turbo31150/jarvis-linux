@@ -16,13 +16,13 @@ export function safeDirName(input: string): string {
   if (!trimmed) {
     return trimmed;
   }
-  return trimmed.replaceAll("/", "__").replaceAll("\\", "__");
+  return trimmed.replaceAll("/", "__").replaceAll("/", "__");
 }
 
 export function safePathSegmentHashed(input: string): string {
   const trimmed = input.trim();
   const base = trimmed
-    .replaceAll(/[\\/]/g, "-")
+    .replaceAll(/[//]/g, "-")
     .replaceAll(/[^a-zA-Z0-9._-]/g, "-")
     .replaceAll(/-+/g, "-")
     .replaceAll(/^-+/g, "")

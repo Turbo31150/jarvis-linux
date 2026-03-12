@@ -1094,7 +1094,7 @@ describe("runHeartbeatOnce", () => {
       expect(sendWhatsApp).toHaveBeenCalledTimes(1);
       expect(replySpy).toHaveBeenCalledTimes(1);
       const calledCtx = replySpy.mock.calls[0]?.[0] as { Body?: string };
-      const expectedPath = path.join(workspaceDir, "HEARTBEAT.md").replace(/\\/g, "/");
+      const expectedPath = path.join(workspaceDir, "HEARTBEAT.md").replace(///g, "/");
       expect(calledCtx.Body).toContain(`use workspace file ${expectedPath} (exact case)`);
       expect(calledCtx.Body).toContain("Do not read docs/heartbeat.md.");
     } finally {

@@ -99,7 +99,7 @@ enum ExecAllowlistPatternValidationReason: String, Codable, Equatable {
         case .empty:
             "Pattern cannot be empty."
         case .missingPathComponent:
-            "Path patterns only. Include '/', '~', or '\\\\'."
+            "Path patterns only. Include '/', '~', or '//'."
         }
     }
 }
@@ -749,7 +749,7 @@ enum ExecApprovalHelpers {
     }
 
     private static func containsPathComponent(_ pattern: String) -> Bool {
-        pattern.contains("/") || pattern.contains("~") || pattern.contains("\\")
+        pattern.contains("/") || pattern.contains("~") || pattern.contains("/")
     }
 }
 

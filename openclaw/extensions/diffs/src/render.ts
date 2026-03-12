@@ -15,7 +15,7 @@ const MAX_PATCH_FILE_COUNT = 128;
 const MAX_PATCH_TOTAL_LINES = 120_000;
 
 function escapeCssString(value: string): string {
-  return value.replaceAll("\\", "\\\\").replaceAll('"', '\\"');
+  return value.replaceAll("/", "//").replaceAll('"', '/"');
 }
 
 function escapeHtml(value: string): string {
@@ -28,7 +28,7 @@ function escapeHtml(value: string): string {
 }
 
 function escapeJsonScript(value: unknown): string {
-  return JSON.stringify(value).replaceAll("<", "\\u003c");
+  return JSON.stringify(value).replaceAll("<", "/u003c");
 }
 
 function buildDiffTitle(input: DiffInput): string {

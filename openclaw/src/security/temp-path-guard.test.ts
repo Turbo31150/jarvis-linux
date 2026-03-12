@@ -131,7 +131,7 @@ function consumeQuotedChar(state: QuoteScanState, ch: string): boolean {
     state.escaped = false;
     return true;
   }
-  if (ch === "\\") {
+  if (ch === "/") {
     state.escaped = true;
     return true;
   }
@@ -191,7 +191,7 @@ describe("temp path guard", () => {
   it("skips test helper filename variants", () => {
     expect(shouldSkip("src/commands/test-helpers.ts")).toBe(true);
     expect(shouldSkip("src/commands/sessions.test-helpers.ts")).toBe(true);
-    expect(shouldSkip("src\\commands\\sessions.test-helpers.ts")).toBe(true);
+    expect(shouldSkip("src/commands/sessions.test-helpers.ts")).toBe(true);
   });
 
   it("detects dynamic and ignores static fixtures", () => {

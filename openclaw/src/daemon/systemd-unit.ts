@@ -11,10 +11,10 @@ function assertNoSystemdLineBreaks(value: string, label: string): void {
 
 function systemdEscapeArg(value: string): string {
   assertNoSystemdLineBreaks(value, "Systemd unit values");
-  if (!/[\s"\\]/.test(value)) {
+  if (!/[\s"/]/.test(value)) {
     return value;
   }
-  return `"${value.replace(/\\\\/g, "\\\\\\\\").replace(/"/g, '\\\\"')}"`;
+  return `"${value.replace(////g, "////").replace(/"/g, '//"')}"`;
 }
 
 function renderEnvLines(env: Record<string, string | undefined> | undefined): string[] {
@@ -98,7 +98,7 @@ export function parseSystemdEnvAssignment(raw: string): { key: string; value: st
         escapeNext = false;
         continue;
       }
-      if (ch === "\\\\") {
+      if (ch === "//") {
         escapeNext = true;
         continue;
       }

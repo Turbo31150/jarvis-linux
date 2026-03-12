@@ -410,7 +410,7 @@ describe("legacy config detection", () => {
     const res = migrateLegacyConfig({
       gateway: { bind: "\r\n0.0.0.0\r\n" },
     });
-    expect(res.changes).toContain('Normalized gateway.bind "\\r\\n0.0.0.0\\r\\n" → "lan".');
+    expect(res.changes).toContain('Normalized gateway.bind "/r/n0.0.0.0/r/n" → "lan".');
   });
   it('enforces dmPolicy="open" allowFrom wildcard for supported providers', async () => {
     const cases = [

@@ -101,7 +101,7 @@ function normalizeTags(tags: ReadonlyArray<string>): ConfigTag[] {
 }
 
 function patternToRegExp(pattern: string): RegExp {
-  const escaped = pattern.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, "[^.]+");
+  const escaped = pattern.replace(/[.+?^${}()|[\]/]/g, "/$&").replace(/\*/g, "[^.]+");
   return new RegExp(`^${escaped}$`, "i");
 }
 

@@ -351,7 +351,7 @@ async function finalizeLineInboundContext(params: {
   });
 
   if (shouldLogVerbose()) {
-    const preview = body.slice(0, 200).replace(/\n/g, "\\n");
+    const preview = body.slice(0, 200).replace(/\n/g, "/n");
     const mediaInfo =
       params.verboseLog.kind === "inbound" && (params.verboseLog.mediaCount ?? 0) > 1
         ? ` mediaCount=${params.verboseLog.mediaCount}`

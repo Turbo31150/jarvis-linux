@@ -83,7 +83,7 @@ describe("cleanup path removals", () => {
     );
 
     const joinedLogs = runtime.log.mock.calls
-      .map(([line]) => line.replaceAll("\\", "/"))
+      .map(([line]) => line.replaceAll("/", "/"))
       .join("\n");
     expect(joinedLogs).toContain("/tmp/openclaw-cleanup/state");
     expect(joinedLogs).toContain("/tmp/openclaw-cleanup/oauth");

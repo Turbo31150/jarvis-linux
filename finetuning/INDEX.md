@@ -258,7 +258,7 @@ Calcul: % de termes JARVIS trouvés dans réponse
 {
   "metadata": {
     "base_model": "Qwen/Qwen3-30B-A3B",
-    "lora_adapter": "/home/turbo/jarvis-linux/finetuning/output/.../final",
+    "lora_adapter": "F:/BUREAU/turbo/finetuning/output/.../final",
     "device": "cuda",
     "timestamp": "2026-02-18T10:30:45.123456"
   },
@@ -323,7 +323,7 @@ Calcul: % de termes JARVIS trouvés dans réponse
 - **Cache**: `~/.cache/huggingface/hub/`
 
 ### Adaptateurs LoRA
-- **Chemin**: `/home/turbo/jarvis-linux/finetuning/output/*/final/`
+- **Chemin**: `F:/BUREAU/turbo/finetuning/output/*/final/`
 - **Détection**: Automatique (dernier dossier)
 - **Requis**: `adapter_config.json` + `adapter_model.bin`
 

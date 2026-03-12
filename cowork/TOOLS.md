@@ -19,7 +19,7 @@ Quand l'utilisateur demande quelque chose sur Telegram:
 - **Lire les emails**: `python3 C:/Users/franc/.openclaw/workspace/jarvis_mail.py read --count 5 --format telegram`
 - **Commandes systeme**: PowerShell via exec (voir section Controle Windows)
 - **Scanner le marche**: `curl.exe -s "https://contract.mexc.com/api/v1/contract/ticker"`
-- **Audit cluster**: `python3 /home/turbo/jarvis-linux/scripts/system_audit.py --quick`
+- **Audit cluster**: `python3 F:/BUREAU/turbo/scripts/system_audit.py --quick`
 
 ### Interpretation intelligente:
 - "envoie un mail a claire" → exec jarvis_mail.py send
@@ -77,7 +77,7 @@ Puis envoyer via l'API Telegram Bot (token en env TELEGRAM_BOT_TOKEN, chat_id en
 ## Scripts Python (/home/turbo/jarvis-linux\scripts\)
 
 - **system_audit.py** — Audit complet du cluster (5 noeuds, scores, grade A-F)
-  `python /home/turbo/jarvis-linux/scripts/system_audit.py [--json|--quick|--save]`
+  `python F:/BUREAU/turbo/scripts/system_audit.py [--json|--quick|--save]`
 - **scan_sniper.py** — Scan MEXC Futures: breakout/retournement pre-pump, top 3 avec entree/TP/SL
   `Set-Location /home/turbo/jarvis-linux; & /home/turbo\.local\bin\uv.exe run python scripts/scan_sniper.py`
   JSON: ajouter `--json` | Top N: ajouter `--top 5`
@@ -97,18 +97,18 @@ Puis envoyer via l'API Telegram Bot (token en env TELEGRAM_BOT_TOKEN, chat_id en
 ## Proxies IA (/home/turbo/jarvis-linux\)
 
 - **gemini-proxy.js** — Proxy Gemini 3 Pro/Flash avec timeout + fallback
-  `node /home/turbo/jarvis-linux/gemini-proxy.js "PROMPT"`
-  `node /home/turbo/jarvis-linux/gemini-proxy.js --json "PROMPT"`
+  `node F:/BUREAU/turbo/gemini-proxy.js "PROMPT"`
+  `node F:/BUREAU/turbo/gemini-proxy.js --json "PROMPT"`
 - **claude-proxy.js** — Proxy Claude Code avec fallback opus/sonnet/haiku
-  `node /home/turbo/jarvis-linux/claude-proxy.js "PROMPT"`
-  `node /home/turbo/jarvis-linux/claude-proxy.js --json "PROMPT"`
+  `node F:/BUREAU/turbo/claude-proxy.js "PROMPT"`
+  `node F:/BUREAU/turbo/claude-proxy.js --json "PROMPT"`
 
 ## Bases de Donnees
 
-- **etoile.db** (`/home/turbo\etoile.db`) — 11 tables, 2273 map entries, carte complete HEXA_CORE
+- **etoile.db** (`F:\BUREAU\etoile.db`) — 11 tables, 2273 map entries, carte complete HEXA_CORE
 - **jarvis.db** (`/home/turbo/jarvis-linux\data\jarvis.db`) — 6 tables: skills, actions, historique
-- **trading_latest.db** (`/home/turbo\carV1\database\trading_latest.db`) — trades/signaux
-- **trading.db** (`/home/turbo\TRADING_V2_PRODUCTION\database\trading.db`) — predictions
+- **trading_latest.db** (`F:\BUREAU\carV1\database\trading_latest.db`) — trades/signaux
+- **trading.db** (`F:\BUREAU\TRADING_V2_PRODUCTION\database\trading.db`) — predictions
 
 ## API Trading MEXC — UTILISE DIRECTEMENT curl.exe
 
@@ -131,7 +131,7 @@ Config: levier 10x, TP 0.4%, SL 0.25%, taille 10 USDT, score min 70/100
 - Python 3.13
 - uv: `/home/turbo\.local\bin\uv.exe`
 - Projet: `/home/turbo/jarvis-linux` (pyproject.toml)
-- Exec: `cd /home/turbo/jarvis-linux && C:/Users/franc/.local/bin/uv.exe run python SCRIPT`
+- Exec: `cd F:/BUREAU/turbo && C:/Users/franc/.local/bin/uv.exe run python SCRIPT`
 
 ## n8n
 

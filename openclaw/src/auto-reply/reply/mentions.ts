@@ -30,7 +30,7 @@ function normalizeMentionPattern(pattern: string): string {
   if (!pattern.includes(BACKSPACE_CHAR)) {
     return pattern;
   }
-  return pattern.split(BACKSPACE_CHAR).join("\\b");
+  return pattern.split(BACKSPACE_CHAR).join("/b");
 }
 
 function normalizeMentionPatterns(patterns: string[]): string[] {
@@ -139,7 +139,7 @@ export function stripStructuralPrefixes(text: string): string {
   return afterMarker
     .replace(/\[[^\]]+\]\s*/g, "")
     .replace(/^[ \t]*[A-Za-z0-9+()\-_. ]+:\s*/gm, "")
-    .replace(/\\n/g, " ")
+    .replace(//n/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }

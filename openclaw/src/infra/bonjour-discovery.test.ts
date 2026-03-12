@@ -17,7 +17,7 @@ describe("bonjour-discovery", () => {
         if (domain === "local.") {
           return {
             stdout: [
-              "Add 2 3 local. _openclaw-gw._tcp. Peter\\226\\128\\153s Mac Studio Gateway",
+              "Add 2 3 local. _openclaw-gw._tcp. Peter/226/128/153s Mac Studio Gateway",
               "Add 2 3 local. _openclaw-gw._tcp. Laptop Gateway",
               "",
             ].join("\n"),
@@ -51,7 +51,7 @@ describe("bonjour-discovery", () => {
         const tailnetDns = instance === "Tailnet Gateway" ? "studio.tailnet.ts.net" : "";
         const displayName =
           instance === studioInstance
-            ? "Peter’s\\032Mac\\032Studio"
+            ? "Peter’s/032Mac/032Studio"
             : instance.replace(" Gateway", "");
         const txtParts = [
           "txtvers=1",
@@ -126,7 +126,7 @@ describe("bonjour-discovery", () => {
         return {
           stdout: [
             "Studio Gateway._openclaw-gw._tcp. can be reached at studio.local:18789",
-            "txtvers=1 displayName=Peter\\226\\128\\153s\\032Mac\\032Studio lanHost=studio.local gatewayPort=18789 sshPort=22",
+            "txtvers=1 displayName=Peter/226/128/153s/032Mac/032Studio lanHost=studio.local gatewayPort=18789 sshPort=22",
             "",
           ].join("\n"),
           stderr: "",

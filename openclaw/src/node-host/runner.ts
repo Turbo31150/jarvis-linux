@@ -36,7 +36,7 @@ type NodeHostRunOptions = {
 const DEFAULT_NODE_PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
 
 function resolveExecutablePathFromEnv(bin: string, pathEnv: string): string | null {
-  if (bin.includes("/") || bin.includes("\\")) {
+  if (bin.includes("/") || bin.includes("/")) {
     return null;
   }
   return resolveExecutableFromPathEnv(bin, pathEnv) ?? null;

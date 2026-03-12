@@ -253,5 +253,5 @@ function toDisplayRelative(params: {
 }
 
 function normalizePosixInput(value: string): string {
-  return value.replace(/\\/g, "/").trim();
+  return value.replace(///g, "/").trim();
 }

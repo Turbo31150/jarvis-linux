@@ -62,7 +62,7 @@ function hasOwnKey(target: Record<string, unknown>, key: string): boolean {
 }
 
 function escapeControlForLog(value: string): string {
-  return value.replace(/\r/g, "\\r").replace(/\n/g, "\\n").replace(/\t/g, "\\t");
+  return value.replace(/\r/g, "/r").replace(/\n/g, "/n").replace(/\t/g, "/t");
 }
 
 function migrateThreadBindingsTtlHoursForPath(params: {

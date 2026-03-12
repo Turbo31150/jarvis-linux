@@ -126,7 +126,7 @@ Les pipelines executent plusieurs actions en sequence (separees par `;;`).
 | audit_securite_complet | "audit securite complet" | Get-MpComputerStatus | Select AntivirusEnabled, Re... > Get-NetTCPConnection -State Listen | Group-Object ... > Get-N... |
 | rapport_systeme_complet | "rapport systeme complet" | $cpu = (Get-CimInstance Win32_Processor).Name; $us... > $os = Get-CimInstance Win32_OperatingSystem; $used... > nvidi... |
 | maintenance_totale | "maintenance totale" | Clear-RecycleBin -Force -ErrorAction SilentlyConti... > Remove-Item $env:TEMP\* -Recurse -Force -ErrorActi... > Remov... (confirm) |
-| sauvegarde_tous_projets | "sauvegarde tous les projets" | cd /home/turbo/jarvis-linux; git add -A; git commit -m 'Bac... > cd /home/turbo\carV1; if(Test-Path .git){git add -A;... > cd F:... (confirm) |
+| sauvegarde_tous_projets | "sauvegarde tous les projets" | cd /home/turbo/jarvis-linux; git add -A; git commit -m 'Bac... > cd F:\BUREAU\carV1; if(Test-Path .git){git add -A;... > cd F:... (confirm) |
 | pomodoro_start | "pomodoro" | Stop-Process -Name 'discord','telegram','slack' -F... > MinimizeAll > pause 1s > Ouvrir code > $end = (Get-Date).AddM... |
 | pomodoro_break | "pause pomodoro" | MinimizeAll > pause 1s > Ouvrir spotify > $end = (Get-Date).AddMinutes(5).ToString('HH:mm');... |
 | mode_entretien | "mode entretien" | Stop-Process -Name 'spotify' -Force -ErrorAction S... > MinimizeAll > pause 1s > Settings > pause 1s > Ouvrir discord |
@@ -151,9 +151,9 @@ Les pipelines executent plusieurs actions en sequence (separees par `;;`).
 | verif_toutes_mises_a_jour | "verifie toutes les mises a jour" | try{$s=New-Object -ComObject Microsoft.Update.Sess... > & '/home/turbo\.local\bin\uv.exe' pip list --ou... > npm o... |
 | snapshot_systeme | "snapshot systeme" | $d = Get-Date -Format 'yyyy-MM-dd_HHmm'; $f = "F:\... |
 | dev_hotfix | "hotfix" | cd /home/turbo/jarvis-linux; $branch = 'hotfix/' + (Get-Dat... > pause 1s > Ouvrir code > pause 1s > Ouvrir wt |
-| dev_new_feature | "nouvelle feature" | cd /home/turbo/jarvis-linux; $branch = 'feature/' + (Get-Da... > pause 1s > Ouvrir code > pause 1s > Ouvrir wt > cd /home/turbo\... |
+| dev_new_feature | "nouvelle feature" | cd /home/turbo/jarvis-linux; $branch = 'feature/' + (Get-Da... > pause 1s > Ouvrir code > pause 1s > Ouvrir wt > cd F:\BUREAU\... |
 | dev_merge_prep | "prepare le merge" | cd /home/turbo/jarvis-linux; & '/home/turbo\.local\bin\u... > cd /home/turbo/jarvis-linux; & '/home/turbo\.local\bin\u... > cd F:... |
-| dev_database_check | "check les databases" | $j = (Get-Item '/home/turbo/jarvis-linux\data\jarvis.db' -E... > $e = (Get-Item '/home/turbo\etoile.db' -ErrorAction ... > $t = ... |
+| dev_database_check | "check les databases" | $j = (Get-Item '/home/turbo/jarvis-linux\data\jarvis.db' -E... > $e = (Get-Item 'F:\BUREAU\etoile.db' -ErrorAction ... > $t = ... |
 | dev_live_coding | "live coding" | Ouvrir obs64 > pause 2s > Ouvrir code > pause 1s > Ouvrir wt > pause 1s > Web: http://localhost:3000 |
 | dev_cleanup | "dev cleanup" | cd /home/turbo/jarvis-linux; $pycache = (Get-ChildItem -Rec... > cd /home/turbo/jarvis-linux; $ruff = & '/home/turbo\.loc... |
 | mode_double_ecran_dev | "mode double ecran dev" | DisplaySwitch.exe /extend > pause 2s > Ouvrir code > pause 1s > Raccourci: win+left > pause 1s > Web: http://127.0.0.... |
@@ -176,7 +176,7 @@ Les pipelines executent plusieurs actions en sequence (separees par `;;`).
 | mode_debug_production | "debug production" | Ouvrir wt > pause 1s > Web: http://127.0.0.1:8080 > pause 1s > Get-WinEvent -FilterHashtable @{LogName='Applicati... ... |
 | mode_apprentissage_code | "mode apprentissage code" | Web: https://leetcode.com > pause 1s > Ouvrir code > pause 1s > Web: https://docs.python.org/3/ > $end = (Get-Date).A... |
 | mode_tutorial | "mode tutorial" | Web: https://www.youtube.com > pause 1s > Ouvrir code > pause 1s > Ouvrir wt > pause 1s > Web: https://developer.mozi... |
-| mode_backup_total | "backup total" | cd /home/turbo/jarvis-linux; git add -A; git commit -m 'Ful... > cd /home/turbo\carV1; if(Test-Path .git){git add -A;... > cd F:... (confirm) |
+| mode_backup_total | "backup total" | cd /home/turbo/jarvis-linux; git add -A; git commit -m 'Ful... > cd F:\BUREAU\carV1; if(Test-Path .git){git add -A;... > cd F:... (confirm) |
 | ouvre_dashboards_trading | "tous les dashboards trading" | Web: https://www.tradingview.com > pause 1s > Web: https://www.mexc.com/exchange/BTC_USDT > pause 1s > Web: https://w... |
 | mode_photo_edit | "mode photo" | Ouvrir mspaint > pause 1s > Web: https://www.pinterest.com > pause 1s > Web: https://www.canva.com |
 | mode_writing | "mode ecriture" | MinimizeAll > pause 1s > Start-Process ms-settings:nightlight > pause 1s > Settings > pause 1s > Web: https://docs.go... |
@@ -215,7 +215,7 @@ Les pipelines executent plusieurs actions en sequence (separees par `;;`).
 | sim_check_matinal | "check matinal" | $m2 = try{(Invoke-WebRequest -Uri 'http://192.168.... > nvidia-smi --query-gpu=name,temperature.gpu,memory... > $os =... |
 | sim_start_coding | "je commence a coder" | cd /home/turbo/jarvis-linux; git pull --rebase 2>&1 | Out-String > Ouvrir code > pause 2s > Raccourci: win+left > pause 1s > O... |
 | sim_code_and_test | "teste mon code" | cd /home/turbo/jarvis-linux; & '/home/turbo\.local\bin\u... > cd /home/turbo/jarvis-linux; & '/home/turbo\.local\bin\u... > cd F:... |
-| sim_commit_and_push | "commit et push" | cd /home/turbo/jarvis-linux; git add -A; git status -sb > cd /home/turbo/jarvis-linux; git commit -m 'Update auto-JAR... > cd /home/turbo... (confirm) |
+| sim_commit_and_push | "commit et push" | cd /home/turbo/jarvis-linux; git add -A; git status -sb > cd /home/turbo/jarvis-linux; git commit -m 'Update auto-JAR... > cd F:\BUREAU... (confirm) |
 | sim_debug_session | "session debug complete" | Ouvrir code > pause 1s > Raccourci: ctrl+` > pause 1s > Raccourci: f12 > Get-WinEvent -FilterHashtable @{LogName='App... |
 | sim_avant_reunion | "prepare la reunion" | Stop-Process -Name 'spotify','obs64' -Force -Error... > MinimizeAll > pause 1s > Settings > pause 1s > Web: https://c... |
 | sim_rejoindre_reunion | "rejoins la reunion" | Ouvrir discord > pause 2s > Raccourci: win+p > "En reunion — partage ecran disponible via Win+P" |
@@ -252,11 +252,11 @@ Les pipelines executent plusieurs actions en sequence (separees par `;;`).
 | sim_audit_securite | "audit securite complet" | Get-NetTCPConnection -State Listen | Group-Object ... > Get-NetTCPConnection -State Established | Where Re... > $rdp ... |
 | sim_hardening_check | "check hardening" | Get-NetFirewallProfile | Select Name, Enabled | Out-String > $uac = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft... > ... |
 | sim_audit_mots_de_passe | "audit mots de passe" | net accounts 2>&1 | Out-String > Get-LocalUser | Select Name, Enabled, PasswordRequ... > "Audit mots de passe termine" |
-| sim_new_project_python | "nouveau projet python" | $name = 'new_project_' + (Get-Date -Format 'yyyyMM... > cd "/home/turbo\$((Get-ChildItem /home/turbo -Director... > Ouvri... |
-| sim_new_project_node | "nouveau projet node" | $name = 'node_project_' + (Get-Date -Format 'yyyyM... > cd "/home/turbo\$((Get-ChildItem /home/turbo -Director... > Ouvri... |
-| sim_clone_and_setup | "clone et setup {repo}" | cd /home/turbo; git clone '{repo}' 2>&1 | Out-String > pause 2s > Ouvrir code > pause 2s > "Repo clone et ouvert dans V... |
+| sim_new_project_python | "nouveau projet python" | $name = 'new_project_' + (Get-Date -Format 'yyyyMM... > cd "F:\BUREAU\$((Get-ChildItem F:\BUREAU -Director... > Ouvri... |
+| sim_new_project_node | "nouveau projet node" | $name = 'node_project_' + (Get-Date -Format 'yyyyM... > cd "F:\BUREAU\$((Get-ChildItem F:\BUREAU -Director... > Ouvri... |
+| sim_clone_and_setup | "clone et setup {repo}" | cd F:\BUREAU; git clone '{repo}' 2>&1 | Out-String > pause 2s > Ouvrir code > pause 2s > "Repo clone et ouvert dans V... |
 | sim_grand_nettoyage_disque | "grand nettoyage du disque" | $s1 = (Get-ChildItem $env:TEMP -Recurse -File -Err... > Remove-Item "$env:LOCALAPPDATA\Google\Chrome\User ... > Clear... (confirm) |
-| sim_archive_vieux_projets | "archive les vieux projets" | $old = Get-ChildItem /home/turbo -Directory | Where ... |
+| sim_archive_vieux_projets | "archive les vieux projets" | $old = Get-ChildItem F:\BUREAU -Directory | Where ... |
 | sim_scan_fichiers_orphelins | "scan fichiers orphelins" | "=== Fichiers > 100MB ==="; Get-ChildItem F:\BUREA... > "=== Doublons par nom ==="; Get-ChildItem F:\BUREA... > "=== ... |
 | sim_design_review | "review design complet" | Raccourci: win+shift+m > pause 3s > Raccourci: win+shift+c > pause 3s > Raccourci: win+shift+t > pause 3s > Raccourci... |
 | sim_layout_productif | "layout productif" | Ouvrir code > pause 2s > Raccourci: win+left > pause 1s > Web: http://127.0.0.1:8080 > pause 2s > Raccourci: win+righ... |
@@ -295,13 +295,13 @@ Les pipelines executent plusieurs actions en sequence (separees par `;;`).
 | sim_learn_coding | "session apprentissage code" | Web: https://www.youtube.com > pause 1s > Web: https://developer.mozilla.org > pause 1s > Web: https://www.w3schools.... |
 | sim_learn_ai | "session apprentissage ia" | Web: https://huggingface.co/learn > pause 1s > Web: https://arxiv.org/list/cs.AI/recent > pause 1s > Web: https://www... |
 | sim_pomodoro_25 | "lance un pomodoro" | Add-Type -AssemblyName System.Speech; (New-Object ... > Settings > Start-Sleep -Seconds 1500; Add-Type -AssemblyName ... |
-| sim_backup_turbo | "backup le projet" | cd /home/turbo/jarvis-linux; git bundle create /home/turbo\tu... > Compress-Archive -Path /home/turbo/jarvis-linux\data -Desti... > "Back... |
+| sim_backup_turbo | "backup le projet" | cd /home/turbo/jarvis-linux; git bundle create F:\BUREAU\tu... > Compress-Archive -Path /home/turbo/jarvis-linux\data -Desti... > "Back... |
 | sim_backup_verify | "verifie les backups" | Get-ChildItem /home/turbo/jarvis-linux_backup_*.bundle -Err... > Get-ChildItem /home/turbo/jarvis-linux_data_backup_*.zip -E... > "Veri... |
 | sim_morning_routine | "routine du matin" | Web: https://www.meteofrance.com > pause 1s > Web: https://news.google.com > pause 1s > Web: https://mail.google.com ... |
 | sim_evening_shutdown | "routine du soir" | cd /home/turbo/jarvis-linux; git status -sb 2>&1 | Out-String > cd /home/turbo/jarvis-linux; git stash 2>&1 | Out-String > Remove-Item ... |
 | sim_freelance_setup | "mode freelance" | Web: https://www.malt.fr > pause 1s > Web: https://mail.google.com > pause 1s > Ouvrir wt > "Setup freelance pret — M... |
 | sim_client_meeting | "prepare le meeting client" | Ouvrir ms-teams > pause 3s > Ouvrir notepad > pause 1s > cd /home/turbo/jarvis-linux; git log --oneline -5 2>&1 | Out-String >... |
-| sim_db_backup_all | "backup toutes les bases" | $d=Get-Date -Format yyyyMMdd; Copy-Item /home/turbo\... > $d=Get-Date -Format yyyyMMdd; Copy-Item /home/turbo\... > "Back... |
+| sim_db_backup_all | "backup toutes les bases" | $d=Get-Date -Format yyyyMMdd; Copy-Item F:\BUREAU\... > $d=Get-Date -Format yyyyMMdd; Copy-Item F:\BUREAU\... > "Back... |
 | sim_security_full_audit | "audit securite complet" | Get-NetTCPConnection -State Listen | Select -First... > Get-NetFirewallProfile | Select Name, Enabled | Fo... > Get-L... |
 | sim_security_network | "audit reseau" | Get-NetTCPConnection | Where { $_.State -eq 'Estab... > Get-DnsClientCache | Select -First 15 Entry, Data ... > arp -... |
 | sim_benchmark_system | "benchmark systeme" | $cpu = Get-CimInstance Win32_Processor; "CPU: $($c... > $ram = Get-CimInstance Win32_OperatingSystem; "RAM... > Get-P... |
@@ -703,20 +703,20 @@ Les pipelines executent plusieurs actions en sequence (separees par `;;`).
 | deplacer_fichier | Deplacer un fichier | "deplace {source} dans {destination}", "deplace {source} vers {destination}", "bouge {source} dans {destination}" | powershell |
 | explorer_nouvel_onglet | Nouvel onglet dans l'Explorateur | "nouvel onglet explorateur", "onglet explorateur", "new tab explorer", +1 | powershell |
 | dossier_captures | Ouvrir le dossier captures d'ecran | "dossier captures", "ouvre les captures", "dossier screenshots", +2 | powershell |
-| taille_dossiers_bureau | Taille de chaque dossier dans /home/turbo | "taille des projets", "poids des dossiers bureau", "combien pese chaque projet", +1 | powershell |
+| taille_dossiers_bureau | Taille de chaque dossier dans F:\BUREAU | "taille des projets", "poids des dossiers bureau", "combien pese chaque projet", +1 | powershell |
 | compresser_fichier | Compresser un dossier en ZIP | "compresse en zip", "zip le dossier", "cree un zip", +2 | powershell |
 | decompresser_fichier | Decompresser un fichier ZIP | "decompresse le zip", "unzip", "extrais l'archive", +2 | powershell |
 | compresser_turbo | Compresser le projet turbo en ZIP (sans .git ni venv) | "zip turbo", "archive turbo", "compresse le projet", +1 | powershell |
 | vider_dossier_temp | Supprimer les fichiers temporaires | "vide le temp", "nettoie les temporaires", "clean temp", +1 | powershell |
 | lister_fichiers_recents | Lister les 20 fichiers les plus recents sur le bureau | "fichiers recents", "derniers fichiers", "quoi de recent", +1 | powershell |
 | chercher_gros_fichiers | Trouver les fichiers > 100 MB sur F: | "gros fichiers partout", "fichiers enormes", "quoi prend toute la place", +1 | powershell |
-| doublons_bureau | Detecter les doublons potentiels par nom dans /home/turbo | "doublons bureau", "fichiers en double", "trouve les doublons", +2 | powershell |
+| doublons_bureau | Detecter les doublons potentiels par nom dans F:\BUREAU | "doublons bureau", "fichiers en double", "trouve les doublons", +2 | powershell |
 | taille_telechargements | Taille du dossier Telechargements | "taille telechargements", "poids downloads", "combien dans les telechargements", +1 | powershell |
 | vider_telechargements | Vider le dossier Telechargements (fichiers > 30 jours) | "vide les telechargements", "nettoie les downloads", "clean downloads", +1 | powershell |
 | lister_telechargements | Derniers fichiers telecharges | "derniers telechargements", "quoi de telecharge", "recent downloads", +1 | powershell |
 | ouvrir_telechargements | Ouvrir le dossier Telechargements | "ouvre les telechargements", "dossier downloads", "va dans les telechargements", +1 | powershell |
 | ouvrir_documents | Ouvrir le dossier Documents | "ouvre les documents", "dossier documents", "mes documents", +1 | powershell |
-| ouvrir_bureau_dossier | Ouvrir /home/turbo dans l'explorateur | "ouvre le bureau", "dossier bureau", "va dans bureau", +1 | powershell |
+| ouvrir_bureau_dossier | Ouvrir F:\BUREAU dans l'explorateur | "ouvre le bureau", "dossier bureau", "va dans bureau", +1 | powershell |
 | fichier_recent_modifie | Trouver le dernier fichier modifie partout | "dernier fichier modifie", "quoi vient de changer", "last modified", +1 | powershell |
 | compter_fichiers_type | Compter les fichiers par extension dans un dossier | "compte les fichiers par type", "extensions dans {path}", "quels types de fichiers dans {path}" | powershell |
 

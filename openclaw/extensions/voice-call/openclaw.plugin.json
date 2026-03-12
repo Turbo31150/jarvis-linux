@@ -211,11 +211,11 @@
       },
       "fromNumber": {
         "type": "string",
-        "pattern": "^\\+[1-9]\\d{1,14}$"
+        "pattern": "^/+[1-9]/d{1,14}$"
       },
       "toNumber": {
         "type": "string",
-        "pattern": "^\\+[1-9]\\d{1,14}$"
+        "pattern": "^/+[1-9]/d{1,14}$"
       },
       "inboundPolicy": {
         "type": "string",
@@ -225,7 +225,7 @@
         "type": "array",
         "items": {
           "type": "string",
-          "pattern": "^\\+[1-9]\\d{1,14}$"
+          "pattern": "^/+[1-9]/d{1,14}$"
         }
       },
       "inboundGreeting": {

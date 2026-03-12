@@ -100,7 +100,7 @@ except (ImportError, AttributeError, RuntimeError) as e:
     print(f"[WARN] Patch bitsandbytes echoue: {e}")
 
 # === CHEMINS ===
-TURBO_DIR = Path("/home/turbo/jarvis-linux")
+TURBO_DIR = Path("F:/BUREAU/turbo")
 FINETUNING_DIR = TURBO_DIR / "finetuning"
 DATASET_DIR = FINETUNING_DIR / "dataset"
 OUTPUT_DIR = FINETUNING_DIR / "output"

@@ -53,7 +53,7 @@ function isFilePath(candidate: string): boolean {
 }
 
 export function resolveWindowsExecutablePath(command: string, env: NodeJS.ProcessEnv): string {
-  if (command.includes("/") || command.includes("\\") || path.isAbsolute(command)) {
+  if (command.includes("/") || command.includes("/") || path.isAbsolute(command)) {
     return command;
   }
 
@@ -101,12 +101,12 @@ function resolveEntrypointFromCmdShim(wrapperPath: string): string | null {
     const candidates: string[] = [];
     for (const match of content.matchAll(/"([^"\r\n]*)"/g)) {
       const token = match[1] ?? "";
-      const relMatch = token.match(/%~?dp0%?\s*[\\/]*(.*)$/i);
+      const relMatch = token.match(/%~?dp0%?\s*[//]*(.*)$/i);
       const relative = relMatch?.[1]?.trim();
       if (!relative) {
         continue;
       }
-      const normalizedRelative = relative.replace(/[\\/]+/g, path.sep).replace(/^[\\/]+/, "");
+      const normalizedRelative = relative.replace(/[//]+/g, path.sep).replace(/^[//]+/, "");
       const candidate = path.resolve(path.dirname(wrapperPath), normalizedRelative);
       if (isFilePath(candidate)) {
         candidates.push(candidate);

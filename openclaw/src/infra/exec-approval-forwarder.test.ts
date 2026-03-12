@@ -309,7 +309,7 @@ describe("exec approval forwarder", () => {
     ).resolves.toBe(true);
     await Promise.resolve();
 
-    expect(getFirstDeliveryText(deliver)).toContain("Command: `bash safe\\u{200B}.sh`");
+    expect(getFirstDeliveryText(deliver)).toContain("Command: `bash safe/u{200B}.sh`");
   });
 
   it("formats complex commands as fenced code blocks", async () => {

@@ -466,7 +466,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
       approvals: expect.anything(),
       request: expect.objectContaining({
         command: ["/bin/sh", "-lc", '$0 "$1"', "/usr/bin/touch", "/tmp/marker"],
-        rawCommand: '/bin/sh -lc "$0 \\"$1\\"" /usr/bin/touch /tmp/marker',
+        rawCommand: '/bin/sh -lc "$0 /"$1/"" /usr/bin/touch /tmp/marker',
       }),
     });
   });
@@ -560,7 +560,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
 
     const runArgs = vi.mocked(runCommand).mock.calls[0]?.[0] as string[] | undefined;
     expect(runArgs).toBeDefined();
-    expect(runArgs?.[0]).toMatch(/(^|[/\\])tr$/);
+    expect(runArgs?.[0]).toMatch(/(^|[//])tr$/);
     expect(runArgs?.slice(1)).toEqual(["a", "b"]);
     expectInvokeOk(sendInvokeResult);
   });

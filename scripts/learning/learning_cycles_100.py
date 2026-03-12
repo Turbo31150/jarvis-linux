@@ -48,7 +48,7 @@ SCENARIOS = [
     {"id": 10, "cat": "fichiers", "cmd": "affiche la taille du dossier turbo", "expected": "Measure-Object", "powershell": "(Get-ChildItem F:/BUREAU/turbo -Recurse | Measure-Object -Property Length -Sum).Sum / 1MB"},
     {"id": 11, "cat": "fichiers", "cmd": "crée un fichier texte avec du contenu", "expected": "Set-Content", "powershell": "Set-Content -Path note.txt -Value 'Hello JARVIS'"},
     {"id": 12, "cat": "fichiers", "cmd": "déplace tous les PNG dans un dossier images", "expected": "Move-Item", "powershell": "Move-Item *.png ./images/ -Force"},
-    {"id": 13, "cat": "fichiers", "cmd": "affiche les 10 plus gros fichiers du disque", "expected": "Sort-Object", "powershell": "Get-ChildItem /\ -Recurse -File -ErrorAction SilentlyContinue | Sort-Object Length -Descending | Select -First 10 Name, @{N='MB';E={[math]::Round($_.Length/1MB,2)}}"},
+    {"id": 13, "cat": "fichiers", "cmd": "affiche les 10 plus gros fichiers du disque", "expected": "Sort-Object", "powershell": "Get-ChildItem C:/ -Recurse -File -ErrorAction SilentlyContinue | Sort-Object Length -Descending | Select -First 10 Name, @{N='MB';E={[math]::Round($_.Length/1MB,2)}}"},
     {"id": 14, "cat": "fichiers", "cmd": "vide la corbeille", "expected": "Clear-RecycleBin", "powershell": "Clear-RecycleBin -Force"},
     {"id": 15, "cat": "fichiers", "cmd": "ouvre le fichier config.json dans notepad", "expected": "notepad", "powershell": "Start-Process notepad config.json"},
 
@@ -93,7 +93,7 @@ SCENARIOS = [
     {"id": 49, "cat": "systeme", "cmd": "affiche la RAM disponible", "expected": "Get-CimInstance", "powershell": "$os = Get-CimInstance Win32_OperatingSystem; '{0:N2} GB libre / {1:N2} GB total' -f ($os.FreePhysicalMemory/1MB), ($os.TotalVisibleMemorySize/1MB)"},
     {"id": 50, "cat": "systeme", "cmd": "affiche la température GPU", "expected": "nvidia-smi", "powershell": "nvidia-smi --query-gpu=name,temperature.gpu,memory.used,memory.total --format=csv,noheader"},
     {"id": 51, "cat": "systeme", "cmd": "affiche les variables d'environnement", "expected": "Get-ChildItem Env:", "powershell": "Get-ChildItem Env: | Sort Name | Select Name, Value"},
-    {"id": 52, "cat": "systeme", "cmd": "ajoute un chemin au PATH", "expected": "Environment", "powershell": "[Environment]::SetEnvironmentVariable('Path', $env:Path + ';/\NewPath', 'User')"},
+    {"id": 52, "cat": "systeme", "cmd": "ajoute un chemin au PATH", "expected": "Environment", "powershell": "[Environment]::SetEnvironmentVariable('Path', $env:Path + ';C:/NewPath', 'User')"},
     {"id": 53, "cat": "systeme", "cmd": "planifie un redémarrage dans 1 heure", "expected": "shutdown", "powershell": "shutdown /r /t 3600 /c 'Redémarrage planifié par JARVIS'"},
     {"id": 54, "cat": "systeme", "cmd": "annule le redémarrage planifié", "expected": "shutdown /a", "powershell": "shutdown /a"},
     {"id": 55, "cat": "systeme", "cmd": "affiche les événements système récents", "expected": "Get-EventLog", "powershell": "Get-EventLog -LogName System -Newest 10 | Select TimeGenerated, EntryType, Message"},
@@ -111,7 +111,7 @@ SCENARIOS = [
     {"id": 65, "cat": "services", "cmd": "vérifie le statut du pare-feu Windows", "expected": "Get-NetFirewallProfile", "powershell": "Get-NetFirewallProfile | Select Name, Enabled"},
     {"id": 66, "cat": "services", "cmd": "active le bureau à distance", "expected": "Set-ItemProperty", "powershell": "Set-ItemProperty 'HKLM:/System/CurrentControlSet/Control/Terminal Server' -Name fDenyTSConnections -Value 0"},
     {"id": 67, "cat": "services", "cmd": "affiche les tâches planifiées", "expected": "Get-ScheduledTask", "powershell": "Get-ScheduledTask | Where State -eq Ready | Select TaskName, TaskPath | Sort TaskName"},
-    {"id": 68, "cat": "services", "cmd": "crée une tâche planifiée quotidienne", "expected": "Register-ScheduledTask", "powershell": "$action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument '-File /\script.ps1'; $trigger = New-ScheduledTaskTrigger -Daily -At '08:00'; Register-ScheduledTask -TaskName 'JarvisDaily' -Action $action -Trigger $trigger"},
+    {"id": 68, "cat": "services", "cmd": "crée une tâche planifiée quotidienne", "expected": "Register-ScheduledTask", "powershell": "$action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument '-File C:/script.ps1'; $trigger = New-ScheduledTaskTrigger -Daily -At '08:00'; Register-ScheduledTask -TaskName 'JarvisDaily' -Action $action -Trigger $trigger"},
     {"id": 69, "cat": "services", "cmd": "vérifie l'antivirus Windows Defender", "expected": "Get-MpComputerStatus", "powershell": "Get-MpComputerStatus | Select AntivirusEnabled, RealTimeProtectionEnabled, AntivirusSignatureLastUpdated"},
     {"id": 70, "cat": "services", "cmd": "lance un scan antivirus rapide", "expected": "Start-MpScan", "powershell": "Start-MpScan -ScanType QuickScan"},
 
@@ -133,7 +133,7 @@ SCENARIOS = [
     {"id": 83, "cat": "affichage", "cmd": "verrouille la session", "expected": "LockWorkStation", "powershell": "rundll32.exe user32.dll,LockWorkStation"},
     {"id": 84, "cat": "affichage", "cmd": "minimise toutes les fenêtres", "expected": "Shell.Application", "powershell": "(New-Object -ComObject Shell.Application).MinimizeAll()"},
     {"id": 85, "cat": "affichage", "cmd": "restaure toutes les fenêtres", "expected": "Shell.Application", "powershell": "(New-Object -ComObject Shell.Application).UndoMinimizeAll()"},
-    {"id": 86, "cat": "affichage", "cmd": "change le fond d'écran", "expected": "SystemParametersInfo", "powershell": "Add-Type @'`nusing System.Runtime.InteropServices;`npublic class Wallpaper { [DllImport(\"user32.dll\")] public static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni); }`n'@; [Wallpaper]::SystemParametersInfo(20, 0, '/\path/wallpaper.jpg', 3)"},
+    {"id": 86, "cat": "affichage", "cmd": "change le fond d'écran", "expected": "SystemParametersInfo", "powershell": "Add-Type @'`nusing System.Runtime.InteropServices;`npublic class Wallpaper { [DllImport(\"user32.dll\")] public static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni); }`n'@; [Wallpaper]::SystemParametersInfo(20, 0, 'C:/path/wallpaper.jpg', 3)"},
     {"id": 87, "cat": "affichage", "cmd": "active la veilleuse (night light)", "expected": "NightLight", "powershell": "Start-Process ms-settings:nightlight"},
     {"id": 88, "cat": "affichage", "cmd": "affiche les moniteurs connectés", "expected": "Get-CimInstance", "powershell": "Get-CimInstance Win32_DesktopMonitor | Select Name, ScreenWidth, ScreenHeight"},
     {"id": 89, "cat": "affichage", "cmd": "ouvre les paramètres d'affichage", "expected": "ms-settings:display", "powershell": "Start-Process ms-settings:display"},
@@ -302,7 +302,7 @@ async def run_cycles():
         "stats": stats,
         "results": results
     }
-    outpath = Path("/home/turbo/jarvis-linux/data") / f"learning_100cycles_{datetime.now().strftime('%Y%m%d_%H%M')}.json"
+    outpath = Path("F:/BUREAU/turbo/data") / f"learning_100cycles_{datetime.now().strftime('%Y%m%d_%H%M')}.json"
     outpath.parent.mkdir(exist_ok=True)
     outpath.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"\nRapport sauvé: {outpath}")

@@ -18,7 +18,7 @@ if (-not $docker) {
 $dockerDesktop = Get-Process "Docker Desktop" -ErrorAction SilentlyContinue
 if (-not $dockerDesktop) {
     Write-Host "[...] Lancement Docker Desktop..." -ForegroundColor Yellow
-    Start-Process "/Program Files\Docker\Docker\Docker Desktop.exe"
+    Start-Process "C:\Program Files\Docker\Docker\Docker Desktop.exe"
     Write-Host "  Attente du demarrage Docker (30s)..."
     Start-Sleep 30
 }

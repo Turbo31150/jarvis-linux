@@ -18,7 +18,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-TURBO_DIR = Path("/home/turbo/jarvis-linux")
+TURBO_DIR = Path("F:/BUREAU/turbo")
 FINETUNING_DIR = TURBO_DIR / "finetuning"
 OUTPUT_DIR = FINETUNING_DIR / "output"
 GGUF_DIR = FINETUNING_DIR / "gguf"

@@ -20,7 +20,7 @@
 **Step 1: Créer le répertoire et les fichiers vides**
 
 ```bash
-mkdir -p /home/turbo/jarvis-linux/canvas/data
+mkdir -p F:/BUREAU/turbo/canvas/data
 ```
 
 `canvas/data/memory.json`:
@@ -790,7 +790,7 @@ git commit -m "feat(autolearn): canvas UI — status badge + autolearn panel"
 # Kill existing proxy
 taskkill /F /IM node.exe /FI "WINDOWTITLE eq *18800*" 2>/dev/null
 # Start fresh
-cd /home/turbo/jarvis-linux/canvas && node direct-proxy.js &
+cd F:/BUREAU/turbo/canvas && node direct-proxy.js &
 ```
 
 **Step 2: Test health + autolearn status**

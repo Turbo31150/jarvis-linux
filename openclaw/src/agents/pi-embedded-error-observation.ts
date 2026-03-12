@@ -10,7 +10,7 @@ const RAW_ERROR_PREVIEW_MAX_CHARS = 400;
 const PROVIDER_ERROR_PREVIEW_MAX_CHARS = 200;
 const REQUEST_ID_RE = /\brequest[_ ]?id\b\s*[:=]\s*["'()]*([A-Za-z0-9._:-]+)/i;
 const OBSERVATION_EXTRA_REDACT_PATTERNS = [
-  String.raw`\b(?:x-)?api[-_]?key\b\s*[:=]\s*(["']?)([^\s"'\\;]+)\1`,
+  String.raw`\b(?:x-)?api[-_]?key\b\s*[:=]\s*(["']?)([^\s"'/;]+)\1`,
   String.raw`"(?:api[-_]?key|api_key)"\s*:\s*"([^"]+)"`,
   String.raw`(?:\bCookie\b\s*[:=]\s*[^;=\s]+=|;\s*[^;=\s]+=)([^;\s\r\n]+)`,
 ];

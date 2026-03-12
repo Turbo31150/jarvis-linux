@@ -2,13 +2,13 @@
 """JARVIS Full Status — Complete dashboard for Telegram.
 Combines: boot diagnostic + GPU details + cluster + DBs + automation + disk.
 
-Usage: python /home/turbo/jarvis-linux/scripts/jarvis_fullstatus_telegram.py
+Usage: python F:/BUREAU/turbo/scripts/jarvis_fullstatus_telegram.py
 """
 import json, subprocess, time, sqlite3, os, sys
 from pathlib import Path
 
 TIMEOUT = 5
-DATA = Path("/home/turbo/jarvis-linux/data")
+DATA = Path("F:/BUREAU/turbo/data")
 WS_URL = "http://127.0.0.1:9742"
 
 def run(cmd, timeout=TIMEOUT):

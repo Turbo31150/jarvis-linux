@@ -40,7 +40,7 @@ Add a `groupChat` block to `~/.openclaw/openclaw.json` so display-name pings wor
         id: "main",
         groupChat: {
           historyLimit: 50,
-          mentionPatterns: ["@?openclaw", "\\+?15555550123"],
+          mentionPatterns: ["@?openclaw", "/+?15555550123"],
         },
       },
     ],

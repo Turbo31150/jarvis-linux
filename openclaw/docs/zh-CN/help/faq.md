@@ -544,7 +544,7 @@ curl -fsSL https://openclaw.ai/install.sh | bash -s -- --install-method git --ve
   ```powershell
   npm config get prefix
   ```
-- 确保 `<prefix>\\bin` 在 PATH 中（在大多数系统上是 `%AppData%\\npm`）。
+- 确保 `<prefix>/bin` 在 PATH 中（在大多数系统上是 `%AppData%/npm`）。
 - 更新 PATH 后关闭并重新打开 PowerShell。
 
 如果你想要最顺畅的 Windows 设置，请使用 **WSL2** 而不是原生 Windows。

@@ -235,7 +235,7 @@ extension CronJobEditor {
         let raw = input.trimmingCharacters(in: .whitespacesAndNewlines)
         if raw.isEmpty { return nil }
 
-        let rx = try? NSRegularExpression(pattern: "^(\\d+(?:\\.\\d+)?)(ms|s|m|h|d)$", options: [.caseInsensitive])
+        let rx = try? NSRegularExpression(pattern: "^(/d+(?:/./d+)?)(ms|s|m|h|d)$", options: [.caseInsensitive])
         guard let match = rx?.firstMatch(in: raw, range: NSRange(location: 0, length: raw.utf16.count)) else {
             return nil
         }

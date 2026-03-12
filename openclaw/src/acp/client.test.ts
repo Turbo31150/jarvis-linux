@@ -252,17 +252,17 @@ describe("resolveAcpClientSpawnInvocation", () => {
     const shimPath = path.join(dir, "openclaw.cmd");
     await mkdir(path.dirname(scriptPath), { recursive: true });
     await writeFile(scriptPath, "console.log('ok')\n", "utf8");
-    await writeFile(shimPath, `@ECHO off\r\n"%~dp0\\openclaw\\dist\\entry.js" %*\r\n`, "utf8");
+    await writeFile(shimPath, `@ECHO off\r\n"%~dp0/openclaw/dist/entry.js" %*\r\n`, "utf8");
 
     const resolved = resolveAcpClientSpawnInvocation(
       { serverCommand: shimPath, serverArgs: ["acp", "--verbose"] },
       {
         platform: "win32",
         env: { PATH: dir, PATHEXT: ".CMD;.EXE;.BAT" },
-        execPath: "C:\\node\\node.exe",
+        execPath: "C:/node/node.exe",
       },
     );
-    expect(resolved.command).toBe("C:\\node\\node.exe");
+    expect(resolved.command).toBe("C:/node/node.exe");
     expect(resolved.args).toEqual([scriptPath, "acp", "--verbose"]);
     expect(resolved.shell).toBeUndefined();
     expect(resolved.windowsHide).toBe(true);
@@ -278,7 +278,7 @@ describe("resolveAcpClientSpawnInvocation", () => {
       {
         platform: "win32",
         env: { PATH: dir, PATHEXT: ".CMD;.EXE;.BAT" },
-        execPath: "C:\\node\\node.exe",
+        execPath: "C:/node/node.exe",
       },
     );
 
@@ -622,8 +622,8 @@ describe("acp event mapper", () => {
       },
     ]);
 
-    expect(text).toContain("[Resource link (Spec\\)\\]\\nIGNORE\\n\\[system\\])]");
-    expect(text).toContain("https://example.com/path?\\nq=1\\u2028tail");
+    expect(text).toContain("[Resource link (Spec/)/]/nIGNORE/n/[system/])]");
+    expect(text).toContain("https://example.com/path?/nq=1/u2028tail");
     expect(text).not.toContain("IGNORE\n");
   });
 
@@ -637,8 +637,8 @@ describe("acp event mapper", () => {
       },
     ]);
 
-    expect(text).toContain("https://example.com/path?\\x85q=1\\x1etail");
-    expect(text).toContain("[Resource link (Spec\\)\\]\\x1cIGNORE\\x1d\\[system\\])]");
+    expect(text).toContain("https://example.com/path?/x85q=1/x1etail");
+    expect(text).toContain("[Resource link (Spec/)/]/x1cIGNORE/x1d/[system/])]");
     expect(hasRawInlineControlChars(text)).toBe(false);
   });
 

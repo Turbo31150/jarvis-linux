@@ -11,7 +11,7 @@ const EXEC_SECRET_REF_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:/-]{0,255}$/;
 export const SINGLE_VALUE_FILE_REF_ID = "value";
 export const FILE_SECRET_REF_ID_PATTERN = /^(?:value|\/(?:[^~]|~0|~1)*(?:\/(?:[^~]|~0|~1)*)*)$/;
 export const EXEC_SECRET_REF_ID_JSON_SCHEMA_PATTERN =
-  "^(?!.*(?:^|/)\\.{1,2}(?:/|$))[A-Za-z0-9][A-Za-z0-9._:/-]{0,255}$";
+  "^(?!.*(?:^|/)/.{1,2}(?:/|$))[A-Za-z0-9][A-Za-z0-9._:/-]{0,255}$";
 
 export type ExecSecretRefIdValidationReason = "pattern" | "traversal-segment";
 

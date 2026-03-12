@@ -41,7 +41,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Optional
 
-TURBO = Path("/home/turbo/jarvis-linux")
+TURBO = Path("F:/BUREAU/turbo")
 DB_PATH = str(TURBO / "data" / "cluster_autonomy.db")
 ORCH_DB = str(TURBO / "data" / "task_orchestrator.db")
 LOG_PATH = str(TURBO / "data" / "cluster_autonomy.log")

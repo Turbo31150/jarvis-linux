@@ -1,11 +1,11 @@
 """JARVIS Boot & Diagnostic — Script autonome pour Telegram.
-Lance via: python /home/turbo/jarvis-linux/scripts/jarvis_boot_telegram.py
+Lance via: python F:/BUREAU/turbo/scripts/jarvis_boot_telegram.py
 Retourne un rapport JSON compact."""
 
 import json, subprocess, time, sqlite3, os, sys
 
 TIMEOUT = 5
-DATA = "/home/turbo/jarvis-linux/data"
+DATA = "F:/BUREAU/turbo/data"
 
 def run(cmd, timeout=TIMEOUT):
     try:

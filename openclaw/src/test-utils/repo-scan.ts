@@ -47,7 +47,7 @@ function hasAllowedExtension(fileName: string, extensions: readonly string[]): b
 }
 
 function normalizeRelativePath(relativePath: string): string {
-  return relativePath.replaceAll("\\", "/");
+  return relativePath.replaceAll("/", "/");
 }
 
 function toSortedUnique(values: readonly string[]): Array<string> {

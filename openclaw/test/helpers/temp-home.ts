@@ -80,7 +80,7 @@ function setTempHome(base: string) {
     return;
   }
   process.env.HOMEDRIVE = match[1];
-  process.env.HOMEPATH = match[2] || "\\";
+  process.env.HOMEPATH = match[2] || "/";
 }
 
 async function allocateTempHomeBase(prefix: string): Promise<string> {

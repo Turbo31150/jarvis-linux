@@ -57,7 +57,7 @@ except Exception as e:
 MODEL = "Qwen/Qwen3-8B"
 TRAIN_FILE = r"/home/turbo/jarvis-linux\finetuning\dataset\jarvis_final_train.jsonl"
 EVAL_FILE = r"/home/turbo/jarvis-linux\finetuning\dataset\jarvis_final_eval.jsonl"
-OUTPUT_DIR = Path(r"/home/turbo/jarvis-linux/finetuning/output")
+OUTPUT_DIR = Path(r"F:/BUREAU/turbo/finetuning/output")
 
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 run_name = f"jarvis-qwen3-8b-3080-main-{timestamp}"

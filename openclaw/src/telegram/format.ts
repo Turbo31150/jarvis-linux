@@ -136,17 +136,17 @@ export function markdownToTelegramHtml(
  */
 /** Escape regex metacharacters in a string */
 function escapeRegex(str: string): string {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return str.replace(/[.*+?^${}()|[\]/]/g, "/$&");
 }
 
 const FILE_EXTENSIONS_PATTERN = Array.from(FILE_EXTENSIONS_WITH_TLD).map(escapeRegex).join("|");
 const AUTO_LINKED_ANCHOR_PATTERN = /<a\s+href="https?:\/\/([^"]+)"[^>]*>\1<\/a>/gi;
 const FILE_REFERENCE_PATTERN = new RegExp(
-  `(^|[^a-zA-Z0-9_\\-/])([a-zA-Z0-9_.\\-./]+\\.(?:${FILE_EXTENSIONS_PATTERN}))(?=$|[^a-zA-Z0-9_\\-/])`,
+  `(^|[^a-zA-Z0-9_/-/])([a-zA-Z0-9_./-./]+/.(?:${FILE_EXTENSIONS_PATTERN}))(?=$|[^a-zA-Z0-9_/-/])`,
   "gi",
 );
 const ORPHANED_TLD_PATTERN = new RegExp(
-  `([^a-zA-Z0-9]|^)([A-Za-z]\\.(?:${FILE_EXTENSIONS_PATTERN}))(?=[^a-zA-Z0-9/]|$)`,
+  `([^a-zA-Z0-9]|^)([A-Za-z]/.(?:${FILE_EXTENSIONS_PATTERN}))(?=[^a-zA-Z0-9/]|$)`,
   "g",
 );
 const HTML_TAG_PATTERN = /(<\/?)([a-zA-Z][a-zA-Z0-9-]*)\b[^>]*?>/gi;

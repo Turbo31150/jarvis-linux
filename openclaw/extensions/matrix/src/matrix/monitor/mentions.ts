@@ -21,16 +21,16 @@ function checkFormattedBodyMention(formattedBody: string | undefined, userId: st
     return false;
   }
   // Escape special regex characters in the user ID (e.g., @user:matrix.org)
-  const escapedUserId = userId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const escapedUserId = userId.replace(/[.*+?^${}()|[\]/]/g, "/$&");
   // Match matrix.to links with the user ID, handling both URL-encoded and plain formats
   // Example: href="https://matrix.to/#/@user:matrix.org" or href="https://matrix.to/#/%40user%3Amatrix.org"
-  const plainPattern = new RegExp(`href=["']https://matrix\\.to/#/${escapedUserId}["']`, "i");
+  const plainPattern = new RegExp(`href=["']https://matrix/.to/#/${escapedUserId}["']`, "i");
   if (plainPattern.test(formattedBody)) {
     return true;
   }
   // Also check URL-encoded version (@ -> %40, : -> %3A)
-  const encodedUserId = encodeURIComponent(userId).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const encodedPattern = new RegExp(`href=["']https://matrix\\.to/#/${encodedUserId}["']`, "i");
+  const encodedUserId = encodeURIComponent(userId).replace(/[.*+?^${}()|[\]/]/g, "/$&");
+  const encodedPattern = new RegExp(`href=["']https://matrix/.to/#/${encodedUserId}["']`, "i");
   return encodedPattern.test(formattedBody);
 }
 

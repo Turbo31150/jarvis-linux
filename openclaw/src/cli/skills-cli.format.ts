@@ -44,7 +44,7 @@ function normalizeSkillEmoji(emoji?: string): string {
 }
 
 const REMAINING_ESC_SEQUENCE_REGEX = new RegExp(
-  String.raw`\u001b(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])`,
+  String.raw`\u001b(?:[@-Z/-_]|\[[0-?]*[ -/]*[@-~])`,
   "g",
 );
 const JSON_CONTROL_CHAR_REGEX = new RegExp(String.raw`[\u0000-\u001f\u007f-\u009f]`, "g");

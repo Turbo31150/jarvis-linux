@@ -149,7 +149,7 @@ function mapContainerWorkspaceFileUrl(params: {
   }
   // Sandbox paths are Linux-style (/workspace/*). Parse the URL path directly so
   // Windows hosts can still accept file:///workspace/... media references.
-  const normalizedPathname = decodeURIComponent(parsed.pathname).replace(/\\/g, "/");
+  const normalizedPathname = decodeURIComponent(parsed.pathname).replace(///g, "/");
   if (
     normalizedPathname !== SANDBOX_CONTAINER_WORKDIR &&
     !normalizedPathname.startsWith(`${SANDBOX_CONTAINER_WORKDIR}/`)
@@ -166,7 +166,7 @@ function mapContainerWorkspacePath(params: {
   candidate: string;
   sandboxRoot: string;
 }): string | undefined {
-  const normalized = params.candidate.replace(/\\/g, "/");
+  const normalized = params.candidate.replace(///g, "/");
   if (normalized === SANDBOX_CONTAINER_WORKDIR) {
     return path.resolve(params.sandboxRoot);
   }

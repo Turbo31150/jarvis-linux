@@ -116,7 +116,7 @@ function expectWorkerTranscriptPath(
   expect(session).toMatchObject({ key: "agent:worker:main" });
   const transcriptPath = String(session?.transcriptPath ?? "");
   expect(path.normalize(transcriptPath)).toContain(path.normalize(params.containsPath));
-  expect(transcriptPath).toMatch(new RegExp(`${params.sessionId}\\.jsonl$`));
+  expect(transcriptPath).toMatch(new RegExp(`${params.sessionId}/.jsonl$`));
 }
 
 async function withStubbedStateDir<T>(

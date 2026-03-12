@@ -166,7 +166,7 @@ describe("secrets audit", () => {
       execScriptPath,
       [
         "#!/bin/sh",
-        `printf 'x\\n' >> ${JSON.stringify(execLogPath)}`,
+        `printf 'x/n' >> ${JSON.stringify(execLogPath)}`,
         "cat >/dev/null",
         'printf \'{"protocolVersion":1,"values":{"providers/openai/apiKey":"value:providers/openai/apiKey","providers/moonshot/apiKey":"value:providers/moonshot/apiKey"}}\'', // pragma: allowlist secret
       ].join("\n"),
@@ -224,7 +224,7 @@ describe("secrets audit", () => {
       [
         "#!/usr/bin/env node",
         "import fs from 'node:fs';",
-        `fs.appendFileSync(${JSON.stringify(execLogPath)}, 'x\\n');`,
+        `fs.appendFileSync(${JSON.stringify(execLogPath)}, 'x/n');`,
         "process.exit(1);",
       ].join("\n"),
       { encoding: "utf8", mode: 0o700 },

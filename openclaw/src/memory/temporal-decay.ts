@@ -42,7 +42,7 @@ export function applyTemporalDecayToScore(params: {
 }
 
 function parseMemoryDateFromPath(filePath: string): Date | null {
-  const normalized = filePath.replaceAll("\\", "/").replace(/^\.\//, "");
+  const normalized = filePath.replaceAll("/", "/").replace(/^\.\//, "");
   const match = DATED_MEMORY_PATH_RE.exec(normalized);
   if (!match) {
     return null;
@@ -69,7 +69,7 @@ function parseMemoryDateFromPath(filePath: string): Date | null {
 }
 
 function isEvergreenMemoryPath(filePath: string): boolean {
-  const normalized = filePath.replaceAll("\\", "/").replace(/^\.\//, "");
+  const normalized = filePath.replaceAll("/", "/").replace(/^\.\//, "");
   if (normalized === "MEMORY.md" || normalized === "memory.md") {
     return true;
   }

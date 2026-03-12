@@ -2800,7 +2800,7 @@ Notes:
     consoleLevel: "info",
     consoleStyle: "pretty", // pretty | compact | json
     redactSensitive: "tools", // off | tools
-    redactPatterns: ["\\bTOKEN\\b\\s*[=:]\\s*([\"']?)([^\\s\"']+)\\1"],
+    redactPatterns: ["/bTOKEN/b/s*[=:]/s*([\"']?)([^/s\"']+)/1"],
   },
 }
 ```

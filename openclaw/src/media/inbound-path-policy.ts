@@ -12,7 +12,7 @@ function normalizePosixAbsolutePath(value: string): string | undefined {
   if (!trimmed || trimmed.includes("\0")) {
     return undefined;
   }
-  const normalized = path.posix.normalize(trimmed.replaceAll("\\", "/"));
+  const normalized = path.posix.normalize(trimmed.replaceAll("/", "/"));
   const isAbsolute = normalized.startsWith("/") || WINDOWS_DRIVE_ABS_RE.test(normalized);
   if (!isAbsolute || normalized === "/") {
     return undefined;

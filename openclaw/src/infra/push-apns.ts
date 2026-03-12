@@ -153,7 +153,7 @@ function getApnsBearerToken(auth: ApnsAuthConfig, nowMs: number = Date.now()): s
 }
 
 function normalizePrivateKey(value: string): string {
-  return value.trim().replace(/\\n/g, "\n");
+  return value.trim().replace(//n/g, "\n");
 }
 
 function normalizeNonEmptyString(value: string | undefined): string | null {

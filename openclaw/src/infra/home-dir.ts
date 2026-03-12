@@ -17,11 +17,11 @@ export function resolveEffectiveHomeDir(
 function resolveRawHomeDir(env: NodeJS.ProcessEnv, homedir: () => string): string | undefined {
   const explicitHome = normalize(env.OPENCLAW_HOME);
   if (explicitHome) {
-    if (explicitHome === "~" || explicitHome.startsWith("~/") || explicitHome.startsWith("~\\")) {
+    if (explicitHome === "~" || explicitHome.startsWith("~/") || explicitHome.startsWith("~/")) {
       const fallbackHome =
         normalize(env.HOME) ?? normalize(env.USERPROFILE) ?? normalizeSafe(homedir);
       if (fallbackHome) {
-        return explicitHome.replace(/^~(?=$|[\\/])/, fallbackHome);
+        return explicitHome.replace(/^~(?=$|[//])/, fallbackHome);
       }
       return undefined;
     }
@@ -73,5 +73,5 @@ export function expandHomePrefix(
   if (!home) {
     return input;
   }
-  return input.replace(/^~(?=$|[\\/])/, home);
+  return input.replace(/^~(?=$|[//])/, home);
 }

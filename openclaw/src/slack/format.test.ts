@@ -69,7 +69,7 @@ describe("escapeSlackMrkdwn", () => {
   });
 
   it("escapes slack and mrkdwn control characters", () => {
-    expect(escapeSlackMrkdwn("mode_*`~<&>\\")).toBe("mode\\_\\*\\`\\~&lt;&amp;&gt;\\\\");
+    expect(escapeSlackMrkdwn("mode_*`~<&>/")).toBe("mode/_/*/`/~&lt;&amp;&gt;//");
   });
 });
 

@@ -24,23 +24,23 @@ const INHERIT_FLAGS = new Set(["I", "OI", "CI", "IO", "NP"]);
 const WORLD_PRINCIPALS = new Set([
   "everyone",
   "users",
-  "builtin\\users",
+  "builtin/users",
   "authenticated users",
-  "nt authority\\authenticated users",
+  "nt authority/authenticated users",
 ]);
 const TRUSTED_BASE = new Set([
-  "nt authority\\system",
+  "nt authority/system",
   "system",
-  "builtin\\administrators",
+  "builtin/administrators",
   "creator owner",
   // Localized SYSTEM account names (French, German, Spanish, Portuguese)
-  "autorite nt\\système",
-  "nt-autorität\\system",
-  "autoridad nt\\system",
-  "autoridade nt\\system",
+  "autorite nt/système",
+  "nt-autorität/system",
+  "autoridad nt/system",
+  "autoridade nt/system",
 ]);
-const WORLD_SUFFIXES = ["\\users", "\\authenticated users"];
-const TRUSTED_SUFFIXES = ["\\administrators", "\\system", "\\système"];
+const WORLD_SUFFIXES = ["/users", "/authenticated users"];
+const TRUSTED_SUFFIXES = ["/administrators", "/system", "/système"];
 
 // Accept an optional leading * which icacls prefixes to SIDs when invoked with /sid
 // (e.g. *S-1-5-18 instead of S-1-5-18).
@@ -76,7 +76,7 @@ export function resolveWindowsUserPrincipal(env?: NodeJS.ProcessEnv): string | n
     return null;
   }
   const domain = env?.USERDOMAIN?.trim();
-  return domain ? `${domain}\\${username}` : username;
+  return domain ? `${domain}/${username}` : username;
 }
 
 function buildTrustedPrincipals(env?: NodeJS.ProcessEnv): Set<string> {
@@ -84,7 +84,7 @@ function buildTrustedPrincipals(env?: NodeJS.ProcessEnv): Set<string> {
   const principal = resolveWindowsUserPrincipal(env);
   if (principal) {
     trusted.add(normalize(principal));
-    const parts = principal.split("\\");
+    const parts = principal.split("/");
     const userOnly = parts.at(-1);
     if (userOnly) {
       trusted.add(normalize(userOnly));

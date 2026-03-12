@@ -525,7 +525,7 @@ describe("buildAgentSystemPrompt", () => {
       workspaceDir: "/tmp/openclaw",
       contextFiles: [
         { path: "./SOUL.md", content: "Persona" },
-        { path: "dir\\SOUL.md", content: "Persona Windows" },
+        { path: "dir/SOUL.md", content: "Persona Windows" },
       ],
     });
 

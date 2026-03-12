@@ -358,7 +358,7 @@ describe("edge cases", () => {
   });
 
   it("does not match filenames containing angle brackets", () => {
-    // The regex character class [a-zA-Z0-9_.\\-./] doesn't include < >
+    // The regex character class [a-zA-Z0-9_./-./] doesn't include < >
     // so these won't be matched and wrapped (which is correct/safe)
     const input = "file<script>.md";
     const result = wrapFileReferencesInHtml(input);

@@ -4,9 +4,9 @@ import json
 from pathlib import Path
 from datetime import datetime
 
-INBOX = Path("/home/turbo/jarvis-linux/tasks/for_perplexity")
-OUTBOX = Path("/home/turbo/jarvis-linux/tasks/from_perplexity")
-ARCHIVE = Path("/home/turbo/jarvis-linux/tasks/archive")
+INBOX = Path("F:/BUREAU/turbo/tasks/for_perplexity")
+OUTBOX = Path("F:/BUREAU/turbo/tasks/from_perplexity")
+ARCHIVE = Path("F:/BUREAU/turbo/tasks/archive")
 
 def watch_tasks():
     """Surveille les nouvelles taches de Claude Code."""

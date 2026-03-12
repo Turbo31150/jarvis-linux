@@ -12,7 +12,7 @@ import { stripAnsi, visibleWidth } from "../../terminal/ansi.js";
 import { findWordBoundaryIndex, fuzzyFilterLower } from "./fuzzy-filter.js";
 
 const ANSI_ESCAPE = String.fromCharCode(27);
-const ANSI_SGR_REGEX = new RegExp(`${ANSI_ESCAPE}\\[[0-9;]*m`, "g");
+const ANSI_SGR_REGEX = new RegExp(`${ANSI_ESCAPE}/[[0-9;]*m`, "g");
 
 export interface SearchableSelectListTheme extends SelectListTheme {
   searchPrompt: (text: string) => string;
@@ -129,7 +129,7 @@ export class SearchableSelectList implements Component {
   }
 
   private escapeRegex(str: string): string {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return str.replace(/[.*+?^${}()|[\]/]/g, "/$&");
   }
 
   private compareByScore = (

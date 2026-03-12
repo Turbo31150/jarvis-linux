@@ -435,11 +435,11 @@ describe("exec approvals shell parsing", () => {
         reason: "unsupported shell token: \n",
       },
       {
-        command: 'echo "ok $\\\n(id -u)"',
+        command: 'echo "ok $/\n(id -u)"',
         reason: "unsupported shell token: newline",
       },
       {
-        command: 'echo "ok $\\\r\n(id -u)"',
+        command: 'echo "ok $/\r\n(id -u)"',
         reason: "unsupported shell token: newline",
       },
       {
@@ -456,7 +456,7 @@ describe("exec approvals shell parsing", () => {
   });
 
   it("accepts inert substitution-like syntax", () => {
-    const cases = ['echo "output: \\$(whoami)"', "echo 'output: $(whoami)'"];
+    const cases = ['echo "output: /$(whoami)"', "echo 'output: $(whoami)'"];
     for (const command of cases) {
       const res = analyzeShellCommand({ command });
       expect(res.ok).toBe(true);
@@ -481,7 +481,7 @@ describe("exec approvals shell parsing", () => {
         command: "/usr/bin/cat <<-EOF\n\tline one\n\tline two\n\tEOF",
         expectedArgv: ["/usr/bin/cat"],
       },
-      { command: "/usr/bin/cat <<EOF\n\\$(id)\nEOF", expectedArgv: ["/usr/bin/cat"] },
+      { command: "/usr/bin/cat <<EOF\n/$(id)\nEOF", expectedArgv: ["/usr/bin/cat"] },
       { command: "/usr/bin/cat <<'EOF'\n$(id)\nEOF", expectedArgv: ["/usr/bin/cat"] },
       { command: '/usr/bin/cat <<"EOF"\n$(id)\nEOF', expectedArgv: ["/usr/bin/cat"] },
       {
@@ -526,11 +526,11 @@ describe("exec approvals shell parsing", () => {
 
   it("parses windows quoted executables", () => {
     const res = analyzeShellCommand({
-      command: '"C:\\Program Files\\Tool\\tool.exe" --version',
+      command: '"C:/Program Files/Tool/tool.exe" --version',
       platform: "win32",
     });
     expect(res.ok).toBe(true);
-    expect(res.segments[0]?.argv).toEqual(["C:\\Program Files\\Tool\\tool.exe", "--version"]);
+    expect(res.segments[0]?.argv).toEqual(["C:/Program Files/Tool/tool.exe", "--version"]);
   });
 
   it("normalizes short option clusters with attached payloads", () => {
@@ -605,7 +605,7 @@ describe("exec approvals shell allowlist (chained commands)", () => {
 
   it("respects quoted chain separators", () => {
     const allowlist: ExecAllowlistEntry[] = [{ pattern: "/usr/bin/echo" }];
-    const commands = ['/usr/bin/echo "foo && bar"', '/usr/bin/echo "foo\\" && bar"'];
+    const commands = ['/usr/bin/echo "foo && bar"', '/usr/bin/echo "foo/" && bar"'];
     for (const command of commands) {
       const result = evaluateShellAllowlist({
         command,
@@ -620,7 +620,7 @@ describe("exec approvals shell allowlist (chained commands)", () => {
 
   it("fails allowlist analysis for shell line continuations", () => {
     const result = evaluateShellAllowlist({
-      command: 'echo "ok $\\\n(id -u)"',
+      command: 'echo "ok $/\n(id -u)"',
       allowlist: [{ pattern: "/usr/bin/echo" }],
       safeBins: new Set(),
       cwd: "/tmp",

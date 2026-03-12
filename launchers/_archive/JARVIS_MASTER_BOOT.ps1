@@ -342,7 +342,7 @@ Reponds en format structure court.
     }
 
     # 4e. Disk check
-    foreach ($drive in @("/", "F:\")) {
+    foreach ($drive in @("C:\", "F:\")) {
         try {
             $disk = Get-PSDrive -Name $drive[0] 2>$null
             if ($disk) {

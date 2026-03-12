@@ -204,7 +204,7 @@ describe("system run command helpers", () => {
       throw new Error("unreachable");
     }
     expect(res.shellPayload).toBe('$0 "$1"');
-    expect(res.commandText).toBe('/bin/sh -lc "$0 \\"$1\\"" /usr/bin/touch /tmp/marker');
+    expect(res.commandText).toBe('/bin/sh -lc "$0 /"$1/"" /usr/bin/touch /tmp/marker');
     expect(res.previewText).toBe(null);
   });
 

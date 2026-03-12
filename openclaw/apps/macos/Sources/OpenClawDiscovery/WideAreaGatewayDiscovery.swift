@@ -274,9 +274,9 @@ enum WideAreaGatewayDiscovery {
 
     private static func unescapeTxt(_ value: String) -> String {
         value
-            .replacingOccurrences(of: "\\\\", with: "\\")
-            .replacingOccurrences(of: "\\\"", with: "\"")
-            .replacingOccurrences(of: "\\n", with: "\n")
+            .replacingOccurrences(of: "//", with: "/")
+            .replacingOccurrences(of: "/\"", with: "\"")
+            .replacingOccurrences(of: "/n", with: "\n")
     }
 
     private static func mapTxt(tokens: [String]) -> [String: String] {
@@ -322,7 +322,7 @@ enum WideAreaGatewayDiscovery {
         var i = 0
         while i < chars.count {
             let ch = chars[i]
-            if ch == "\\", i + 3 < chars.count {
+            if ch == "/", i + 3 < chars.count {
                 let digits = String(chars[(i + 1)...(i + 3)])
                 if digits.allSatisfy(\.isNumber),
                    let byte = UInt8(digits)

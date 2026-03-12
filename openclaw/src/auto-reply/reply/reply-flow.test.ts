@@ -21,13 +21,13 @@ describe("normalizeInboundTextNewlines", () => {
     const cases = [
       { input: "hello\r\nworld", expected: "hello\nworld" },
       { input: "hello\rworld", expected: "hello\nworld" },
-      { input: "C:\\Work\\nxxx\\README.md", expected: "C:\\Work\\nxxx\\README.md" },
+      { input: "C:/Work/nxxx/README.md", expected: "C:/Work/nxxx/README.md" },
       {
-        input: "Please read the file at C:\\Work\\nxxx\\README.md",
-        expected: "Please read the file at C:\\Work\\nxxx\\README.md",
+        input: "Please read the file at C:/Work/nxxx/README.md",
+        expected: "Please read the file at C:/Work/nxxx/README.md",
       },
-      { input: "C:\\new\\notes\\nested", expected: "C:\\new\\notes\\nested" },
-      { input: "Line 1\r\nC:\\Work\\nxxx", expected: "Line 1\nC:\\Work\\nxxx" },
+      { input: "C:/new/notes/nested", expected: "C:/new/notes/nested" },
+      { input: "Line 1\r\nC:/Work/nxxx", expected: "Line 1\nC:/Work/nxxx" },
     ] as const;
 
     for (const testCase of cases) {

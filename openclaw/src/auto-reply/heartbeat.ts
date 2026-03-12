@@ -67,7 +67,7 @@ function stripTokenAtEdges(raw: string): { text: string; didStrip: boolean } {
 
   const token = HEARTBEAT_TOKEN;
   const tokenAtEndWithOptionalTrailingPunctuation = new RegExp(
-    `${escapeRegExp(token)}[^\\w]{0,4}$`,
+    `${escapeRegExp(token)}[^/w]{0,4}$`,
   );
   if (!text.includes(token)) {
     return { text, didStrip: false };

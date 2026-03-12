@@ -26,7 +26,7 @@ describe("ensureSkillsWatcher", () => {
     const opts = firstCall?.[1] ?? {};
 
     expect(opts.ignored).toBe(mod.DEFAULT_SKILLS_WATCH_IGNORED);
-    const posix = (p: string) => p.replaceAll("\\", "/");
+    const posix = (p: string) => p.replaceAll("/", "/");
     expect(targets).toEqual(
       expect.arrayContaining([
         posix(path.join("/tmp/workspace", "skills", "SKILL.md")),

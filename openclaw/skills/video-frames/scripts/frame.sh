@@ -61,7 +61,7 @@ mkdir -p "$(dirname "$out")"
 if [[ "$index" != "" ]]; then
   ffmpeg -hide_banner -loglevel error -y \
     -i "$in" \
-    -vf "select=eq(n\\,${index})" \
+    -vf "select=eq(n/,${index})" \
     -vframes 1 \
     "$out"
 elif [[ "$time" != "" ]]; then
@@ -73,7 +73,7 @@ elif [[ "$time" != "" ]]; then
 else
   ffmpeg -hide_banner -loglevel error -y \
     -i "$in" \
-    -vf "select=eq(n\\,0)" \
+    -vf "select=eq(n/,0)" \
     -vframes 1 \
     "$out"
 fi

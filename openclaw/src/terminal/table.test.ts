@@ -57,7 +57,7 @@ describe("renderTable", () => {
       ],
     });
 
-    const ansiToken = new RegExp(String.raw`\u001b\[[0-9;]*m|\u001b\]8;;.*?\u001b\\`, "gs");
+    const ansiToken = new RegExp(String.raw`\u001b\[[0-9;]*m|\u001b\]8;;.*?\u001b/`, "gs");
     let escapeIndex = out.indexOf("\u001b");
     while (escapeIndex >= 0) {
       ansiToken.lastIndex = escapeIndex;
@@ -260,13 +260,13 @@ describe("wrapNoteMessage", () => {
 
   it("preserves long Windows paths without inserting spaces/newlines", () => {
     // No spaces: wrapNoteMessage splits on whitespace, so a "Program Files" style path would wrap.
-    const input = "C:\\\\State\\\\OpenClaw\\\\bin\\\\openclaw.exe";
+    const input = "C://State//OpenClaw//bin//openclaw.exe";
     const wrapped = wrapNoteMessage(input, { maxWidth: 10, columns: 80 });
     expect(wrapped).toBe(input);
   });
 
   it("preserves UNC paths without inserting spaces/newlines", () => {
-    const input = "\\\\\\\\server\\\\share\\\\some\\\\really\\\\long\\\\path\\\\file.txt";
+    const input = "////server//share//some//really//long//path//file.txt";
     const wrapped = wrapNoteMessage(input, { maxWidth: 12, columns: 80 });
     expect(wrapped).toBe(input);
   });

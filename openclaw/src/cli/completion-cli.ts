@@ -385,9 +385,9 @@ _${rootCmd}_root_completion() {
   local -a commands
   local -a options
   
-  _arguments -C \\
-    ${generateZshArgs(program)} \\
-    ${generateZshSubcmdList(program)} \\
+  _arguments -C /
+    ${generateZshArgs(program)} /
+    ${generateZshSubcmdList(program)} /
     "*::arg:->args"
 
   case $state in
@@ -413,17 +413,17 @@ function generateZshArgs(cmd: Command): string {
       const name = flags.find((f) => f.startsWith("--")) || flags[0];
       const short = flags.find((f) => f.startsWith("-") && !f.startsWith("--"));
       const desc = opt.description
-        .replace(/\\/g, "\\\\")
-        .replace(/"/g, '\\"')
-        .replace(/'/g, "'\\''")
-        .replace(/\[/g, "\\[")
-        .replace(/\]/g, "\\]");
+        .replace(///g, "//")
+        .replace(/"/g, '/"')
+        .replace(/'/g, "'/''")
+        .replace(/\[/g, "/[")
+        .replace(/\]/g, "/]");
       if (short) {
         return `"(${name} ${short})"{${name},${short}}"[${desc}]"`;
       }
       return `"${name}[${desc}]"`;
     })
-    .join(" \\\n    ");
+    .join(" /\n    ");
 }
 
 function generateZshSubcmdList(cmd: Command): string {
@@ -431,10 +431,10 @@ function generateZshSubcmdList(cmd: Command): string {
     .map((c) => {
       const desc = c
         .description()
-        .replace(/\\/g, "\\\\")
-        .replace(/'/g, "'\\''")
-        .replace(/\[/g, "\\[")
-        .replace(/\]/g, "\\]");
+        .replace(///g, "//")
+        .replace(/'/g, "'/''")
+        .replace(/\[/g, "/[")
+        .replace(/\]/g, "/]");
       return `'${c.name()}[${desc}]'`;
     })
     .join(" ");
@@ -457,9 +457,9 @@ ${funcName}() {
   local -a commands
   local -a options
   
-  _arguments -C \\
-    ${generateZshArgs(cmd)} \\
-    ${generateZshSubcmdList(cmd)} \\
+  _arguments -C /
+    ${generateZshArgs(cmd)} /
+    ${generateZshSubcmdList(cmd)} /
     "*::arg:->args"
 
   case $state in
@@ -474,7 +474,7 @@ ${funcName}() {
     } else {
       script += `
 ${funcName}() {
-  _arguments -C \\
+  _arguments -C /
     ${generateZshArgs(cmd)}
 }
 `;

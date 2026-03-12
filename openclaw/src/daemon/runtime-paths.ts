@@ -28,7 +28,7 @@ function isNodeExecPath(execPath: string, platform: NodeJS.Platform): boolean {
 
 function normalizeForCompare(input: string, platform: NodeJS.Platform): string {
   const pathModule = getPathModule(platform);
-  const normalized = pathModule.normalize(input).replaceAll("\\", "/");
+  const normalized = pathModule.normalize(input).replaceAll("/", "/");
   if (platform === "win32") {
     return normalized.toLowerCase();
   }
@@ -47,8 +47,8 @@ function buildSystemNodeCandidates(
   }
   if (platform === "win32") {
     const pathModule = getPathModule(platform);
-    const programFiles = env.ProgramFiles ?? "C:\\Program Files";
-    const programFilesX86 = env["ProgramFiles(x86)"] ?? "C:\\Program Files (x86)";
+    const programFiles = env.ProgramFiles ?? "C:/Program Files";
+    const programFilesX86 = env["ProgramFiles(x86)"] ?? "C:/Program Files (x86)";
     return [
       pathModule.join(programFiles, "nodejs", "node.exe"),
       pathModule.join(programFilesX86, "nodejs", "node.exe"),

@@ -202,7 +202,7 @@ sysadmin = AgentDefinition(
         "- F:/BUREAU/turbo (JARVIS Turbo)\n"
         "- F:/BUREAU/carV1 (Trading DB)\n"
         "- F:/BUREAU/lienDepart (ce projet)\n"
-        "- /\Users/franc (home)\n\n"
+        "- C:/Users/franc (home)\n\n"
         "CAPACITES:\n"
         "- PowerShell avance (scripts .ps1 si necessaire)\n"
         "- Gestion processus/services\n"

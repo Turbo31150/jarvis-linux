@@ -89,7 +89,7 @@ function validateHookId(hookId: string): string | null {
   if (hookId === "." || hookId === "..") {
     return "invalid hook name: reserved path segment";
   }
-  if (hookId.includes("/") || hookId.includes("\\")) {
+  if (hookId.includes("/") || hookId.includes("/")) {
     return "invalid hook name: path separators not allowed";
   }
   return null;

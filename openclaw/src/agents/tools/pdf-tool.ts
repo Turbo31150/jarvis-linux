@@ -431,7 +431,7 @@ export function createPdfTool(options?: {
         const isHttpUrl = /^https?:\/\//i.test(trimmed);
         const isFileUrl = /^file:/i.test(trimmed);
         const isDataUrl = /^data:/i.test(trimmed);
-        const looksLikeWindowsDrive = /^[a-zA-Z]:[\\/]/.test(trimmed);
+        const looksLikeWindowsDrive = /^[a-zA-Z]:[//]/.test(trimmed);
         const hasScheme = /^[a-z][a-z0-9+.-]*:/i.test(trimmed);
 
         if (hasScheme && !looksLikeWindowsDrive && !isFileUrl && !isHttpUrl && !isDataUrl) {

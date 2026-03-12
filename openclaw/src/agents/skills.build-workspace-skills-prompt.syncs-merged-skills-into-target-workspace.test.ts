@@ -93,7 +93,7 @@ describe("buildWorkspaceSkillsPrompt", () => {
     expect(prompt).not.toContain("Managed version");
     expect(prompt).not.toContain("Bundled version");
     expect(prompt).not.toContain("Extra version");
-    expect(prompt.replaceAll("\\", "/")).toContain("demo-skill/SKILL.md");
+    expect(prompt.replaceAll("/", "/")).toContain("demo-skill/SKILL.md");
   });
   it.runIf(process.platform !== "win32")(
     "does not sync workspace skills that resolve outside the source workspace root",

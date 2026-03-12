@@ -73,10 +73,10 @@ function isGoogleModelNotFoundError(err: unknown): boolean {
   if (/models\/.+ is not found for api version/i.test(msg)) {
     return true;
   }
-  if (/"status"\\s*:\\s*"NOT_FOUND"/.test(msg)) {
+  if (/"status"/s*:/s*"NOT_FOUND"/.test(msg)) {
     return true;
   }
-  if (/"code"\\s*:\\s*404/.test(msg)) {
+  if (/"code"/s*:/s*404/.test(msg)) {
     return true;
   }
   return false;

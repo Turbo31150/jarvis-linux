@@ -17,7 +17,7 @@ function winRuntime(env: NodeJS.ProcessEnv) {
   return {
     platform: "win32" as const,
     env,
-    execPath: "C:\\node\\node.exe",
+    execPath: "C:/node/node.exe",
   };
 }
 
@@ -74,7 +74,7 @@ describe("resolveSpawnCommand", () => {
       winRuntime({}),
     );
 
-    expect(resolved.command).toBe("C:\\node\\node.exe");
+    expect(resolved.command).toBe("C:/node/node.exe");
     expect(resolved.args).toEqual(["C:/tools/acpx/cli.js", "--help"]);
     expect(resolved.shell).toBeUndefined();
     expect(resolved.windowsHide).toBe(true);
@@ -88,7 +88,7 @@ describe("resolveSpawnCommand", () => {
     await createWindowsCmdShimFixture({
       shimPath,
       scriptPath,
-      shimLine: '"%~dp0\\..\\acpx\\dist\\index.js" %*',
+      shimLine: '"%~dp0/../acpx/dist/index.js" %*',
     });
 
     const resolved = resolveSpawnCommand(
@@ -103,7 +103,7 @@ describe("resolveSpawnCommand", () => {
       }),
     );
 
-    expect(resolved.command).toBe("C:\\node\\node.exe");
+    expect(resolved.command).toBe("C:/node/node.exe");
     expect(resolved.args[0]).toBe(scriptPath);
     expect(resolved.args.slice(1)).toEqual(["--format", "json", "agent", "status"]);
     expect(resolved.shell).toBeUndefined();
@@ -115,7 +115,7 @@ describe("resolveSpawnCommand", () => {
     const wrapperPath = path.join(dir, "acpx.cmd");
     const exePath = path.join(dir, "acpx.exe");
     await writeFile(exePath, "", "utf8");
-    await writeFile(wrapperPath, ["@ECHO off", '"%~dp0\\acpx.exe" %*', ""].join("\r\n"), "utf8");
+    await writeFile(wrapperPath, ["@ECHO off", '"%~dp0/acpx.exe" %*', ""].join("\r\n"), "utf8");
 
     const resolved = resolveSpawnCommand(
       {
@@ -175,7 +175,7 @@ describe("resolveSpawnCommand", () => {
     const dir = await createTempDir();
     const wrapperPath = path.join(dir, "strict-wrapper.cmd");
     await writeFile(wrapperPath, "@ECHO off\r\necho wrapper\r\n", "utf8");
-    const payload = "C:\\safe & calc.exe";
+    const payload = "C:/safe & calc.exe";
     const events: Array<{ resolution: string }> = [];
 
     expect(() =>
@@ -203,7 +203,7 @@ describe("resolveSpawnCommand", () => {
     await createWindowsCmdShimFixture({
       shimPath: wrapperPath,
       scriptPath,
-      shimLine: '"%~dp0\\acpx\\dist\\index.js" %*',
+      shimLine: '"%~dp0/acpx/dist/index.js" %*',
     });
 
     const cache: SpawnCommandCache = {};
@@ -226,8 +226,8 @@ describe("resolveSpawnCommand", () => {
       winRuntime({}),
     );
 
-    expect(first.command).toBe("C:\\node\\node.exe");
-    expect(second.command).toBe("C:\\node\\node.exe");
+    expect(first.command).toBe("C:/node/node.exe");
+    expect(second.command).toBe("C:/node/node.exe");
     expect(first.args[0]).toBe(scriptPath);
     expect(second.args[0]).toBe(scriptPath);
   });

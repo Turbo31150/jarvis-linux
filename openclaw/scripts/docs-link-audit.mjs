@@ -38,7 +38,7 @@ function walk(dir) {
 
 /** @param {string} p */
 function normalizeSlashes(p) {
-  return p.replace(/\\/g, "/");
+  return p.replace(///g, "/");
 }
 
 /** @param {string} p */

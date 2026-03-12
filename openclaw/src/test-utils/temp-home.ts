@@ -29,7 +29,7 @@ export async function createTempHomeEnv(prefix: string): Promise<TempHomeEnv> {
     const match = home.match(/^([A-Za-z]:)(.*)$/);
     if (match) {
       process.env.HOMEDRIVE = match[1];
-      process.env.HOMEPATH = match[2] || "\\";
+      process.env.HOMEPATH = match[2] || "/";
     }
   }
 

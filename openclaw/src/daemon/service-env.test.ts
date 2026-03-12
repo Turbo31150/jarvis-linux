@@ -162,7 +162,7 @@ describe("getMinimalServicePathParts - Linux user directories", () => {
   it("does not include Linux user directories on Windows", () => {
     const result = getMinimalServicePathParts({
       platform: "win32",
-      home: "C:\\Users\\testuser",
+      home: "C:/Users/testuser",
     });
 
     // Windows returns empty array (uses existing PATH)
@@ -187,10 +187,10 @@ describe("buildMinimalServicePath", () => {
 
   it("returns PATH as-is on Windows", () => {
     const result = buildMinimalServicePath({
-      env: { PATH: "C:\\\\Windows\\\\System32" },
+      env: { PATH: "C://Windows//System32" },
       platform: "win32",
     });
-    expect(result).toBe("C:\\\\Windows\\\\System32");
+    expect(result).toBe("C://Windows//System32");
   });
 
   it("includes Linux user directories when HOME is set in env", () => {
@@ -334,8 +334,8 @@ describe("buildServiceEnvironment", () => {
   it("omits PATH on Windows so Scheduled Tasks can inherit the current shell path", () => {
     const env = buildServiceEnvironment({
       env: {
-        HOME: "C:\\Users\\alice",
-        PATH: "C:\\Windows\\System32;C:\\Tools\\rg",
+        HOME: "C:/Users/alice",
+        PATH: "C:/Windows/System32;C:/Tools/rg",
       },
       port: 18789,
       platform: "win32",
@@ -490,7 +490,7 @@ describe("resolveGatewayStateDir", () => {
   });
 
   it("preserves Windows absolute paths without HOME", () => {
-    const env = { OPENCLAW_STATE_DIR: "C:\\State\\openclaw" };
-    expect(resolveGatewayStateDir(env)).toBe("C:\\State\\openclaw");
+    const env = { OPENCLAW_STATE_DIR: "C:/State/openclaw" };
+    expect(resolveGatewayStateDir(env)).toBe("C:/State/openclaw");
   });
 });

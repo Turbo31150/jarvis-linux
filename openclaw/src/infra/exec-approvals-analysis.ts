@@ -36,7 +36,7 @@ export type ShellChainPart = {
 };
 
 const DISALLOWED_PIPELINE_TOKENS = new Set([">", "<", "`", "\n", "\r", "(", ")"]);
-const DOUBLE_QUOTE_ESCAPES = new Set(["\\", '"', "$", "`"]);
+const DOUBLE_QUOTE_ESCAPES = new Set(["/", '"', "$", "`"]);
 const WINDOWS_UNSUPPORTED_TOKENS = new Set([
   "&",
   "|",
@@ -99,7 +99,7 @@ function splitShellPipeline(command: string): { ok: boolean; reason?: string; se
         if (ch === "\n" || ch === "\r") {
           return null;
         }
-        if (quote === '"' && ch === "\\" && i + 1 < source.length) {
+        if (quote === '"' && ch === "/" && i + 1 < source.length) {
           delimiter += source[i + 1];
           i += 2;
           continue;
@@ -148,7 +148,7 @@ function splitShellPipeline(command: string): { ok: boolean; reason?: string; se
 
   const isEscapedInHeredocLine = (line: string, index: number): boolean => {
     let slashes = 0;
-    for (let i = index - 1; i >= 0 && line[i] === "\\"; i -= 1) {
+    for (let i = index - 1; i >= 0 && line[i] === "/"; i -= 1) {
       slashes += 1;
     }
     return slashes % 2 === 1;
@@ -204,7 +204,7 @@ function splitShellPipeline(command: string): { ok: boolean; reason?: string; se
       emptySegment = false;
       continue;
     }
-    if (!inSingle && !inDouble && ch === "\\") {
+    if (!inSingle && !inDouble && ch === "/") {
       escaped = true;
       buf += ch;
       emptySegment = false;
@@ -219,10 +219,10 @@ function splitShellPipeline(command: string): { ok: boolean; reason?: string; se
       continue;
     }
     if (inDouble) {
-      if (ch === "\\" && isEscapedLineContinuation(next)) {
+      if (ch === "/" && isEscapedLineContinuation(next)) {
         return { ok: false, reason: "unsupported shell token: newline", segments: [] };
       }
-      if (ch === "\\" && isDoubleQuoteEscape(next)) {
+      if (ch === "/" && isDoubleQuoteEscape(next)) {
         buf += ch;
         buf += next;
         i += 1;
@@ -476,7 +476,7 @@ export function splitCommandChainWithOperators(command: string): ShellChainPart[
       escaped = false;
       continue;
     }
-    if (!inSingle && !inDouble && ch === "\\") {
+    if (!inSingle && !inDouble && ch === "/") {
       escaped = true;
       buf += ch;
       continue;
@@ -489,11 +489,11 @@ export function splitCommandChainWithOperators(command: string): ShellChainPart[
       continue;
     }
     if (inDouble) {
-      if (ch === "\\" && isEscapedLineContinuation(next)) {
+      if (ch === "/" && isEscapedLineContinuation(next)) {
         invalidChain = true;
         break;
       }
-      if (ch === "\\" && isDoubleQuoteEscape(next)) {
+      if (ch === "/" && isDoubleQuoteEscape(next)) {
         buf += ch;
         buf += next;
         i += 1;

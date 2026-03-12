@@ -10,4 +10,4 @@
   - Trading MEXC Futures — 10 paires, levier 10x
   - JARVIS Desktop (Electron + React)
 - **Outils:** uv (Python), npm/node, git, LM Studio, Ollama
-- **Disques:** / (systeme, quasi vide) | F:\ (principal, projets + modeles)
+- **Disques:** C:\ (systeme, quasi vide) | F:\ (principal, projets + modeles)

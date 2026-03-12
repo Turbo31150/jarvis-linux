@@ -159,7 +159,7 @@ function setTempHomeEnv(home: string): void {
     return;
   }
   process.env.HOMEDRIVE = match[1];
-  process.env.HOMEPATH = match[2] || "\\";
+  process.env.HOMEPATH = match[2] || "/";
 }
 
 beforeAll(async () => {

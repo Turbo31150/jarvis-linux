@@ -14,10 +14,10 @@ data class Quad<A, B, C, D>(val first: A, val second: B, val third: C, val fourt
 
 fun String.toJsonString(): String {
   val escaped =
-    this.replace("\\", "\\\\")
-      .replace("\"", "\\\"")
-      .replace("\n", "\\n")
-      .replace("\r", "\\r")
+    this.replace("/", "//")
+      .replace("\"", "/\"")
+      .replace("\n", "/n")
+      .replace("\r", "/r")
   return "\"$escaped\""
 }
 

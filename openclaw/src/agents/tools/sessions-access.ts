@@ -106,8 +106,8 @@ export function createAgentToAgentPolicy(cfg: OpenClawConfig): AgentToAgentPolic
       if (!raw.includes("*")) {
         return raw === agentId;
       }
-      const escaped = raw.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      const re = new RegExp(`^${escaped.replaceAll("\\*", ".*")}$`, "i");
+      const escaped = raw.replace(/[.*+?^${}()|[\]/]/g, "/$&");
+      const re = new RegExp(`^${escaped.replaceAll("/*", ".*")}$`, "i");
       return re.test(agentId);
     });
   };

@@ -23,7 +23,7 @@ load_dotenv()
 JARVIS_VERSION = "10.6"
 
 # ── Project paths (existing codebase) ──────────────────────────────────────
-_TURBO = Path("/home/turbo/jarvis-linux")
+_TURBO = Path("F:/BUREAU/turbo")
 
 PATHS = {
     # ── Core ──

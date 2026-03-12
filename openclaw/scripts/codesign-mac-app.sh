@@ -59,7 +59,7 @@ select_identity() {
 
   # Fallback to the first valid signing identity.
   available="$(security find-identity -p codesigning -v 2>/dev/null \
-    | sed -n 's/.*\"\\(.*\\)\"/\\1/p')"
+    | sed -n 's/.*\"/(.*/)\"//1/p')"
 
   if [ -n "$available" ]; then
     first="$(printf '%s\n' "$available" | head -n1)"

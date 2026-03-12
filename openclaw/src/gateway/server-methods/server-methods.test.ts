@@ -663,7 +663,7 @@ describe("exec approval handlers", () => {
     const requested = broadcasts.find((entry) => entry.event === "exec.approval.requested");
     expect(requested).toBeTruthy();
     const request = (requested?.payload as { request?: Record<string, unknown> })?.request ?? {};
-    expect(request["command"]).toBe("bash safe\\u{200B}.sh");
+    expect(request["command"]).toBe("bash safe/u{200B}.sh");
     expect((request["systemRunPlan"] as { commandText?: string }).commandText).toBe(
       "bash safe\u200B.sh",
     );

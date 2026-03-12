@@ -124,7 +124,7 @@ openclaw config set browser.executablePath "/usr/bin/google-chrome"
 // Windows
 {
   browser: {
-    executablePath: "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe"
+    executablePath: "C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe"
   }
 }
 

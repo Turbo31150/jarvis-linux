@@ -14,7 +14,7 @@ describe("extractTextFromMessage", () => {
       content: [],
       stopReason: "error",
       errorMessage:
-        '429 {"type":"error","error":{"type":"rate_limit_error","message":"This request would exceed your account\\u0027s rate limit. Please try again later."},"request_id":"req_123"}',
+        '429 {"type":"error","error":{"type":"rate_limit_error","message":"This request would exceed your account/u0027s rate limit. Please try again later."},"request_id":"req_123"}',
     });
 
     expect(text).toContain("HTTP 429");

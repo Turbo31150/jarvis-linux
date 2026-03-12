@@ -33,7 +33,7 @@ export async function listSessionFilesForAgent(agentId: string): Promise<string[
 }
 
 export function sessionPathForFile(absPath: string): string {
-  return path.join("sessions", path.basename(absPath)).replace(/\\/g, "/");
+  return path.join("sessions", path.basename(absPath)).replace(///g, "/");
 }
 
 function normalizeSessionText(value: string): string {

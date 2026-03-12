@@ -20,7 +20,7 @@ export const AVATAR_DATA_RE = /^data:/i;
 export const AVATAR_IMAGE_DATA_RE = /^data:image\//i;
 export const AVATAR_HTTP_RE = /^https?:\/\//i;
 export const AVATAR_SCHEME_RE = /^[a-z][a-z0-9+.-]*:/i;
-export const WINDOWS_ABS_RE = /^[a-zA-Z]:[\\/]/;
+export const WINDOWS_ABS_RE = /^[a-zA-Z]:[//]/;
 
 const AVATAR_PATH_EXT_RE = /\.(png|jpe?g|gif|webp|svg|ico)$/i;
 
@@ -71,7 +71,7 @@ export function isPathWithinRoot(rootDir: string, targetPath: string): boolean {
 }
 
 export function looksLikeAvatarPath(value: string): boolean {
-  if (/[\\/]/.test(value)) {
+  if (/[//]/.test(value)) {
     return true;
   }
   return AVATAR_PATH_EXT_RE.test(value);

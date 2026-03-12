@@ -643,7 +643,7 @@ export function createMatrixRoomMessageHandler(params: MatrixMonitorHandlerParam
         },
       });
 
-      const preview = bodyText.slice(0, 200).replace(/\n/g, "\\n");
+      const preview = bodyText.slice(0, 200).replace(/\n/g, "/n");
       logVerboseMessage(`matrix inbound: room=${roomId} from=${senderId} preview="${preview}"`);
 
       const ackReaction = (cfg.messages?.ackReaction ?? "").trim();

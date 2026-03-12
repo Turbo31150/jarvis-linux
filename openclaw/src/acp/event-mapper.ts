@@ -46,14 +46,14 @@ const TOOL_LOCATION_MAX_DEPTH = 4;
 const TOOL_LOCATION_MAX_NODES = 100;
 
 const INLINE_CONTROL_ESCAPE_MAP: Readonly<Record<string, string>> = {
-  "\0": "\\0",
-  "\r": "\\r",
-  "\n": "\\n",
-  "\t": "\\t",
-  "\v": "\\v",
-  "\f": "\\f",
-  "\u2028": "\\u2028",
-  "\u2029": "\\u2029",
+  "\0": "/0",
+  "\r": "/r",
+  "\n": "/n",
+  "\t": "/t",
+  "\v": "/v",
+  "\f": "/f",
+  "\u2028": "/u2028",
+  "\u2029": "/u2029",
 };
 
 function escapeInlineControlChars(value: string): string {
@@ -84,15 +84,15 @@ function escapeInlineControlChars(value: string): string {
     // Keep escaped control bytes readable and stable in logs/prompts.
     escaped +=
       codePoint <= 0xff
-        ? `\\x${codePoint.toString(16).padStart(2, "0")}`
-        : `\\u${codePoint.toString(16).padStart(4, "0")}`;
+        ? `/x${codePoint.toString(16).padStart(2, "0")}`
+        : `/u${codePoint.toString(16).padStart(4, "0")}`;
   }
   return escaped;
 }
 
 function escapeResourceTitle(value: string): string {
   // Keep title content, but escape characters that can break the resource-link annotation shape.
-  return escapeInlineControlChars(value).replace(/[()[\]]/g, (char) => `\\${char}`);
+  return escapeInlineControlChars(value).replace(/[()[\]]/g, (char) => `/${char}`);
 }
 
 function asRecord(value: unknown): Record<string, unknown> | undefined {

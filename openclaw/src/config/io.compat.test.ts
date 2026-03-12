@@ -161,7 +161,7 @@ describe("config io paths", () => {
 
       expect(() => io.loadConfig()).toThrow(/Invalid config/);
       expect(logger.error).toHaveBeenCalledWith(
-        expect.stringContaining(`Invalid config at ${configPath}:\\n`),
+        expect.stringContaining(`Invalid config at ${configPath}:/n`),
       );
       expect(logger.error).toHaveBeenCalledWith(expect.stringContaining("- gateway.port:"));
     });

@@ -19,6 +19,6 @@ export const INVALID_EXEC_SECRET_REF_IDS = [
   "a/.",
   "/absolute/path",
   "bad id",
-  "a\\b",
+  "a/b",
   `a${"b".repeat(256)}`,
 ] as const;

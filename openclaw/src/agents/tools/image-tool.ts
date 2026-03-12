@@ -401,7 +401,7 @@ export function createImageTool(options?: {
         // `image:0` (e.g. "first image in the prompt"). We don't have access to a
         // shared image registry here, so fail gracefully instead of attempting to
         // `fs.readFile("image:0")` and producing a noisy ENOENT.
-        const looksLikeWindowsDrivePath = /^[a-zA-Z]:[\\/]/.test(imageRaw);
+        const looksLikeWindowsDrivePath = /^[a-zA-Z]:[//]/.test(imageRaw);
         const hasScheme = /^[a-z][a-z0-9+.-]*:/i.test(imageRaw);
         const isFileUrl = /^file:/i.test(imageRaw);
         const isHttpUrl = /^https?:\/\//i.test(imageRaw);

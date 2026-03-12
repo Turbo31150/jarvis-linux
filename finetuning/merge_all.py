@@ -17,7 +17,7 @@ import json
 import random
 from pathlib import Path
 
-TURBO_DIR = Path("/home/turbo/jarvis-linux")
+TURBO_DIR = Path("F:/BUREAU/turbo")
 DATASET_DIR = TURBO_DIR / "finetuning" / "dataset"
 
 SYSTEM_PROMPT = (

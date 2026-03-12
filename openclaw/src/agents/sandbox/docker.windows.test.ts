@@ -31,12 +31,12 @@ describe("resolveDockerSpawnInvocation", () => {
     const exePath = path.join(dir, "docker.exe");
     const cmdPath = path.join(dir, "docker.cmd");
     await writeFile(exePath, "", "utf8");
-    await writeFile(cmdPath, `@ECHO off\r\n"%~dp0\\docker.exe" %*\r\n`, "utf8");
+    await writeFile(cmdPath, `@ECHO off\r\n"%~dp0/docker.exe" %*\r\n`, "utf8");
 
     const resolved = resolveDockerSpawnInvocation(["version"], {
       platform: "win32",
       env: { PATH: dir, PATHEXT: ".CMD;.EXE;.BAT" },
-      execPath: "C:\\node\\node.exe",
+      execPath: "C:/node/node.exe",
     });
 
     expect(resolved).toEqual({
@@ -57,7 +57,7 @@ describe("resolveDockerSpawnInvocation", () => {
       resolveDockerSpawnInvocation(["ps"], {
         platform: "win32",
         env: { PATH: dir, PATHEXT: ".CMD;.EXE;.BAT" },
-        execPath: "C:\\node\\node.exe",
+        execPath: "C:/node/node.exe",
       }),
     ).toThrow(
       /wrapper resolved, but no executable\/Node entrypoint could be resolved without shell execution\./i,

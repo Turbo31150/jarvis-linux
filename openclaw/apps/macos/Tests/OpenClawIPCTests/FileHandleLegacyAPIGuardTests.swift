@@ -121,7 +121,7 @@ struct FileHandleLegacyAPIGuardTests {
                 index = source.index(after: index)
 
             case let .string(quoteCount):
-                if ch == "\\", quoteCount == 1 {
+                if ch == "/", quoteCount == 1 {
                     // Skip escaped character in normal strings.
                     out.append(" ")
                     index = source.index(after: index)

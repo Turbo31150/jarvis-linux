@@ -61,7 +61,7 @@ try:
 except Exception as e: fail("consensus_test_scenario", str(e)[:80])
 
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); r=c.execute('SELECT COUNT(*) FROM map WHERE entity_type=/\"routing_rule/\"').fetchone()[0]; print(f'{r} regles routage')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); r=c.execute('SELECT COUNT(*) FROM map WHERE entity_type=/\"routing_rule/\"').fetchone()[0]; print(f'{r} regles routage')\" 2>&1")
     ok("consensus_routing_rules", out[:80])
 except Exception as e: fail("consensus_routing_rules", str(e)[:80])
 
@@ -150,17 +150,17 @@ except Exception as e: fail("n8n_execution_history", str(e)[:80])
 # DB OPTIMIZATION (3)
 print("\n[DB OPTIMIZATION]")
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); c.execute('REINDEX'); print('REINDEX OK')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); c.execute('REINDEX'); print('REINDEX OK')\" 2>&1")
     ok("db_reindex_all", out[:80])
 except Exception as e: fail("db_reindex_all", str(e)[:80])
 
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); t=c.execute('SELECT COUNT(*) FROM sqlite_master WHERE type=/\"table/\"').fetchone()[0]; print(f'{t} tables')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); t=c.execute('SELECT COUNT(*) FROM sqlite_master WHERE type=/\"table/\"').fetchone()[0]; print(f'{t} tables')\" 2>&1")
     ok("db_schema_info", out[:80])
 except Exception as e: fail("db_schema_info", str(e)[:80])
 
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import os; s=os.path.getsize('/home/turbo/jarvis-linux/data/etoile.db')/1024; print(f'etoile.db: {s:.0f}KB')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import os; s=os.path.getsize('F:/BUREAU/turbo/data/etoile.db')/1024; print(f'etoile.db: {s:.0f}KB')\" 2>&1")
     ok("db_export_snapshot", out[:80])
 except Exception as e: fail("db_export_snapshot", str(e)[:80])
 
@@ -184,7 +184,7 @@ try:
 except Exception as e: fail("hotfix_deploy_express", str(e)[:80])
 
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c 'from src.commands_pipelines import PIPELINE_COMMANDS; print(f\"{len(PIPELINE_COMMANDS)} pipelines OK\")' 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c 'from src.commands_pipelines import PIPELINE_COMMANDS; print(f\"{len(PIPELINE_COMMANDS)} pipelines OK\")' 2>&1")
     ok("hotfix_verify_integrity", out[:80])
 except Exception as e: fail("hotfix_verify_integrity", str(e)[:80])
 

@@ -63,13 +63,13 @@ export function markdownToWhatsApp(text: string): string {
 
   // 5. Restore inline code
   result = result.replace(
-    new RegExp(`${escapeRegExp(INLINE_CODE_PLACEHOLDER)}(\\d+)`, "g"),
+    new RegExp(`${escapeRegExp(INLINE_CODE_PLACEHOLDER)}(/d+)`, "g"),
     (_, idx) => inlineCodes[Number(idx)] ?? "",
   );
 
   // 6. Restore fenced code blocks
   result = result.replace(
-    new RegExp(`${escapeRegExp(FENCE_PLACEHOLDER)}(\\d+)`, "g"),
+    new RegExp(`${escapeRegExp(FENCE_PLACEHOLDER)}(/d+)`, "g"),
     (_, idx) => fences[Number(idx)] ?? "",
   );
 

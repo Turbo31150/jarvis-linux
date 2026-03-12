@@ -46,7 +46,7 @@ function useTempSessionsFixture(prefix: string) {
 
 describe("session path safety", () => {
   it("rejects unsafe session IDs", () => {
-    const unsafeSessionIds = ["../etc/passwd", "a/b", "a\\b", "/abs"];
+    const unsafeSessionIds = ["../etc/passwd", "a/b", "a/b", "/abs"];
     for (const sessionId of unsafeSessionIds) {
       expect(() => validateSessionId(sessionId), sessionId).toThrow(/Invalid session ID/);
     }

@@ -9,7 +9,7 @@ const LONG_TOKEN_RE = /\S{33,}/g;
 const LONG_TOKEN_TEST_RE = /\S{33,}/;
 const BINARY_LINE_REPLACEMENT_THRESHOLD = 12;
 const URL_PREFIX_RE = /^(https?:\/\/|file:\/\/)/i;
-const WINDOWS_DRIVE_RE = /^[a-zA-Z]:[\\/]/;
+const WINDOWS_DRIVE_RE = /^[a-zA-Z]:[//]/;
 const FILE_LIKE_RE = /^[a-zA-Z0-9._-]+$/;
 const EDGE_PUNCTUATION_RE = /^[`"'([{<]+|[`"')\]}>.,:;!?]+$/g;
 const TOKENISH_MIN_LENGTH = 24;
@@ -72,10 +72,10 @@ function isCopySensitiveToken(token: string): boolean {
   ) {
     return true;
   }
-  if (WINDOWS_DRIVE_RE.test(token) || token.startsWith("\\\\")) {
+  if (WINDOWS_DRIVE_RE.test(token) || token.startsWith("//")) {
     return true;
   }
-  if (token.includes("/") || token.includes("\\")) {
+  if (token.includes("/") || token.includes("/")) {
     return true;
   }
   if (token.includes("_") && FILE_LIKE_RE.test(token)) {

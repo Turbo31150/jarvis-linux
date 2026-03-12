@@ -19,7 +19,7 @@ TON ROLE COWORK:
 MCP DISPONIBLES:
 - jarvis-turbo: 88 handlers (cluster, trading, system, voice, bridges)
 - trading-ai-ultimate: MEXC Futures + sniper.db + consensus
-- filesystem: lecture/ecriture fichiers (/home/turbo/jarvis-linux et /)
+- filesystem: lecture/ecriture fichiers (/home/turbo/jarvis-linux et C:\)
 - n8n: 20 workflows automatises
 
 TACHE PRIORITAIRE: Consensus multi-IA sur scan sniper + monitoring continu du cluster.

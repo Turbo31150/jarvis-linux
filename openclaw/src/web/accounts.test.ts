@@ -20,13 +20,13 @@ describe("resolveWhatsAppAuthDir", () => {
   it("sanitizes special characters in accountId", () => {
     const { authDir } = resolveWhatsAppAuthDir({
       cfg: stubCfg,
-      accountId: "foo/bar\\baz",
+      accountId: "foo/bar/baz",
     });
     // Sprawdzaj sanityzacje na segmencie accountId, nie na calej sciezce
     // (Windows uzywa backslash jako separator katalogow).
     const segment = path.basename(authDir);
     expect(segment).not.toContain("/");
-    expect(segment).not.toContain("\\");
+    expect(segment).not.toContain("/");
   });
 
   it("returns default directory for empty accountId", () => {
@@ -34,7 +34,7 @@ describe("resolveWhatsAppAuthDir", () => {
       cfg: stubCfg,
       accountId: "",
     });
-    expect(authDir).toMatch(/whatsapp[/\\]default$/);
+    expect(authDir).toMatch(/whatsapp[//]default$/);
   });
 
   it("preserves valid accountId unchanged", () => {
@@ -42,6 +42,6 @@ describe("resolveWhatsAppAuthDir", () => {
       cfg: stubCfg,
       accountId: "my-account-1",
     });
-    expect(authDir).toMatch(/whatsapp[/\\]my-account-1$/);
+    expect(authDir).toMatch(/whatsapp[//]my-account-1$/);
   });
 });

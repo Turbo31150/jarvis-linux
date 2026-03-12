@@ -24,7 +24,7 @@ export function splitSandboxBindSpec(spec: string): SplitBindSpec | null {
 }
 
 function getHostContainerSeparatorIndex(spec: string): number {
-  const hasDriveLetterPrefix = /^[A-Za-z]:[\\/]/.test(spec);
+  const hasDriveLetterPrefix = /^[A-Za-z]:[//]/.test(spec);
   for (let i = hasDriveLetterPrefix ? 2 : 0; i < spec.length; i += 1) {
     if (spec[i] === ":") {
       return i;

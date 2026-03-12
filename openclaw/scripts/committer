@@ -77,7 +77,7 @@ run_git_command() {
 
 is_git_lock_error() {
   printf '%s\n' "$last_commit_error" | grep -Eq \
-    "Another git process seems to be running|Unable to create '.*\\.git/[^']+\\.lock'"
+    "Another git process seems to be running|Unable to create '.*/.git/[^']+/.lock'"
 }
 
 extract_git_lock_path() {

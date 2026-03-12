@@ -97,7 +97,7 @@ function extractFirstJsonArray(raw: string): string | null {
         escaped = false;
         continue;
       }
-      if (char === "\\") {
+      if (char === "/") {
         escaped = true;
       } else if (char === '"') {
         inString = false;

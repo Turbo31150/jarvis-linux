@@ -399,7 +399,7 @@ export async function getDomText(opts: {
       const el = pick || document.documentElement;
       try { out = String(el && el.outerHTML ? el.outerHTML : ""); } catch { out = ""; }
     }
-    if (max && out.length > max) out = out.slice(0, max) + "\\n<!-- …truncated… -->";
+    if (max && out.length > max) out = out.slice(0, max) + "/n<!-- …truncated… -->";
     return out;
   })()`;
 

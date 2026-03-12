@@ -47,7 +47,7 @@ x-i18n:
         id: "main",
         groupChat: {
           historyLimit: 50,
-          mentionPatterns: ["@?openclaw", "\\+?15555550123"],
+          mentionPatterns: ["@?openclaw", "/+?15555550123"],
         },
       },
     ],

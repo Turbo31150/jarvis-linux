@@ -8,7 +8,7 @@ import time
 import json
 import requests
 
-ROOT = r"/home/turbo\TRADING_V2_PRODUCTION"
+ROOT = r"F:\BUREAU\TRADING_V2_PRODUCTION"
 SCRIPTS_DIR = os.path.join(ROOT, "scripts")
 GENERATED_DIR = os.path.join(SCRIPTS_DIR, "generated")
 M2_URL = "http://192.168.1.26:1234/v1/chat/completions"

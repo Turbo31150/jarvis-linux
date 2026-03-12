@@ -213,8 +213,8 @@ CRITICAL Notification Created
 
 ### Services
 - **WebSocket Server:** `ws://127.0.0.1:9742` (externe)
-- **Base de données:** `/home/turbo/jarvis-linux/jarvis.db` (SQLite)
-- **Logs:** `/home/turbo/jarvis-linux/logs/` (directory)
+- **Base de données:** `F:/BUREAU/turbo/jarvis.db` (SQLite)
+- **Logs:** `F:/BUREAU/turbo/logs/` (directory)
 
 ### Telegram (optionnel)
 - Token bot Telegram
@@ -289,7 +289,7 @@ python integration_example.py  # Lance 3 exemples complets
 ## Fichiers de Logs
 
 ```
-/home/turbo/jarvis-linux/logs/
+F:/BUREAU/turbo/logs/
 ├── tray.log              # System tray events
 ├── notifications.log     # Notification history
 └── jarvis_tray.log      # General logs

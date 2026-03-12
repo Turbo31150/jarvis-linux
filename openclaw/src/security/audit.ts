@@ -920,7 +920,7 @@ function collectExecRuntimeFindings(cfg: OpenClawConfig): SecurityAuditFinding[]
     if (!path.isAbsolute(raw)) {
       return "relative path (trust boundary depends on process cwd)";
     }
-    const normalized = path.resolve(raw).replace(/\\/g, "/").toLowerCase();
+    const normalized = path.resolve(raw).replace(///g, "/").toLowerCase();
     if (
       normalized === "/tmp" ||
       normalized.startsWith("/tmp/") ||

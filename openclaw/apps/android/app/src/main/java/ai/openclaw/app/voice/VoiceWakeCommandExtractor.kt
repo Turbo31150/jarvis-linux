@@ -14,7 +14,7 @@ object VoiceWakeCommandExtractor {
 
     val alternation = triggers.joinToString("|") { Regex.escape(it) }
     // Match: "<anything> <trigger><punct/space> <command>"
-    val regex = Regex("(?i)(?:^|\\s)($alternation)\\b[\\s\\p{Punct}]*([\\s\\S]+)$")
+    val regex = Regex("(?i)(?:^|/s)($alternation)/b[/s/p{Punct}]*([/s/S]+)$")
     val match = regex.find(raw) ?: return null
     val extracted = match.groupValues.getOrNull(2)?.trim().orEmpty()
     if (extracted.isEmpty()) return null

@@ -1,5 +1,5 @@
 function normalizeProcArg(arg: string): string {
-  return arg.replaceAll("\\", "/").toLowerCase();
+  return arg.replaceAll("/", "/").toLowerCase();
 }
 
 export function parseProcCmdline(raw: string): string[] {

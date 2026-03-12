@@ -9,7 +9,7 @@ def test_linux_paths():
     for key, path in PATHS.items():
         assert isinstance(path, Path)
         assert str(path).startswith("/") or str(path).startswith(".")
-        assert "\\" not in str(path)
+        assert "/" not in str(path)
 
 def test_gpu_scheduler_presence():
     """Vérifier que le scheduler GPU est présent et exécutable."""
@@ -38,6 +38,6 @@ def test_mcp_config_posix():
     for server in data["mcpServers"].values():
         for arg in server.get("args", []):
             if "/" in arg:
-                assert "\\" not in arg
+                assert "/" not in arg
         if "cwd" in server:
-            assert "\\" not in server["cwd"]
+            assert "/" not in server["cwd"]

@@ -9,7 +9,7 @@ export function classifyPortListener(listener: PortListener, port: number): Port
   if (raw.includes("ssh")) {
     const portToken = String(port);
     const tunnelPattern = new RegExp(
-      `-(l|r)\\s*${portToken}\\b|-(l|r)${portToken}\\b|:${portToken}\\b`,
+      `-(l|r)/s*${portToken}/b|-(l|r)${portToken}/b|:${portToken}/b`,
     );
     if (!raw || tunnelPattern.test(raw)) {
       return "ssh";

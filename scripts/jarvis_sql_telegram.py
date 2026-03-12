@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """JARVIS SQL — Execute SQL queries via WS API for Telegram.
-Usage: python /home/turbo/jarvis-linux/scripts/jarvis_sql_telegram.py [query|stats|databases]
+Usage: python F:/BUREAU/turbo/scripts/jarvis_sql_telegram.py [query|stats|databases]
 """
 import json, sys, urllib.request
 

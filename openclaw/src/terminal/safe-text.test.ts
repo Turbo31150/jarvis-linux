@@ -7,6 +7,6 @@ describe("sanitizeTerminalText", () => {
   });
 
   it("escapes line controls while preserving printable text", () => {
-    expect(sanitizeTerminalText("a\tb\nc\rd")).toBe("a\\tb\\nc\\rd");
+    expect(sanitizeTerminalText("a\tb\nc\rd")).toBe("a/tb/nc/rd");
   });
 });

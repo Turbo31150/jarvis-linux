@@ -30,6 +30,6 @@ export function resolveSlackSlashCommandConfig(
 
 export function buildSlackSlashCommandMatcher(name: string) {
   const normalized = normalizeSlackSlashCommandName(name);
-  const escaped = normalized.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const escaped = normalized.replace(/[.*+?^${}()|[\]/]/g, "/$&");
   return new RegExp(`^/?${escaped}$`);
 }

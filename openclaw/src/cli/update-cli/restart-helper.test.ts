@@ -222,7 +222,7 @@ describe("restart-helper", () => {
       });
       // Single quotes should be escaped with '\'' pattern
       expect(content).not.toContain("it's");
-      expect(content).toContain("it'\\''s");
+      expect(content).toContain("it'/''s");
       await cleanupScript(scriptPath);
     });
 
@@ -235,7 +235,7 @@ describe("restart-helper", () => {
         OPENCLAW_PROFILE: "default",
       });
       // The plist path must contain the resolved home dir, not literal $HOME
-      expect(content).toMatch(/[\\/]Users[\\/]testuser[\\/]Library[\\/]LaunchAgents[\\/]/);
+      expect(content).toMatch(/[//]Users[//]testuser[//]Library[//]LaunchAgents[//]/);
       expect(content).not.toContain("$HOME");
       await cleanupScript(scriptPath);
     });
@@ -248,7 +248,7 @@ describe("restart-helper", () => {
         HOME: "/Users/envhome",
         OPENCLAW_PROFILE: "default",
       });
-      expect(content).toMatch(/[\\/]Users[\\/]envhome[\\/]Library[\\/]LaunchAgents[\\/]/);
+      expect(content).toMatch(/[//]Users[//]envhome[//]Library[//]LaunchAgents[//]/);
       await cleanupScript(scriptPath);
     });
 
@@ -261,7 +261,7 @@ describe("restart-helper", () => {
         OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.it's-a-test",
       });
       // The plist path must also shell-escape the label to prevent injection
-      expect(content).toContain("ai.openclaw.it'\\''s-a-test.plist");
+      expect(content).toContain("ai.openclaw.it'/''s-a-test.plist");
       await cleanupScript(scriptPath);
     });
 
@@ -293,7 +293,7 @@ describe("restart-helper", () => {
 
     it("uses cmd.exe on Windows", async () => {
       Object.defineProperty(process, "platform", { value: "win32" });
-      const scriptPath = "C:\\Temp\\fake-script.bat";
+      const scriptPath = "C:/Temp/fake-script.bat";
       const mockChild = { unref: vi.fn() };
       vi.mocked(spawn).mockReturnValue(mockChild as unknown as ChildProcess);
 
@@ -308,7 +308,7 @@ describe("restart-helper", () => {
 
     it("quotes cmd.exe /c paths with metacharacters on Windows", async () => {
       Object.defineProperty(process, "platform", { value: "win32" });
-      const scriptPath = "C:\\Temp\\me&(ow)\\fake-script.bat";
+      const scriptPath = "C:/Temp/me&(ow)/fake-script.bat";
       const mockChild = { unref: vi.fn() };
       vi.mocked(spawn).mockReturnValue(mockChild as unknown as ChildProcess);
 

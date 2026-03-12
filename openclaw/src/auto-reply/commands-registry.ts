@@ -450,9 +450,9 @@ export function getCommandDetection(_cfg?: OpenClawConfig): CommandDetection {
         continue;
       }
       if (cmd.acceptsArgs) {
-        patterns.push(`${escaped}(?:\\s+.+|\\s*:\\s*.*)?`);
+        patterns.push(`${escaped}(?:/s+.+|/s*:/s*.*)?`);
       } else {
-        patterns.push(`${escaped}(?:\\s*:\\s*)?`);
+        patterns.push(`${escaped}(?:/s*:/s*)?`);
       }
     }
   }

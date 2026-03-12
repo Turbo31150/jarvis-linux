@@ -33,7 +33,7 @@ function normalizeSafeBrewFormula(raw: unknown): string | undefined {
     return undefined;
   }
   const formula = raw.trim();
-  if (!formula || formula.startsWith("-") || formula.includes("\\") || formula.includes("..")) {
+  if (!formula || formula.startsWith("-") || formula.includes("/") || formula.includes("..")) {
     return undefined;
   }
   if (!BREW_FORMULA_PATTERN.test(formula)) {
@@ -64,7 +64,7 @@ function normalizeSafeGoModule(raw: unknown): string | undefined {
   if (
     !moduleSpec ||
     moduleSpec.startsWith("-") ||
-    moduleSpec.includes("\\") ||
+    moduleSpec.includes("/") ||
     moduleSpec.includes("://")
   ) {
     return undefined;
@@ -80,7 +80,7 @@ function normalizeSafeUvPackage(raw: unknown): string | undefined {
     return undefined;
   }
   const pkg = raw.trim();
-  if (!pkg || pkg.startsWith("-") || pkg.includes("\\") || pkg.includes("://")) {
+  if (!pkg || pkg.startsWith("-") || pkg.includes("/") || pkg.includes("://")) {
     return undefined;
   }
   if (!UV_PACKAGE_PATTERN.test(pkg)) {

@@ -72,7 +72,7 @@ function expandTilde(p: string, env: NodeJS.ProcessEnv): string | null {
   if (p === "~") {
     return home;
   }
-  if (p.startsWith("~/") || p.startsWith("~\\")) {
+  if (p.startsWith("~/") || p.startsWith("~/")) {
     return path.join(home, p.slice(2));
   }
   return null;
@@ -103,7 +103,7 @@ function formatCodeSafetyDetails(findings: SkillScanFinding[], rootDir: string):
         relPath && relPath !== "." && !relPath.startsWith("..")
           ? relPath
           : path.basename(finding.file);
-      const normalizedPath = filePath.replaceAll("\\", "/");
+      const normalizedPath = filePath.replaceAll("/", "/");
       return `  - [${finding.ruleId}] ${finding.message} (${normalizedPath}:${finding.line})`;
     })
     .join("\n");

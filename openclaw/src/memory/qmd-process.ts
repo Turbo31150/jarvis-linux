@@ -60,8 +60,8 @@ export function isWindowsCommandShimEinval(params: {
   if (errno?.code !== "EINVAL") {
     return false;
   }
-  const escapedBase = params.commandBase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`(^|[\\\\/])${escapedBase}\\.cmd$`, "i").test(params.command);
+  const escapedBase = params.commandBase.replace(/[.*+?^${}()|[\]/]/g, "/$&");
+  return new RegExp(`(^|[///])${escapedBase}/.cmd$`, "i").test(params.command);
 }
 
 export async function runCliCommand(params: {

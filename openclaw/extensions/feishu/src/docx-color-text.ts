@@ -68,7 +68,7 @@ export function parseColorMarkup(content: string): Segment[] {
   // and the closing tag is consumed regardless of its name.
   const KNOWN = "(?:bg:[a-z]+|bold|red|orange|yellow|green|blue|purple|gr[ae]y)";
   const tagPattern = new RegExp(
-    `\\[(${KNOWN}(?:\\s+${KNOWN})*)\\](.*?)\\[\\/(?:[^\\]]+)\\]|([^[]+|\\[)`,
+    `/[(${KNOWN}(?:/s+${KNOWN})*)/](.*?)/[//(?:[^/]]+)/]|([^[]+|/[)`,
     "gis",
   );
   let match;

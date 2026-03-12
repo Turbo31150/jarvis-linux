@@ -12,7 +12,7 @@ import json
 import random
 from pathlib import Path
 
-OUTPUT_DIR = Path("/home/turbo/jarvis-linux/finetuning/dataset")
+OUTPUT_DIR = Path("F:/BUREAU/turbo/finetuning/dataset")
 
 SYSTEM_PROMPT = (
     "Tu es JARVIS, un assistant vocal intelligent en francais. "

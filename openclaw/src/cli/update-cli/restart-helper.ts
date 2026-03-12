@@ -16,7 +16,7 @@ import {
  * For batch scripts, validates against special characters instead.
  */
 function shellEscape(value: string): string {
-  return value.replace(/'/g, "'\\''");
+  return value.replace(/'/g, "'/''");
 }
 
 /** Validates a string is safe for embedding in a batch (cmd.exe) script. */

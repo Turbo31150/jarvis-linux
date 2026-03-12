@@ -46,7 +46,7 @@ describe("process supervisor PTY command contract", () => {
   it("passes PTY command verbatim to shell args", async () => {
     createPtyAdapterMock.mockResolvedValue(createStubPtyAdapter());
     const supervisor = createProcessSupervisor();
-    const command = `printf '%s\\n' "a b" && printf '%s\\n' '$HOME'`;
+    const command = `printf '%s/n' "a b" && printf '%s/n' '$HOME'`;
 
     const run = await supervisor.spawn({
       sessionId: "s1",

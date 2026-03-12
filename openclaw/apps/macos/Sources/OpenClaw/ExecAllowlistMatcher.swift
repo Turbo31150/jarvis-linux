@@ -46,7 +46,7 @@ enum ExecAllowlistMatcher {
     }
 
     private static func normalizeMatchTarget(_ value: String) -> String {
-        value.replacingOccurrences(of: "\\\\", with: "/").lowercased()
+        value.replacingOccurrences(of: "//", with: "/").lowercased()
     }
 
     private static func regex(for pattern: String) -> NSRegularExpression? {

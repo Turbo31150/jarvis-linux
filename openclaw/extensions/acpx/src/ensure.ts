@@ -36,7 +36,7 @@ function isExpectedVersionConfigured(value: string | undefined): value is string
 }
 
 function supportsPathResolution(command: string): boolean {
-  return path.isAbsolute(command) || command.includes("/") || command.includes("\\");
+  return path.isAbsolute(command) || command.includes("/") || command.includes("/");
 }
 
 function isUnsupportedVersionProbe(stdout: string, stderr: string): boolean {

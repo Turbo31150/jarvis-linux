@@ -29,7 +29,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 
-TURBO_DIR = Path("/home/turbo/jarvis-linux")
+TURBO_DIR = Path("F:/BUREAU/turbo")
 LOG_DIR = TURBO_DIR / "logs"
 DB_PATH = TURBO_DIR / "data" / "process_gc.db"
 

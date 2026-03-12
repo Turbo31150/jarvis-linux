@@ -176,8 +176,8 @@ exit 1`,
     await writeExecutable(
       sharedFakePythonPath,
       `#!/usr/bin/env bash
-printf 'AAAAA11111\\t0\\tAlpha Team\\r\\n'
-printf 'BBBBB22222\\t0\\tBeta Team\\r\\n'`,
+printf 'AAAAA11111/t0/tAlpha Team/r/n'
+printf 'BBBBB22222/t0/tBeta Team/r/n'`,
     );
   });
 

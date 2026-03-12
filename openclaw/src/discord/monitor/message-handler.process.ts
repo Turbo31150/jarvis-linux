@@ -406,7 +406,7 @@ export async function processDiscordMessage(ctx: DiscordMessagePreflightContext)
   });
 
   if (shouldLogVerbose()) {
-    const preview = truncateUtf16Safe(combinedBody, 200).replace(/\n/g, "\\n");
+    const preview = truncateUtf16Safe(combinedBody, 200).replace(/\n/g, "/n");
     logVerbose(
       `discord inbound: channel=${messageChannelId} deliver=${deliverTarget} from=${ctxPayload.From} preview="${preview}"`,
     );

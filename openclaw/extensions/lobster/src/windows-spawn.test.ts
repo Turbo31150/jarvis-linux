@@ -33,7 +33,7 @@ describe("resolveWindowsLobsterSpawn", () => {
     await createWindowsCmdShimFixture({
       shimPath,
       scriptPath,
-      shimLine: `"%dp0%\\..\\shim-dist\\lobster-cli.cjs" %*`,
+      shimLine: `"%dp0%/../shim-dist/lobster-cli.cjs" %*`,
     });
 
     const target = resolveWindowsLobsterSpawn(shimPath, ["run", "noop"], process.env);
@@ -48,7 +48,7 @@ describe("resolveWindowsLobsterSpawn", () => {
     await createWindowsCmdShimFixture({
       shimPath,
       scriptPath,
-      shimLine: `"%~dp0%\\..\\shim-dist\\lobster-cli.cjs" %*`,
+      shimLine: `"%~dp0%/../shim-dist/lobster-cli.cjs" %*`,
     });
 
     const target = resolveWindowsLobsterSpawn(shimPath, ["run", "noop"], process.env);
@@ -67,7 +67,7 @@ describe("resolveWindowsLobsterSpawn", () => {
     await fs.writeFile(scriptPath, "module.exports = {};\n", "utf8");
     await fs.writeFile(
       shimPath,
-      `@echo off\r\n"%~dp0%\\node.exe" "%~dp0%\\..\\shim-dist-node\\lobster-cli.cjs" %*\r\n`,
+      `@echo off\r\n"%~dp0%/node.exe" "%~dp0%/../shim-dist-node/lobster-cli.cjs" %*\r\n`,
       "utf8",
     );
 

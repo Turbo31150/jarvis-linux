@@ -43,7 +43,7 @@ const log = createSubsystemLogger("memory");
 const SNIPPET_HEADER_RE = /@@\s*-([0-9]+),([0-9]+)/;
 const SEARCH_PENDING_UPDATE_WAIT_MS = 500;
 const MAX_QMD_OUTPUT_CHARS = 200_000;
-const NUL_MARKER_RE = /(?:\^@|\\0|\\x00|\\u0000|null\s*byte|nul\s*byte)/i;
+const NUL_MARKER_RE = /(?:\^@|/0|/x00|/u0000|null\s*byte|nul\s*byte)/i;
 const QMD_EMBED_BACKOFF_BASE_MS = 60_000;
 const QMD_EMBED_BACKOFF_MAX_MS = 60 * 60 * 1000;
 const HAN_SCRIPT_RE = /[\u3400-\u9fff]/u;
@@ -1635,7 +1635,7 @@ export class QmdMemoryManager implements MemorySearchManager {
     if (!relative || relative === ".") {
       return null;
     }
-    return relative.replace(/\\/g, "/");
+    return relative.replace(///g, "/");
   }
 
   private pickDocLocation(
@@ -1751,7 +1751,7 @@ export class QmdMemoryManager implements MemorySearchManager {
     if (!root) {
       return null;
     }
-    const normalizedRelative = collectionRelativePath.replace(/\\/g, "/");
+    const normalizedRelative = collectionRelativePath.replace(///g, "/");
     const absPath = path.normalize(path.resolve(root.path, collectionRelativePath));
     const relativeToWorkspace = path.relative(this.workspaceDir, absPath);
     const relPath = this.buildSearchPath(
@@ -1771,7 +1771,7 @@ export class QmdMemoryManager implements MemorySearchManager {
   ): string {
     const insideWorkspace = this.isInsideWorkspace(relativeToWorkspace);
     if (insideWorkspace) {
-      const normalized = relativeToWorkspace.replace(/\\/g, "/");
+      const normalized = relativeToWorkspace.replace(///g, "/");
       if (!normalized) {
         return path.basename(absPath);
       }

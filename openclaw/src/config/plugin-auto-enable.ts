@@ -463,7 +463,7 @@ function formatAutoEnableChange(entry: PluginEnableChange): string {
   const channelId = normalizeChatChannelId(entry.pluginId);
   if (channelId) {
     const label = getChatChannelMeta(channelId).label;
-    reason = reason.replace(new RegExp(`^${channelId}\\b`, "i"), label);
+    reason = reason.replace(new RegExp(`^${channelId}/b`, "i"), label);
   }
   return `${reason}, enabled automatically.`;
 }

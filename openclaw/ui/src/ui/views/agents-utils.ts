@@ -430,8 +430,8 @@ function compilePattern(pattern: string): CompiledPattern {
   if (!normalized.includes("*")) {
     return { kind: "exact", value: normalized };
   }
-  const escaped = normalized.replace(/[.*+?^${}()|[\\]\\]/g, "\\$&");
-  return { kind: "regex", value: new RegExp(`^${escaped.replaceAll("\\*", ".*")}$`) };
+  const escaped = normalized.replace(/[.*+?^${}()|[/]/]/g, "/$&");
+  return { kind: "regex", value: new RegExp(`^${escaped.replaceAll("/*", ".*")}$`) };
 }
 
 function compilePatterns(patterns?: string[]): CompiledPattern[] {

@@ -3,7 +3,7 @@ import { visibleWidth } from "./ansi.js";
 import { stylePromptTitle } from "./prompt-style.js";
 
 const URL_PREFIX_RE = /^(https?:\/\/|file:\/\/)/i;
-const WINDOWS_DRIVE_RE = /^[a-zA-Z]:[\\/]/;
+const WINDOWS_DRIVE_RE = /^[a-zA-Z]:[//]/;
 const FILE_LIKE_RE = /^[a-zA-Z0-9._-]+$/;
 
 function isSuppressedByEnv(value: string | undefined): boolean {
@@ -44,10 +44,10 @@ function isCopySensitiveToken(word: string): boolean {
   ) {
     return true;
   }
-  if (WINDOWS_DRIVE_RE.test(word) || word.startsWith("\\\\")) {
+  if (WINDOWS_DRIVE_RE.test(word) || word.startsWith("//")) {
     return true;
   }
-  if (word.includes("/") || word.includes("\\")) {
+  if (word.includes("/") || word.includes("/")) {
     return true;
   }
   // Preserve common file-like tokens (for example administrators_authorized_keys).

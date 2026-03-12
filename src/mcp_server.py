@@ -1371,7 +1371,7 @@ async def handle_security_scan(args: dict) -> list[TextContent]:
 
     # Check for .env file
     import pathlib
-    env_path = pathlib.Path("/home/turbo/jarvis-linux/.env")
+    env_path = pathlib.Path("F:/BUREAU/turbo/.env")
     if env_path.exists():
         issues.append("OK: .env file exists for secret management")
     else:
@@ -1437,7 +1437,7 @@ async def handle_voice_analytics(args: dict) -> list[TextContent]:
     stats = {}
     try:
         def _get_stats():
-            conn = sqlite3.connect("/home/turbo/jarvis-linux/data/etoile.db")
+            conn = sqlite3.connect("F:/BUREAU/turbo/data/etoile.db")
             try:
                 corrections = conn.execute("SELECT COUNT(*) FROM voice_corrections").fetchone()[0]
                 dominos = conn.execute("SELECT COUNT(*) FROM domino_chains").fetchone()[0]

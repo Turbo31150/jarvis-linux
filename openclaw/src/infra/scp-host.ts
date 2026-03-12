@@ -23,7 +23,7 @@ export function normalizeScpRemoteHost(value: string | null | undefined): string
   if (hasControlOrWhitespace(trimmed)) {
     return undefined;
   }
-  if (trimmed.startsWith("-") || trimmed.includes("/") || trimmed.includes("\\")) {
+  if (trimmed.startsWith("-") || trimmed.includes("/") || trimmed.includes("/")) {
     return undefined;
   }
 

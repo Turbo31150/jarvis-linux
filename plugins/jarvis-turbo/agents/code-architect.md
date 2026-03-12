@@ -36,7 +36,7 @@ curl -s --max-time 60 http://192.168.1.113:1234/v1/chat/completions -H "Content-
 
 GEMINI (archi):
 ```bash
-node /home/turbo/jarvis-linux/gemini-proxy.js "PROMPT"
+node F:/BUREAU/turbo/gemini-proxy.js "PROMPT"
 ```
 
 ## Regles

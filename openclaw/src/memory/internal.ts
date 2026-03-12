@@ -55,7 +55,7 @@ export function ensureDir(dir: string): string {
 
 export function normalizeRelPath(value: string): string {
   const trimmed = value.trim().replace(/^[./]+/, "");
-  return trimmed.replace(/\\/g, "/");
+  return trimmed.replace(///g, "/");
 }
 
 export function normalizeExtraMemoryPaths(workspaceDir: string, extraPaths?: string[]): string[] {
@@ -199,7 +199,7 @@ export async function buildFileEntry(
     }
     throw err;
   }
-  const normalizedPath = path.relative(workspaceDir, absPath).replace(/\\/g, "/");
+  const normalizedPath = path.relative(workspaceDir, absPath).replace(///g, "/");
   const multimodalSettings = multimodal ?? DISABLED_MULTIMODAL_SETTINGS;
   const modality = classifyMemoryMultimodalPath(absPath, multimodalSettings);
   if (modality) {

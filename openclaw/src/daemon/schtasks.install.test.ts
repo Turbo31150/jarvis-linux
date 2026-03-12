@@ -49,7 +49,7 @@ describe("installScheduledTask", () => {
           "--bang",
           "!token!",
         ],
-        workingDirectory: "C:\\temp\\poc&calc",
+        workingDirectory: "C:/temp/poc&calc",
         environment: {
           OC_INJECT: "safe & whoami | calc",
           OC_CARET: "a^b",
@@ -61,7 +61,7 @@ describe("installScheduledTask", () => {
       });
 
       const script = await fs.readFile(scriptPath, "utf8");
-      expect(script).toContain('cd /d "C:\\temp\\poc&calc"');
+      expect(script).toContain('cd /d "C:/temp/poc&calc"');
       expect(script).toContain(
         'node gateway.js --display-name "safe&whoami" --percent "%%TEMP%%" --bang "^!token^!"',
       );
@@ -85,7 +85,7 @@ describe("installScheduledTask", () => {
           "--bang",
           "!token!",
         ],
-        workingDirectory: "C:\\temp\\poc&calc",
+        workingDirectory: "C:/temp/poc&calc",
       });
       expect(parsed?.environment).toMatchObject({
         OC_INJECT: "safe & whoami | calc",
@@ -141,7 +141,7 @@ describe("installScheduledTask", () => {
         stdout: new PassThrough(),
         programArguments: ["node", "gateway.js"],
         environment: {
-          PATH: "C:\\Windows\\System32;C:\\Program Files\\Docker\\Docker\\resources\\bin",
+          PATH: "C:/Windows/System32;C:/Program Files/Docker/Docker/resources/bin",
           OPENCLAW_GATEWAY_PORT: "18789",
         },
       });

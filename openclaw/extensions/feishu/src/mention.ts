@@ -4,7 +4,7 @@ import type { FeishuMessageEvent } from "./bot.js";
  * Escape regex metacharacters so user-controlled mention fields are treated literally.
  */
 export function escapeRegExp(input: string): string {
-  return input.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return input.replace(/[.*+?^${}()|[\]/]/g, "/$&");
 }
 
 /**

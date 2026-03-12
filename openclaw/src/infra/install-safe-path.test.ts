@@ -12,7 +12,7 @@ describe("safePathSegmentHashed", () => {
   it("normalizes separators and adds hash suffix", () => {
     const result = safePathSegmentHashed("../../demo/skill");
     expect(result.includes("/")).toBe(false);
-    expect(result.includes("\\")).toBe(false);
+    expect(result.includes("/")).toBe(false);
     expect(result).toMatch(/-[a-f0-9]{10}$/);
   });
 

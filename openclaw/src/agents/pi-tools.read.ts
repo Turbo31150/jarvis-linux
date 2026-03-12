@@ -364,7 +364,7 @@ function mapContainerPathToWorkspaceRoot(params: {
   if (!containerWorkdir) {
     return params.filePath;
   }
-  const normalizedWorkdir = containerWorkdir.replace(/\\/g, "/").replace(/\/+$/, "");
+  const normalizedWorkdir = containerWorkdir.replace(///g, "/").replace(/\/+$/, "");
   if (!normalizedWorkdir.startsWith("/")) {
     return params.filePath;
   }
@@ -392,7 +392,7 @@ function mapContainerPathToWorkspaceRoot(params: {
     }
   }
 
-  const normalizedCandidate = candidate.replace(/\\/g, "/");
+  const normalizedCandidate = candidate.replace(///g, "/");
   if (normalizedCandidate === normalizedWorkdir) {
     return path.resolve(params.root);
   }

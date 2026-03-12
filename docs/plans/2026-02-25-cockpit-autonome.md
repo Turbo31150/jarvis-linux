@@ -33,8 +33,8 @@ patterns dangereux.
 
 ### Verification:
 ```bash
-curl -s http://127.0.0.1:18800/tool -d '{"name":"list_dir","args":{"path":"/home/turbo/jarvis-linux"}}'
-curl -s http://127.0.0.1:18800/tool -d '{"name":"read_file","args":{"path":"/home/turbo/jarvis-linux/README.md"}}'
+curl -s http://127.0.0.1:18800/tool -d '{"name":"list_dir","args":{"path":"F:/BUREAU/turbo"}}'
+curl -s http://127.0.0.1:18800/tool -d '{"name":"read_file","args":{"path":"F:/BUREAU/turbo/README.md"}}'
 ```
 
 ---

@@ -211,7 +211,7 @@ final class CanvasSchemeHandler: NSObject, WKURLSchemeHandler {
     private func loadBundledResourceData(relativePath: String) -> Data? {
         let trimmed = relativePath.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return nil }
-        if trimmed.contains("..") || trimmed.contains("\\") { return nil }
+        if trimmed.contains("..") || trimmed.contains("/") { return nil }
 
         let parts = trimmed.split(separator: "/")
         guard let filename = parts.last else { return nil }

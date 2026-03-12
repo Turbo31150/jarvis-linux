@@ -57,7 +57,7 @@ print()
 
 # 4. Vérifier la structure des répertoires
 print("[4/6] Structure de répertoires")
-finetuning_dir = Path("/home/turbo/jarvis-linux/finetuning")
+finetuning_dir = Path("F:/BUREAU/turbo/finetuning")
 if finetuning_dir.exists():
     print(f"  ✓ {finetuning_dir}")
 else:
@@ -80,7 +80,7 @@ print()
 
 # 5. Vérifier les adaptateurs LoRA
 print("[5/6] Adaptateurs LoRA")
-lora_base = Path("/home/turbo/jarvis-linux/finetuning/output")
+lora_base = Path("F:/BUREAU/turbo/finetuning/output")
 if lora_base.exists():
     print(f"  ✓ Répertoire output existe")
 

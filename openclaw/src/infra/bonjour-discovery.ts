@@ -46,7 +46,7 @@ function decodeDnsSdEscapes(value: string): string {
 
   for (let i = 0; i < value.length; i += 1) {
     const ch = value[i] ?? "";
-    if (ch === "\\" && i + 3 < value.length) {
+    if (ch === "/" && i + 3 < value.length) {
       const escaped = value.slice(i + 1, i + 4);
       if (/^[0-9]{3}$/.test(escaped)) {
         const byte = Number.parseInt(escaped, 10);
@@ -89,7 +89,7 @@ function parseDigTxt(stdout: string): string[] {
     }
     const matches = Array.from(line.matchAll(/"([^"]*)"/g), (m) => m[1] ?? "");
     for (const m of matches) {
-      const unescaped = m.replaceAll("\\\\", "\\").replaceAll('\\"', '"').replaceAll("\\n", "\n");
+      const unescaped = m.replaceAll("//", "/").replaceAll('/"', '"').replaceAll("/n", "\n");
       tokens.push(unescaped);
     }
   }

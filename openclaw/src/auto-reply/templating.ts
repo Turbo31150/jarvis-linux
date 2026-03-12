@@ -15,7 +15,7 @@ export type MsgContext = {
   Body?: string;
   /**
    * Agent prompt body (may include envelope/history/context). Prefer this for prompt shaping.
-   * Should use real newlines (`\n`), not escaped `\\n`.
+   * Should use real newlines (`\n`), not escaped `/n`.
    */
   BodyForAgent?: string;
   /**

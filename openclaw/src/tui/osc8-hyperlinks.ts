@@ -1,7 +1,7 @@
 // Regex patterns for ANSI escape sequences (constructed from strings to
 // satisfy the no-control-regex lint rule).
-const SGR_PATTERN = "\\x1b\\[[0-9;]*m";
-const OSC8_PATTERN = "\\x1b\\]8;;.*?(?:\\x07|\\x1b\\\\)";
+const SGR_PATTERN = "/x1b/[[0-9;]*m";
+const OSC8_PATTERN = "/x1b/]8;;.*?(?:/x07|/x1b//)";
 const ANSI_RE = new RegExp(`${SGR_PATTERN}|${OSC8_PATTERN}`, "g");
 const SGR_START_RE = new RegExp(`^${SGR_PATTERN}`);
 const OSC8_START_RE = new RegExp(`^${OSC8_PATTERN}`);

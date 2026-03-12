@@ -110,7 +110,7 @@ iwr -useb https://openclaw.ai/install.ps1 | iex -InstallMethod git
 ```
 
 ```powershell
-iwr -useb https://openclaw.ai/install.ps1 | iex -InstallMethod git -GitDir "C:\\openclaw"
+iwr -useb https://openclaw.ai/install.ps1 | iex -InstallMethod git -GitDir "C:/openclaw"
 ```
 
 环境变量：
@@ -125,4 +125,4 @@ Git 要求：
 常见 Windows 问题：
 
 - **npm error spawn git / ENOENT**：安装 Git for Windows 并重新打开 PowerShell，然后重新运行安装器。
-- **"openclaw" 不是可识别的命令**：你的 npm 全局 bin 文件夹不在 PATH 中。大多数系统使用 `%AppData%\\npm`。你也可以运行 `npm config get prefix` 并将 `\\bin` 添加到 PATH，然后重新打开 PowerShell。
+- **"openclaw" 不是可识别的命令**：你的 npm 全局 bin 文件夹不在 PATH 中。大多数系统使用 `%AppData%/npm`。你也可以运行 `npm config get prefix` 并将 `/bin` 添加到 PATH，然后重新打开 PowerShell。

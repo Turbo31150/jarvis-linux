@@ -141,8 +141,8 @@ list_categories() {
 # Escape user input embedded in macOS log predicate string literals.
 escape_predicate_literal() {
     local value="$1"
-    value="${value//\\/\\\\}"
-    value="${value//\"/\\\"}"
+    value="${value//////}"
+    value="${value//\"//\"}"
     printf '%s' "$value"
 }
 

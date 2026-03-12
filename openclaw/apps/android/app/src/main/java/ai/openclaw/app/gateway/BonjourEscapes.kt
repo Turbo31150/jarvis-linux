@@ -7,7 +7,7 @@ object BonjourEscapes {
     val bytes = mutableListOf<Byte>()
     var i = 0
     while (i < input.length) {
-      if (input[i] == '\\' && i + 3 < input.length) {
+      if (input[i] == '/' && i + 3 < input.length) {
         val d0 = input[i + 1]
         val d1 = input[i + 2]
         val d2 = input[i + 3]

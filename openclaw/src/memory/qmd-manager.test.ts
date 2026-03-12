@@ -62,7 +62,7 @@ function isMcporterCommand(cmd: unknown): boolean {
   if (typeof cmd !== "string") {
     return false;
   }
-  return /(^|[\\/])mcporter(?:\.cmd)?$/i.test(cmd);
+  return /(^|[//])mcporter(?:\.cmd)?$/i.test(cmd);
 }
 
 vi.mock("../logging/subsystem.js", () => ({
@@ -1093,7 +1093,7 @@ describe("QmdMemoryManager", () => {
       for (const call of qmdCalls) {
         const command = String(call[0]);
         const options = call[2] as { shell?: boolean } | undefined;
-        if (/(^|[\\/])qmd(?:\.cmd)?$/i.test(command)) {
+        if (/(^|[//])qmd(?:\.cmd)?$/i.test(command)) {
           // Wrapper unresolved: keep `.cmd` and use shell for PATHEXT lookup.
           expect(command.toLowerCase().endsWith("qmd.cmd")).toBe(true);
           expect(options?.shell).toBe(true);
@@ -1725,7 +1725,7 @@ describe("QmdMemoryManager", () => {
     );
     expect(mcporterCall).toBeDefined();
     const spawnOpts = mcporterCall?.[2] as { env?: NodeJS.ProcessEnv } | undefined;
-    const normalizePath = (value?: string) => value?.replace(/\\/g, "/");
+    const normalizePath = (value?: string) => value?.replace(///g, "/");
     expect(normalizePath(spawnOpts?.env?.XDG_CONFIG_HOME)).toContain("/agents/main/qmd/xdg-config");
     expect(normalizePath(spawnOpts?.env?.XDG_CACHE_HOME)).toContain("/agents/main/qmd/xdg-cache");
 

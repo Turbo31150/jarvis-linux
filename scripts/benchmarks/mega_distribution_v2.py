@@ -17,7 +17,7 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 
-TURBO = Path("/home/turbo/jarvis-linux")
+TURBO = Path("F:/BUREAU/turbo")
 DB = sqlite3.connect(str(TURBO / "data" / "etoile.db"))
 DB.execute("""CREATE TABLE IF NOT EXISTS mega_bench_v2 (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -71,7 +71,7 @@ def oll(model, prompt, mt, timeout=90):
 def gemini_call(prompt, timeout=60):
     t0 = time.time()
     r = subprocess.run(
-        ["node", "/home/turbo/jarvis-linux/gemini-proxy.js", prompt],
+        ["node", "F:/BUREAU/turbo/gemini-proxy.js", prompt],
         capture_output=True, text=True, timeout=timeout, encoding="utf-8", errors="replace"
     )
     lat = time.time() - t0

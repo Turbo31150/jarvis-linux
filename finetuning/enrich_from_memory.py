@@ -7,7 +7,7 @@ import sqlite3
 import os
 from pathlib import Path
 
-DATASET_DIR = Path("/home/turbo/jarvis-linux/finetuning/dataset")
+DATASET_DIR = Path("F:/BUREAU/turbo/finetuning/dataset")
 TRAIN_FILE = DATASET_DIR / "jarvis_final_train.jsonl"
 ENRICHMENT_FILE = DATASET_DIR / "jarvis_memory_enrichment.jsonl"
 
@@ -201,7 +201,7 @@ def generate_system_examples() -> list:
         "- rag-v1 : RAG adaptatif (plugin LM Studio)\n"
         "- TRADING_V2_PRODUCTION : MCP v3.5\n"
         "- n8n_workflows_backup : 20 workflows\n"
-        "Disques : /\ (82+ GB libre / 476 GB), F:/ (104+ GB / 446 GB)."
+        "Disques : C:/ (82+ GB libre / 476 GB), F:/ (104+ GB / 446 GB)."
     ))
 
     examples.append(make_example(
@@ -314,7 +314,7 @@ def generate_skills_examples() -> list:
 def generate_domino_examples_from_db() -> list:
     """Genere des exemples a partir des chaines domino dans etoile.db."""
     examples = []
-    db_path = "/home/turbo/jarvis-linux/data/etoile.db"
+    db_path = "F:/BUREAU/turbo/data/etoile.db"
     if not os.path.exists(db_path):
         return examples
 
@@ -388,7 +388,7 @@ def generate_domino_examples_from_db() -> list:
 def generate_commands_from_db() -> list:
     """Genere des exemples a partir des commandes dans jarvis.db."""
     examples = []
-    db_path = "/home/turbo/jarvis-linux/data/jarvis.db"
+    db_path = "F:/BUREAU/turbo/data/jarvis.db"
     if not os.path.exists(db_path):
         return examples
 

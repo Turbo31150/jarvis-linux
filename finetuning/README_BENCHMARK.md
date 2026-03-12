@@ -99,7 +99,7 @@ Le script génère :
 {
   "metadata": {
     "base_model": "Qwen/Qwen3-30B-A3B",
-    "lora_adapter": "/home/turbo/jarvis-linux/finetuning/output/.../final",
+    "lora_adapter": "F:/BUREAU/turbo/finetuning/output/.../final",
     "device": "cuda",
     "timestamp": "2026-02-18T10:30:45.123456"
   },

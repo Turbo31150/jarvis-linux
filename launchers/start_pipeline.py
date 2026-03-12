@@ -4,7 +4,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-TURBO = Path("/home/turbo/jarvis-linux")
+TURBO = Path("F:/BUREAU/turbo")
 PYTHON = TURBO / ".venv" / "Scripts" / "python.exe"
 SCRIPT = TURBO / "cowork" / "dev" / "autonomous_cluster_pipeline.py"
 PID_FILE = TURBO / "data" / "cluster_pipeline.pid"

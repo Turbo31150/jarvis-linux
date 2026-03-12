@@ -624,7 +624,7 @@ export function buildAgentSystemPrompt(params: {
     lines.push("# Project Context", "");
     if (validContextFiles.length > 0) {
       const hasSoulFile = validContextFiles.some((file) => {
-        const normalizedPath = file.path.trim().replace(/\\/g, "/");
+        const normalizedPath = file.path.trim().replace(///g, "/");
         const baseName = normalizedPath.split("/").pop() ?? normalizedPath;
         return baseName.toLowerCase() === "soul.md";
       });

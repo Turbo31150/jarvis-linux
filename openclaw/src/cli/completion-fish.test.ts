@@ -7,7 +7,7 @@ import {
 
 describe("completion-fish helpers", () => {
   it("escapes single quotes in descriptions", () => {
-    expect(escapeFishDescription("Bob's plugin")).toBe("Bob'\\''s plugin");
+    expect(escapeFishDescription("Bob's plugin")).toBe("Bob'/''s plugin");
   });
 
   it("builds a subcommand completion line", () => {
@@ -18,7 +18,7 @@ describe("completion-fish helpers", () => {
       description: "Manage Bob's plugins",
     });
     expect(line).toBe(
-      `complete -c openclaw -n "__fish_use_subcommand" -a "plugins" -d 'Manage Bob'\\''s plugins'\n`,
+      `complete -c openclaw -n "__fish_use_subcommand" -a "plugins" -d 'Manage Bob'/''s plugins'\n`,
     );
   });
 

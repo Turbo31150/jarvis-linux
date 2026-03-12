@@ -26,7 +26,7 @@ print("=" * 60)
 # LEARNING CYCLES (4)
 print("\n[LEARNING CYCLES]")
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); t=c.execute('SELECT COUNT(*) FROM pipeline_tests').fetchone()[0]; print(f'{t} tests total')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); t=c.execute('SELECT COUNT(*) FROM pipeline_tests').fetchone()[0]; print(f'{t} tests total')\" 2>&1")
     ok("learning_cycle_status", out[:80])
 except Exception as e: fail("learning_cycle_status", str(e)[:80])
 try:
@@ -34,30 +34,30 @@ try:
     ok("learning_cycle_benchmark", r[:80])
 except Exception as e: fail("learning_cycle_benchmark", str(e)[:80])
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); cats=c.execute('SELECT COUNT(DISTINCT category) FROM pipeline_tests').fetchone()[0]; print(f'{cats} categories testees')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); cats=c.execute('SELECT COUNT(DISTINCT category) FROM pipeline_tests').fetchone()[0]; print(f'{cats} categories testees')\" 2>&1")
     ok("learning_cycle_metrics", out[:80])
 except Exception as e: fail("learning_cycle_metrics", str(e)[:80])
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); f=c.execute('SELECT COUNT(*) FROM pipeline_tests WHERE status!=/\"PASS/\"').fetchone()[0]; print(f'{f} echecs')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); f=c.execute('SELECT COUNT(*) FROM pipeline_tests WHERE status!=/\"PASS/\"').fetchone()[0]; print(f'{f} echecs')\" 2>&1")
     ok("learning_cycle_feedback", out[:80])
 except Exception as e: fail("learning_cycle_feedback", str(e)[:80])
 
 # SCENARIO & TESTING (4)
 print("\n[SCENARIO & TESTING]")
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); t=c.execute('SELECT COUNT(*) FROM pipeline_tests').fetchone()[0]; m=c.execute('SELECT COUNT(*) FROM map').fetchone()[0]; print(f'tests:{t} map:{m}')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); t=c.execute('SELECT COUNT(*) FROM pipeline_tests').fetchone()[0]; m=c.execute('SELECT COUNT(*) FROM map').fetchone()[0]; print(f'tests:{t} map:{m}')\" 2>&1")
     ok("scenario_count_all", out[:80])
 except Exception as e: fail("scenario_count_all", str(e)[:80])
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); r=c.execute('SELECT category,COUNT(*) FROM pipeline_tests GROUP BY category').fetchall(); print(len(r),'categories')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); r=c.execute('SELECT category,COUNT(*) FROM pipeline_tests GROUP BY category').fetchall(); print(len(r),'categories')\" 2>&1")
     ok("scenario_run_category", out[:80])
 except Exception as e: fail("scenario_run_category", str(e)[:80])
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); t=c.execute('SELECT COUNT(*),SUM(CASE WHEN status=/\"PASS/\" THEN 1 ELSE 0 END) FROM pipeline_tests').fetchone(); print(f'{t[1]}/{t[0]} PASS')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); t=c.execute('SELECT COUNT(*),SUM(CASE WHEN status=/\"PASS/\" THEN 1 ELSE 0 END) FROM pipeline_tests').fetchone(); print(f'{t[1]}/{t[0]} PASS')\" 2>&1")
     ok("scenario_report_generate", out[:80])
 except Exception as e: fail("scenario_report_generate", str(e)[:80])
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); r=c.execute('SELECT pipeline_name,latency_ms FROM pipeline_tests WHERE latency_ms IS NOT NULL ORDER BY latency_ms DESC LIMIT 3').fetchall(); print(r)\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); r=c.execute('SELECT pipeline_name,latency_ms FROM pipeline_tests WHERE latency_ms IS NOT NULL ORDER BY latency_ms DESC LIMIT 3').fetchall(); print(r)\" 2>&1")
     ok("scenario_regression_check", out[:80])
 except Exception as e: fail("scenario_regression_check", str(e)[:80])
 
@@ -76,7 +76,7 @@ try:
     ok("api_latency_test", f"M1: {lat}ms")
 except Exception as e: fail("api_latency_test", str(e)[:80])
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import glob; envs=glob.glob('/home/turbo/jarvis-linux/**/.env',recursive=True); print(f'{len(envs)} .env fichiers')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import glob; envs=glob.glob('F:/BUREAU/turbo/**/.env',recursive=True); print(f'{len(envs)} .env fichiers')\" 2>&1")
     ok("api_keys_status", out[:80])
 except Exception as e: fail("api_keys_status", str(e)[:80])
 
@@ -91,7 +91,7 @@ try:
     ok("profile_memory_usage", out.replace("\n", " | ")[:80])
 except Exception as e: fail("profile_memory_usage", str(e)[:80])
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3,time; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); s=time.time(); c.execute('SELECT COUNT(*) FROM map').fetchone(); print(f'map query: {round((time.time()-s)*1000,1)}ms')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3,time; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); s=time.time(); c.execute('SELECT COUNT(*) FROM map').fetchone(); print(f'map query: {round((time.time()-s)*1000,1)}ms')\" 2>&1")
     ok("profile_slow_queries", out[:80])
 except Exception as e: fail("profile_slow_queries", str(e)[:80])
 try:
@@ -144,14 +144,14 @@ try:
     ok("notification_config_show", out[:80])
 except Exception as e: fail("notification_config_show", str(e)[:80])
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); f=c.execute('SELECT COUNT(*) FROM pipeline_tests WHERE status!=/\"PASS/\"').fetchone()[0]; print(f'{f} alertes')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); f=c.execute('SELECT COUNT(*) FROM pipeline_tests WHERE status!=/\"PASS/\"').fetchone()[0]; print(f'{f} alertes')\" 2>&1")
     ok("notification_alert_history", out[:80])
 except Exception as e: fail("notification_alert_history", str(e)[:80])
 
 # DOCUMENTATION AUTO (3)
 print("\n[DOCUMENTATION AUTO]")
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"from src.commands_pipelines import PIPELINE_COMMANDS; print(f'{len(PIPELINE_COMMANDS)} pipelines documentes')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"from src.commands_pipelines import PIPELINE_COMMANDS; print(f'{len(PIPELINE_COMMANDS)} pipelines documentes')\" 2>&1")
     ok("doc_auto_generate", out[:80])
 except Exception as e: fail("doc_auto_generate", str(e)[:80])
 try:
@@ -159,7 +159,7 @@ try:
     ok("doc_sync_check", out[:80])
 except Exception as e: fail("doc_sync_check", str(e)[:80])
 try:
-    out = ps("& '/\Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db'); r=c.execute('SELECT COUNT(*) FROM pipeline_tests WHERE status=/\"PASS/\"').fetchone()[0]; print(f'{r} exemples PASS')\" 2>&1")
+    out = ps("& 'C:/Users/franc/.local/bin/uv.exe' run python -c \"import sqlite3; c=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db'); r=c.execute('SELECT COUNT(*) FROM pipeline_tests WHERE status=/\"PASS/\"').fetchone()[0]; print(f'{r} exemples PASS')\" 2>&1")
     ok("doc_usage_examples", out[:80])
 except Exception as e: fail("doc_usage_examples", str(e)[:80])
 

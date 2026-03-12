@@ -89,7 +89,7 @@ function isChannelLiteralNode(node) {
 }
 
 function matchesChannelModuleSpecifier(specifier) {
-  return channelSegmentRe.test(specifier.replaceAll("\\", "/"));
+  return channelSegmentRe.test(specifier.replaceAll("/", "/"));
 }
 
 const userFacingChannelNameRe =

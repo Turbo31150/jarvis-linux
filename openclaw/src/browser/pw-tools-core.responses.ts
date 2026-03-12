@@ -11,7 +11,7 @@ function matchUrlPattern(pattern: string, url: string): boolean {
     return true;
   }
   if (p.includes("*")) {
-    const escaped = p.replace(/[|\\{}()[\]^$+?.]/g, "\\$&");
+    const escaped = p.replace(/[|/{}()[\]^$+?.]/g, "/$&");
     const regex = new RegExp(`^${escaped.replace(/\*\*/g, ".*").replace(/\*/g, ".*")}$`);
     return regex.test(url);
   }

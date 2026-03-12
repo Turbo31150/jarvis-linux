@@ -229,7 +229,7 @@ if (anyError) {
   console.error(`ERROR: agent returned error payload: ${combinedText}`);
   process.exit(1);
 }
-if (/rate_limit_error/i.test(combinedText) || /^429\\b/.test(combinedText)) {
+if (/rate_limit_error/i.test(combinedText) || /^429/b/.test(combinedText)) {
   console.error(`ERROR: agent rate limited: ${combinedText}`);
   process.exit(1);
 }

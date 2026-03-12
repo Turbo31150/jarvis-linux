@@ -95,7 +95,7 @@ function cronIdOrJobIdParams(extraFields: Record<string, TSchema>) {
 const CronRunLogJobIdSchema = Type.String({
   minLength: 1,
   // Prevent path traversal via separators in cron.runs id/jobId.
-  pattern: "^[^/\\\\]+$",
+  pattern: "^[^///]+$",
 });
 
 export const CronScheduleSchema = Type.Union([

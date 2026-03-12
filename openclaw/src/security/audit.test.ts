@@ -649,9 +649,9 @@ description: test skill
     const configPath = path.join(stateDir, "openclaw.json");
     await fs.writeFile(configPath, "{}\n", "utf-8");
 
-    const user = "DESKTOP-TEST\\Tester";
+    const user = "DESKTOP-TEST/Tester";
     const execIcacls = async (_cmd: string, args: string[]) => ({
-      stdout: `${args[0]} NT AUTHORITY\\SYSTEM:(F)\n ${user}:(F)\n`,
+      stdout: `${args[0]} NT AUTHORITY/SYSTEM:(F)\n ${user}:(F)\n`,
       stderr: "",
     });
 
@@ -687,17 +687,17 @@ description: test skill
     const configPath = path.join(stateDir, "openclaw.json");
     await fs.writeFile(configPath, "{}\n", "utf-8");
 
-    const user = "DESKTOP-TEST\\Tester";
+    const user = "DESKTOP-TEST/Tester";
     const execIcacls = async (_cmd: string, args: string[]) => {
       const target = args[0];
       if (target === stateDir) {
         return {
-          stdout: `${target} NT AUTHORITY\\SYSTEM:(F)\n BUILTIN\\Users:(RX)\n ${user}:(F)\n`,
+          stdout: `${target} NT AUTHORITY/SYSTEM:(F)\n BUILTIN/Users:(RX)\n ${user}:(F)\n`,
           stderr: "",
         };
       }
       return {
-        stdout: `${target} NT AUTHORITY\\SYSTEM:(F)\n ${user}:(F)\n`,
+        stdout: `${target} NT AUTHORITY/SYSTEM:(F)\n ${user}:(F)\n`,
         stderr: "",
       };
     };
@@ -2807,18 +2807,18 @@ description: test skill
     await fs.chmod(configPath, 0o600);
 
     const cfg: OpenClawConfig = { logging: { redactSensitive: "off" } };
-    const user = "DESKTOP-TEST\\Tester";
+    const user = "DESKTOP-TEST/Tester";
     const execIcacls = isWindows
       ? async (_cmd: string, args: string[]) => {
           const target = args[0];
           if (target === includePath) {
             return {
-              stdout: `${target} NT AUTHORITY\\SYSTEM:(F)\n BUILTIN\\Users:(W)\n ${user}:(F)\n`,
+              stdout: `${target} NT AUTHORITY/SYSTEM:(F)\n BUILTIN/Users:(W)\n ${user}:(F)\n`,
               stderr: "",
             };
           }
           return {
-            stdout: `${target} NT AUTHORITY\\SYSTEM:(F)\n ${user}:(F)\n`,
+            stdout: `${target} NT AUTHORITY/SYSTEM:(F)\n ${user}:(F)\n`,
             stderr: "",
           };
         }
@@ -3187,7 +3187,7 @@ description: test skill
     );
     expect(pluginFinding).toBeDefined();
     expect(pluginFinding?.detail).toContain("dangerous-exec");
-    expect(pluginFinding?.detail).toMatch(/\.hidden[\\/]+index\.js:\d+/);
+    expect(pluginFinding?.detail).toMatch(/\.hidden[//]+index\.js:\d+/);
 
     const skillFinding = skillFindings.find(
       (finding) => finding.checkId === "skills.code_safety" && finding.severity === "critical",

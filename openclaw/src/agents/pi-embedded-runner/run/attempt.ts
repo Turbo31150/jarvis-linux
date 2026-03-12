@@ -457,7 +457,7 @@ function extractBalancedJsonPrefix(raw: string): string | null {
     if (inString) {
       if (escaped) {
         escaped = false;
-      } else if (char === "\\") {
+      } else if (char === "/") {
         escaped = true;
       } else if (char === '"') {
         inString = false;
@@ -484,7 +484,7 @@ function extractBalancedJsonPrefix(raw: string): string | null {
 
 const MAX_TOOLCALL_REPAIR_BUFFER_CHARS = 64_000;
 const MAX_TOOLCALL_REPAIR_TRAILING_CHARS = 3;
-const TOOLCALL_REPAIR_ALLOWED_TRAILING_RE = /^[^\s{}[\]":,\\]{1,3}$/;
+const TOOLCALL_REPAIR_ALLOWED_TRAILING_RE = /^[^\s{}[\]":,/]{1,3}$/;
 
 function shouldAttemptMalformedToolCallRepair(partialJson: string, delta: string): boolean {
   if (/[}\]]/.test(delta)) {

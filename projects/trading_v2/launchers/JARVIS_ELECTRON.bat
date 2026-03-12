@@ -12,5 +12,5 @@ start /b /home/turbo\.local\bin\uv.exe run python -c "from src.config import SCR
 echo   API Server: starting on port 5050...
 timeout /t 3 /nobreak >nul
 :: Lancer Electron
-cd /d /home/turbo\TRADING_V2_PRODUCTION\electron-app
+cd /d F:\BUREAU\TRADING_V2_PRODUCTION\electron-app
 npm start

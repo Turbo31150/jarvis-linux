@@ -67,7 +67,7 @@ struct ExecCommandResolution {
         env: [String: String]?) -> ExecCommandResolution?
     {
         let expanded = rawExecutable.hasPrefix("~") ? (rawExecutable as NSString).expandingTildeInPath : rawExecutable
-        let hasPathSeparator = expanded.contains("/") || expanded.contains("\\")
+        let hasPathSeparator = expanded.contains("/") || expanded.contains("/")
         let resolvedPath: String? = {
             if hasPathSeparator {
                 if expanded.hasPrefix("/") {
@@ -156,7 +156,7 @@ struct ExecCommandResolution {
                 continue
             }
 
-            if ch == "\\", !inSingle {
+            if ch == "/", !inSingle {
                 current.append(ch)
                 escaped = true
                 idx += 1
@@ -252,7 +252,7 @@ enum ExecCommandFormatter {
             guard !trimmed.isEmpty else { return "\"\"" }
             let needsQuotes = trimmed.contains { $0.isWhitespace || $0 == "\"" }
             if !needsQuotes { return trimmed }
-            let escaped = trimmed.replacingOccurrences(of: "\"", with: "\\\"")
+            let escaped = trimmed.replacingOccurrences(of: "\"", with: "/\"")
             return "\"\(escaped)\""
         }.joined(separator: " ")
     }

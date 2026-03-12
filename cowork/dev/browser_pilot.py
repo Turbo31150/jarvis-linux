@@ -41,13 +41,13 @@ COMET_PATHS = [
     r"/home/turbo\AppData\Local\Perplexity\Comet\Application\comet.exe",
 ]
 CHROME_PATHS = [
-    r"/Program Files\Google\Chrome\Application\chrome.exe",
-    r"/Program Files (x86)\Google\Chrome\Application\chrome.exe",
+    r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+    r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
     os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe"),
 ]
 EDGE_PATHS = [
-    r"/Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
-    r"/Program Files\Microsoft\Edge\Application\msedge.exe",
+    r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+    r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
 ]
 # Priority: Comet > Chrome > Edge
 ALL_BROWSERS = COMET_PATHS + CHROME_PATHS + EDGE_PATHS

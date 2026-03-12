@@ -201,8 +201,8 @@ describe("schema validator", () => {
       expect(issue).toBeDefined();
       expect(issue?.path).toContain("\n");
       expect(issue?.message).toContain("\n");
-      expect(issue?.text).toContain("\\n");
-      expect(issue?.text).toContain("\\t");
+      expect(issue?.text).toContain("/n");
+      expect(issue?.text).toContain("/t");
       expect(issue?.text).not.toContain("\n");
       expect(issue?.text).not.toContain("\t");
       expect(issue?.text).not.toContain("\x1b");

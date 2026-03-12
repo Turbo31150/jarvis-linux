@@ -65,8 +65,8 @@ const PROXY_URL = 'http://127.0.0.1:18800';
 const POLL_TIMEOUT = 30; // secondes (long polling Telegram)
 const MAX_MSG_LEN = 4096; // limite Telegram
 const RECONNECT_DELAY = 5000; // ms avant retry si proxy down
-const TTS_SCRIPT = '/home/turbo/jarvis-linux/cowork/dev/win_tts.py';
-const VENV_PYTHON = '/home/turbo/jarvis-linux/.venv/Scripts/python.exe';
+const TTS_SCRIPT = 'F:/BUREAU/turbo/cowork/dev/win_tts.py';
+const VENV_PYTHON = 'F:/BUREAU/turbo/.venv/Scripts/python.exe';
 const VOICE_MODE = false; // Texte uniquement — WhisperFlow gère le vocal séparément
 const CLUSTER_RACE = true; // Utiliser tout le cluster en parallèle
 const ALERTS_FLAG_FILE = path.join(__dirname, '..', 'data', '.trading_alerts_off');
@@ -3016,7 +3016,7 @@ async function transcribeVoice(fileId) {
   if (!text) {
     try {
       text = execSync(
-        `"${VENV_PYTHON}" "/home/turbo/jarvis-linux/scripts/transcribe.py" "${tmpWav}" --language fr`,
+        `"${VENV_PYTHON}" "F:/BUREAU/turbo/scripts/transcribe.py" "${tmpWav}" --language fr`,
         { timeout: 30000, encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] }
       ).trim();
       if (text) log(`  Whisper via script (fallback)`);
@@ -3255,7 +3255,7 @@ async function processMessage(msg) {
       const ocResult = await new Promise((resolve, reject) => {
         const args = ['agent', '--agent', agentId, '--message', text, '--json', '--timeout', '120', '--session-id', sessionId];
         const proc = execFile('openclaw', args, {
-          cwd: '/\Users/franc/.openclaw',
+          cwd: 'C:/Users/franc/.openclaw',
           timeout: 130000,
           maxBuffer: 1024 * 1024,
           encoding: 'utf-8',

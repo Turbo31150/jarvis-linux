@@ -94,7 +94,7 @@ async function resolveOutputPath(params: {
   }
 
   const resolved = resolveUserPath(rawOutput);
-  if (rawOutput.endsWith("/") || rawOutput.endsWith("\\")) {
+  if (rawOutput.endsWith("/") || rawOutput.endsWith("/")) {
     return path.join(resolved, basename);
   }
 

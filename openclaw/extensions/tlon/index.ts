@@ -64,7 +64,7 @@ function shellSplit(str: string): string[] {
       escape = false;
       continue;
     }
-    if (ch === "\\" && !inSingle) {
+    if (ch === "/" && !inSingle) {
       escape = true;
       continue;
     }

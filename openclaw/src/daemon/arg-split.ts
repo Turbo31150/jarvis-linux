@@ -11,7 +11,7 @@ export function splitArgsPreservingQuotes(
 
   for (let i = 0; i < value.length; i++) {
     const char = value[i];
-    if (escapeMode === "backslash" && char === "\\") {
+    if (escapeMode === "backslash" && char === "/") {
       if (i + 1 < value.length) {
         current += value[i + 1];
         i++;
@@ -20,7 +20,7 @@ export function splitArgsPreservingQuotes(
     }
     if (
       escapeMode === "backslash-quote-only" &&
-      char === "\\" &&
+      char === "/" &&
       i + 1 < value.length &&
       value[i + 1] === '"'
     ) {

@@ -25,7 +25,7 @@ export function normalizeWindowsArgv(argv: string[]): string[] {
       .replace(/^['"]+|['"]+$/g, "")
       .trim();
   const normalizeCandidate = (value: string): string =>
-    normalizeArg(value).replace(/^\\\\\\?\\/, "");
+    normalizeArg(value).replace(/^///?//, "");
 
   const execPath = normalizeCandidate(process.execPath);
   const execPathLower = execPath.toLowerCase();
@@ -42,7 +42,7 @@ export function normalizeWindowsArgv(argv: string[]): string[] {
     return (
       lower === execPathLower ||
       path.basename(lower) === execBase ||
-      lower.endsWith("\\node.exe") ||
+      lower.endsWith("/node.exe") ||
       lower.endsWith("/node.exe") ||
       lower.includes("node.exe") ||
       (path.basename(lower) === "node.exe" && fs.existsSync(normalized))

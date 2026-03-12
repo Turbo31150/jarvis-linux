@@ -1,5 +1,5 @@
 export function escapeFishDescription(value: string): string {
-  return value.replace(/'/g, "'\\''");
+  return value.replace(/'/g, "'/''");
 }
 
 function parseOptionFlags(flags: string): { long?: string; short?: string } {

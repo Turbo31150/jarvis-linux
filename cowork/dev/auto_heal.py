@@ -12,7 +12,7 @@ SERVICES = {
         "port": 9742, "host": "127.0.0.1",
         "restart_cmd": ["python", "-m", "uvicorn", "python_ws.server:app",
                         "--host", "127.0.0.1", "--port", "9742"],
-        "cwd": "/home/turbo/jarvis-linux",
+        "cwd": "F:/BUREAU/turbo",
     },
     "LMStudio": {
         "port": 1234, "host": "127.0.0.1",

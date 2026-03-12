@@ -1,8 +1,8 @@
 import path from "node:path";
 import { resolveGatewayProfileSuffix } from "./constants.js";
 
-const windowsAbsolutePath = /^[a-zA-Z]:[\\/]/;
-const windowsUncPath = /^\\\\/;
+const windowsAbsolutePath = /^[a-zA-Z]:[//]/;
+const windowsUncPath = /^///;
 
 export function resolveHomeDir(env: Record<string, string | undefined>): string {
   const home = env.HOME?.trim() || env.USERPROFILE?.trim();
@@ -21,7 +21,7 @@ export function resolveUserPathWithHome(input: string, home?: string): string {
     if (!home) {
       throw new Error("Missing HOME");
     }
-    const expanded = trimmed.replace(/^~(?=$|[\\/])/, home);
+    const expanded = trimmed.replace(/^~(?=$|[//])/, home);
     return path.resolve(expanded);
   }
   if (windowsAbsolutePath.test(trimmed) || windowsUncPath.test(trimmed)) {

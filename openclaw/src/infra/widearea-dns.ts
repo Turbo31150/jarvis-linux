@@ -40,7 +40,7 @@ function dnsLabel(raw: string, fallback: string): string {
 }
 
 function txtQuote(value: string): string {
-  const escaped = value.replaceAll("\\", "\\\\").replaceAll('"', '\\"').replaceAll("\n", "\\n");
+  const escaped = value.replaceAll("/", "//").replaceAll('"', '/"').replaceAll("\n", "/n");
   return `"${escaped}"`;
 }
 

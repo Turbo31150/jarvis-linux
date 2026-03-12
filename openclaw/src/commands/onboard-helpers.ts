@@ -353,7 +353,7 @@ export async function detectBinary(name: string): Promise<boolean> {
     path.isAbsolute(resolved) ||
     resolved.startsWith(".") ||
     resolved.includes("/") ||
-    resolved.includes("\\")
+    resolved.includes("/")
   ) {
     try {
       await fs.access(resolved);

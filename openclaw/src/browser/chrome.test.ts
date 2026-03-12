@@ -229,12 +229,12 @@ describe("browser chrome helpers", () => {
   });
 
   it("picks the first existing Chrome candidate on Windows", () => {
-    vi.stubEnv("LOCALAPPDATA", "C:\\Users\\Test\\AppData\\Local");
+    vi.stubEnv("LOCALAPPDATA", "C:/Users/Test/AppData/Local");
     const exists = mockExistsSync((pathStr) => {
       return (
-        pathStr.includes("Google\\Chrome\\Application\\chrome.exe") ||
-        pathStr.includes("BraveSoftware\\Brave-Browser\\Application\\brave.exe") ||
-        pathStr.includes("Microsoft\\Edge\\Application\\msedge.exe")
+        pathStr.includes("Google/Chrome/Application/chrome.exe") ||
+        pathStr.includes("BraveSoftware/Brave-Browser/Application/brave.exe") ||
+        pathStr.includes("Microsoft/Edge/Application/msedge.exe")
       );
     });
     const exe = findChromeExecutableWindows();
@@ -260,8 +260,8 @@ describe("browser chrome helpers", () => {
 
   it("resolves Windows executables without LOCALAPPDATA", () => {
     vi.stubEnv("LOCALAPPDATA", "");
-    vi.stubEnv("ProgramFiles", "C:\\Program Files");
-    vi.stubEnv("ProgramFiles(x86)", "C:\\Program Files (x86)");
+    vi.stubEnv("ProgramFiles", "C:/Program Files");
+    vi.stubEnv("ProgramFiles(x86)", "C:/Program Files (x86)");
     const marker = path.win32.join(
       "Program Files",
       "Google",

@@ -8,7 +8,7 @@ TG_CHAT = None
 
 # Load .env
 try:
-    with open("/home/turbo/jarvis-linux/.env") as f:
+    with open("F:/BUREAU/turbo/.env") as f:
         for line in f:
             if line.startswith("TELEGRAM_TOKEN="):
                 TG_TOKEN = line.strip().split("=", 1)[1]

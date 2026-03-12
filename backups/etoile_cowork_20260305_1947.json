@@ -4366,7 +4366,7 @@
     330,
     "ia_context_compressor",
     "PAT_CW_IA_OPTIMIZATION",
-    "/home/turbo/jarvis-linux/cowork/dev/ia_context_compressor.py",
+    "F:/BUREAU/turbo/cowork/dev/ia_context_compressor.py",
     null,
     "active",
     "2026-03-05 18:24:48"
@@ -4375,7 +4375,7 @@
     331,
     "registry_manager",
     "PAT_CW_WIN_SYSTEM",
-    "/home/turbo/jarvis-linux/cowork/dev/registry_manager.py",
+    "F:/BUREAU/turbo/cowork/dev/registry_manager.py",
     null,
     "active",
     "2026-03-05 18:24:48"
@@ -4384,7 +4384,7 @@
     332,
     "task_queue",
     "PAT_CW_AUTONOMOUS",
-    "/home/turbo/jarvis-linux/cowork/dev/task_queue.py",
+    "F:/BUREAU/turbo/cowork/dev/task_queue.py",
     null,
     "active",
     "2026-03-05 18:24:48"
@@ -4393,7 +4393,7 @@
     333,
     "log_compressor",
     "PAT_CW_DATA",
-    "/home/turbo/jarvis-linux/cowork/dev/log_compressor.py",
+    "F:/BUREAU/turbo/cowork/dev/log_compressor.py",
     null,
     "active",
     "2026-03-05 18:30:41"
@@ -4402,7 +4402,7 @@
     334,
     "api_rate_limiter",
     "PAT_CW_CLUSTER",
-    "/home/turbo/jarvis-linux/cowork/dev/api_rate_limiter.py",
+    "F:/BUREAU/turbo/cowork/dev/api_rate_limiter.py",
     null,
     "active",
     "2026-03-05 18:30:41"
@@ -4411,7 +4411,7 @@
     335,
     "model_health_checker",
     "PAT_CW_CLUSTER",
-    "/home/turbo/jarvis-linux/cowork/dev/model_health_checker.py",
+    "F:/BUREAU/turbo/cowork/dev/model_health_checker.py",
     null,
     "active",
     "2026-03-05 18:30:41"
@@ -4420,7 +4420,7 @@
     336,
     "voice_command_fuzzer",
     "PAT_CW_JARVIS_VOICE",
-    "/home/turbo/jarvis-linux/cowork/dev/voice_command_fuzzer.py",
+    "F:/BUREAU/turbo/cowork/dev/voice_command_fuzzer.py",
     null,
     "active",
     "2026-03-05 18:30:41"
@@ -4429,7 +4429,7 @@
     337,
     "config_drift_detector",
     "PAT_CW_CLUSTER",
-    "/home/turbo/jarvis-linux/cowork/dev/config_drift_detector.py",
+    "F:/BUREAU/turbo/cowork/dev/config_drift_detector.py",
     null,
     "active",
     "2026-03-05 18:30:41"
@@ -4438,7 +4438,7 @@
     338,
     "performance_regression_detector",
     "PAT_CW_IA_ANALYSIS",
-    "/home/turbo/jarvis-linux/cowork/dev/performance_regression_detector.py",
+    "F:/BUREAU/turbo/cowork/dev/performance_regression_detector.py",
     null,
     "active",
     "2026-03-05 18:30:41"
@@ -4447,7 +4447,7 @@
     339,
     "auto_documentation_updater",
     "PAT_CW_JARVIS_DEVOPS",
-    "/home/turbo/jarvis-linux/cowork/dev/auto_documentation_updater.py",
+    "F:/BUREAU/turbo/cowork/dev/auto_documentation_updater.py",
     null,
     "active",
     "2026-03-05 18:30:41"
@@ -4456,7 +4456,7 @@
     340,
     "script_deduplication",
     "PAT_CW_DEVTOOLS",
-    "/home/turbo/jarvis-linux/cowork/dev/script_deduplication.py",
+    "F:/BUREAU/turbo/cowork/dev/script_deduplication.py",
     null,
     "active",
     "2026-03-05 18:30:41"
@@ -4465,7 +4465,7 @@
     341,
     "cross_script_integration_tester",
     "PAT_CW_DEVTOOLS",
-    "/home/turbo/jarvis-linux/cowork/dev/cross_script_integration_tester.py",
+    "F:/BUREAU/turbo/cowork/dev/cross_script_integration_tester.py",
     null,
     "active",
     "2026-03-05 18:30:41"
@@ -4474,7 +4474,7 @@
     342,
     "predictive_failure_detector",
     "PAT_CW_IA_ANALYSIS",
-    "/home/turbo/jarvis-linux/cowork/dev/predictive_failure_detector.py",
+    "F:/BUREAU/turbo/cowork/dev/predictive_failure_detector.py",
     null,
     "active",
     "2026-03-05 18:30:41"
@@ -4483,7 +4483,7 @@
     343,
     "resource_contention_monitor",
     "PAT_CW_WIN_MONITORING",
-    "/home/turbo/jarvis-linux/cowork/dev/resource_contention_monitor.py",
+    "F:/BUREAU/turbo/cowork/dev/resource_contention_monitor.py",
     null,
     "active",
     "2026-03-05 18:30:41"
@@ -4492,7 +4492,7 @@
     344,
     "dependency_vulnerability_scanner",
     "PAT_CW_WIN_SECURITY",
-    "/home/turbo/jarvis-linux/cowork/dev/dependency_vulnerability_scanner.py",
+    "F:/BUREAU/turbo/cowork/dev/dependency_vulnerability_scanner.py",
     null,
     "active",
     "2026-03-05 18:30:41"

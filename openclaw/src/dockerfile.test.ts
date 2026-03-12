@@ -56,7 +56,7 @@ describe("Dockerfile", () => {
   it("Docker GPG fingerprint awk uses correct quoting for OPENCLAW_SANDBOX=1 build", async () => {
     const dockerfile = await readFile(dockerfilePath, "utf8");
     expect(dockerfile).toContain('== "fpr" {');
-    expect(dockerfile).not.toContain('\\"fpr\\"');
+    expect(dockerfile).not.toContain('/"fpr/"');
   });
 
   it("keeps runtime pnpm available", async () => {

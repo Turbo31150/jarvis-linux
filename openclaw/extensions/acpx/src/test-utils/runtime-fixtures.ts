@@ -36,12 +36,12 @@ const emitUpdate = (sessionId, update) =>
   });
 
 if (args.includes("--version")) {
-  process.stdout.write("mock-acpx ${ACPX_PINNED_VERSION}\\n");
+  process.stdout.write("mock-acpx ${ACPX_PINNED_VERSION}/n");
   process.exit(0);
 }
 
 if (args.includes("--help")) {
-  process.stdout.write("mock-acpx help\\n");
+  process.stdout.write("mock-acpx help/n");
   process.exit(0);
 }
 

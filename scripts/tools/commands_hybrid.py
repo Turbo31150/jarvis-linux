@@ -20,8 +20,8 @@ from pathlib import Path
 
 from src.config import PATHS
 
-_TURBO_DIR = str(PATHS.get("turbo", "/home/turbo/jarvis-linux")).replace("/", "/")
-_TURBO_DIR_FWD = str(PATHS.get("turbo", "/home/turbo/jarvis-linux"))
+_TURBO_DIR = str(PATHS.get("turbo", "F:/BUREAU/turbo")).replace("/", "/")
+_TURBO_DIR_FWD = str(PATHS.get("turbo", "F:/BUREAU/turbo"))
 _USER_HOME = str(Path.home())
 
 _DB_PATH = Path(__file__).resolve().parent.parent / "data" / "jarvis.db"
@@ -94,10 +94,10 @@ def _fixup_paths(commands: list) -> None:
     for _cmd in commands:
         if "F:/BUREAU/turbo" in _cmd.action:
             _cmd.action = _cmd.action.replace("F:/BUREAU/turbo", _TURBO_DIR)
-        if "/home/turbo/jarvis-linux" in _cmd.action:
-            _cmd.action = _cmd.action.replace("/home/turbo/jarvis-linux", _TURBO_DIR_FWD)
-        if "/\Users/franc" in _cmd.action:
-            _cmd.action = _cmd.action.replace("/\Users/franc", _USER_HOME)
+        if "F:/BUREAU/turbo" in _cmd.action:
+            _cmd.action = _cmd.action.replace("F:/BUREAU/turbo", _TURBO_DIR_FWD)
+        if "C:/Users/franc" in _cmd.action:
+            _cmd.action = _cmd.action.replace("C:/Users/franc", _USER_HOME)
         if "C:/Users/franc" in _cmd.action:
             _cmd.action = _cmd.action.replace("C:/Users/franc", _USER_HOME.replace("/", "/"))
 

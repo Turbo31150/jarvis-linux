@@ -266,7 +266,7 @@ enum GatewayEnvironment {
                 .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
                 .filter { !$0.isEmpty }
             guard let last = lines.last else { return nil }
-            let normalized = last.replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+            let normalized = last.replacingOccurrences(of: "/s+", with: " ", options: .regularExpression)
             return normalized.count > 200 ? String(normalized.prefix(199)) + "…" : normalized
         }
 

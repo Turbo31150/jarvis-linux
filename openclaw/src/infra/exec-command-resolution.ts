@@ -130,7 +130,7 @@ export function resolveAllowlistCandidatePath(
     return undefined;
   }
   const expanded = raw.startsWith("~") ? expandHomePrefix(raw) : raw;
-  if (!expanded.includes("/") && !expanded.includes("\\")) {
+  if (!expanded.includes("/") && !expanded.includes("/")) {
     return undefined;
   }
   if (path.isAbsolute(expanded)) {
@@ -163,7 +163,7 @@ export function matchAllowlist(
     if (!pattern) {
       continue;
     }
-    const hasPath = pattern.includes("/") || pattern.includes("\\") || pattern.includes("~");
+    const hasPath = pattern.includes("/") || pattern.includes("/") || pattern.includes("~");
     if (!hasPath) {
       continue;
     }

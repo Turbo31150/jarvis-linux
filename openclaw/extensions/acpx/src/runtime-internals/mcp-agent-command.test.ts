@@ -48,12 +48,12 @@ describe("resolveAcpxAgentCommand", () => {
 describe("buildMcpProxyAgentCommand", () => {
   it("escapes Windows-style proxy paths without double-escaping backslashes", () => {
     const quoted = __testing.quoteCommandPart(
-      "C:\\repo\\extensions\\acpx\\src\\runtime-internals\\mcp-proxy.mjs",
+      "C:/repo/extensions/acpx/src/runtime-internals/mcp-proxy.mjs",
     );
 
     expect(quoted).toBe(
-      '"C:\\\\repo\\\\extensions\\\\acpx\\\\src\\\\runtime-internals\\\\mcp-proxy.mjs"',
+      '"C://repo//extensions//acpx//src//runtime-internals//mcp-proxy.mjs"',
     );
-    expect(quoted).not.toContain("\\\\\\");
+    expect(quoted).not.toContain("///");
   });
 });

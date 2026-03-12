@@ -141,7 +141,7 @@ class TestShadowCopyManager:
 
     def test_dataclass(self):
         from src.shadow_copy_manager import ShadowCopy
-        sc = ShadowCopy(shadow_id="ABC-123", volume_name="/\")
+        sc = ShadowCopy(shadow_id="ABC-123", volume_name="C:/")
         assert sc.shadow_id == "ABC-123"
         assert sc.state == ""
 
@@ -157,8 +157,8 @@ class TestShadowCopyManager:
     def test_summary_with_mock(self):
         m = self._make()
         m.list_copies = lambda: [
-            {"shadow_id": "1", "volume_name": "/\"},
-            {"shadow_id": "2", "volume_name": "/\"},
+            {"shadow_id": "1", "volume_name": "C:/"},
+            {"shadow_id": "2", "volume_name": "C:/"},
             {"shadow_id": "3", "volume_name": "D:/"},
         ]
         summary = m.get_summary()

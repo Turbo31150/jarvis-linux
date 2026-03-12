@@ -257,8 +257,8 @@ function xtermModifier(mods: Modifiers): number {
 
 function applyXtermModifier(sequence: string, modifier: number): string | null {
   const escPattern = escapeRegExp(ESC);
-  const csiNumber = new RegExp(`^${escPattern}\\[(\\d+)([~A-Z])$`);
-  const csiArrow = new RegExp(`^${escPattern}\\[(A|B|C|D|H|F)$`);
+  const csiNumber = new RegExp(`^${escPattern}/[(/d+)([~A-Z])$`);
+  const csiArrow = new RegExp(`^${escPattern}/[(A|B|C|D|H|F)$`);
 
   const numberMatch = sequence.match(csiNumber);
   if (numberMatch) {

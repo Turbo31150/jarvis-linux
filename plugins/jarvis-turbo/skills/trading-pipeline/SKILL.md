@@ -9,7 +9,7 @@ version: 1.0.0
 ## Lancement
 
 ```bash
-cd "/home/turbo/jarvis-linux/scripts/trading_v2"
+cd "F:/BUREAU/turbo/scripts/trading_v2"
 python3 gpu_pipeline.py --coins 100 --top 10 --json [OPTIONS]
 ```
 

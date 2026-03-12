@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """JARVIS Weights & Routing — Show dispatch weights + routing table for Telegram.
-Usage: python /home/turbo/jarvis-linux/scripts/jarvis_weights_telegram.py
+Usage: python F:/BUREAU/turbo/scripts/jarvis_weights_telegram.py
 """
 import json, sys, urllib.request
 
@@ -20,7 +20,7 @@ if __name__ == "__main__":
     # Section 1: Node weights (from config)
     lines.append("\nNODE WEIGHTS (consensus voting)")
     try:
-        sys.path.insert(0, "/home/turbo/jarvis-linux")
+        sys.path.insert(0, "F:/BUREAU/turbo")
         from src.config import JarvisConfig
         cfg = JarvisConfig()
         for node, w in sorted(cfg.node_weights.items(), key=lambda x: -x[1]):

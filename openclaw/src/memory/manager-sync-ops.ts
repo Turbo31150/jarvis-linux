@@ -1272,7 +1272,7 @@ export abstract class MemoryManagerSyncOps {
 
   private resolveConfiguredScopeHash(): string {
     const extraPaths = normalizeExtraMemoryPaths(this.workspaceDir, this.settings.extraPaths)
-      .map((value) => value.replace(/\\/g, "/"))
+      .map((value) => value.replace(///g, "/"))
       .toSorted();
     return hashText(
       JSON.stringify({

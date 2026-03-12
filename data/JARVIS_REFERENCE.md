@@ -89,7 +89,7 @@
 
 ## FICHIERS (31 commandes)
 - ouvrir_documents: Ouvrir le dossier Documents | triggers: [ouvre mes documents, ouvrir mes documents, ouvre documents] | action: powershell:Start-Process explorer.exe -ArgumentList ([Environment]::GetFolderPath('MyDocuments'))
-- ouvrir_bureau: Ouvrir le dossier Bureau | triggers: [ouvre le bureau, ouvrir le bureau, affiche le bureau] | action: powershell:Start-Process explorer.exe -ArgumentList '/home/turbo'
+- ouvrir_bureau: Ouvrir le dossier Bureau | triggers: [ouvre le bureau, ouvrir le bureau, affiche le bureau] | action: powershell:Start-Process explorer.exe -ArgumentList 'F:\BUREAU'
 - ouvrir_dossier: Ouvrir un dossier specifique | triggers: [ouvre le dossier {dossier}, ouvrir le dossier {dossier}, va dans {dossier}] | action: powershell:Start-Process explorer.exe -ArgumentList '{dossier}'
 - ouvrir_telechargements: Ouvrir Telechargements | triggers: [ouvre les telechargements, ouvre mes telechargements, ouvrir telechargements] | action: powershell:Start-Process explorer.exe -ArgumentList ([Environment]::GetFolderPath('UserProfile') + '\Downloads')
 - ouvrir_images: Ouvrir le dossier Images | triggers: [ouvre mes images, ouvre mes photos, ouvre le dossier images] | action: powershell:Start-Process explorer.exe -ArgumentList ([Environment]::GetFolderPath('MyPictures'))
@@ -340,7 +340,7 @@
 - wifi_profils: Lister les profils Wi-Fi sauvegardes | triggers: [profils wifi, wifi sauvegardes, reseaux memorises] | action: powershell:netsh wlan show profiles | Out-String
 - clipboard_vider: Vider le presse-papier | triggers: [vide le presse-papier, efface le clipboard, nettoie le presse-papier] | action: powershell:Set-Clipboard -Value $null; 'Presse-papier vide'
 - clipboard_compter: Compter les caracteres du presse-papier | triggers: [combien de caracteres dans le presse-papier, taille du presse-papier, longueur du clipboard] | action: powershell:$c = Get-Clipboard; "Clipboard: $($c.Length) caracteres"
-- recherche_everywhere: Rechercher partout sur le PC | triggers: [recherche partout {terme}, cherche partout {terme}, trouve {terme} sur le pc] | action: powershell:Get-ChildItem -Path / -Recurse -Filter '*{terme}*' -ErrorAction SilentlyContinue | Select -First 20 FullName | Out-String
+- recherche_everywhere: Rechercher partout sur le PC | triggers: [recherche partout {terme}, cherche partout {terme}, trouve {terme} sur le pc] | action: powershell:Get-ChildItem -Path C:\ -Recurse -Filter '*{terme}*' -ErrorAction SilentlyContinue | Select -First 20 FullName | Out-String
 - tache_planifier: Creer une tache planifiee | triggers: [planifie une tache {nom}, cree une tache planifiee {nom}, programme {nom}] | action: powershell:Write-Output 'Pour creer une tache planifiee, precisez: nom, heure, commande'
 - variables_utilisateur: Afficher les variables d'environnement utilisateur | triggers: [variables utilisateur, mes variables, env utilisateur] | action: powershell:[Environment]::GetEnvironmentVariables('User') | Out-String
 - chemin_path: Afficher le PATH systeme | triggers: [montre le path, affiche le path, variable path] | action: powershell:$env:PATH -split ';' | ForEach-Object { $_ } | Out-String
@@ -419,7 +419,7 @@
 - hyper_v_manager: Ouvrir le gestionnaire Hyper-V | triggers: [ouvre hyper-v, lance hyper-v, gestionnaire hyper-v] | action: powershell:virtmgmt.msc
 - storage_sense: Activer l'assistant de stockage | triggers: [active l'assistant de stockage, storage sense, nettoyage automatique] | action: powershell:Start-Process ms-settings:storagepolicies
 - creer_point_restauration: Creer un point de restauration systeme | triggers: [cree un point de restauration, point de restauration, creer point de restauration] | action: powershell:Checkpoint-Computer -Description 'JARVIS' -RestorePointType MODIFY_SETTINGS
-- voir_hosts: Afficher le fichier hosts | triggers: [montre le fichier hosts, affiche hosts, ouvre hosts] | action: powershell:Get-Content /Windows\System32\drivers\etc\hosts
+- voir_hosts: Afficher le fichier hosts | triggers: [montre le fichier hosts, affiche hosts, ouvre hosts] | action: powershell:Get-Content C:\Windows\System32\drivers\etc\hosts
 - dxdiag: Lancer le diagnostic DirectX | triggers: [lance dxdiag, diagnostic directx, dxdiag] | action: powershell:dxdiag
 - memoire_diagnostic: Lancer le diagnostic memoire Windows | triggers: [diagnostic memoire, teste la memoire, test ram] | action: powershell:MdSched.exe
 - reset_reseau: Reinitialiser la pile reseau | triggers: [reinitialise le reseau, reset reseau, reset network] | action: powershell:netsh winsock reset; netsh int ip reset
@@ -481,40 +481,40 @@
 
 
 ## SCRIPTS DISPONIBLES (34)
-- advanced_strategies: /home/turbo\carV1\python_scripts\strategies\advanced_strategies.py [OK]
-- all_strategies: /home/turbo\carV1\python_scripts\strategies\all_strategies.py [OK]
-- auto_cycle_10: /home/turbo\TRADING_V2_PRODUCTION\scripts\auto_cycle_10.py [OK]
-- breakout_detector: /home/turbo\carV1\python_scripts\scanners\breakout_detector.py [OK]
-- coinglass_client: /home/turbo\carV1\python_scripts\utils\coinglass_client.py [OK]
-- commander_v2: /home/turbo\TRADING_V2_PRODUCTION\voice_system\commander_v2.py [OK]
-- dashboard: /home/turbo\MCP_MCPLMSTUDIO1\dashboard\app.py [OK]
-- disk_cleaner: /home/turbo\disk_cleaner\disk_cleaner.py [OK]
-- execute_trident: /home/turbo\TRADING_V2_PRODUCTION\scripts\execute_trident.py [OK]
-- fs_agent: /home/turbo\JARVIS\fs_agent.py [OK]
-- gap_detector: /home/turbo\carV1\python_scripts\scanners\gap_detector.py [OK]
-- gpu_pipeline: /home/turbo\carV1\python_scripts\core\gpu_pipeline.py [OK]
-- hyper_scan_v2: /home/turbo\TRADING_V2_PRODUCTION\scripts\hyper_scan_v2.py [OK]
-- jarvis_api: /home/turbo\TRADING_V2_PRODUCTION\scripts\jarvis_api.py [OK]
-- jarvis_gui: /home/turbo\TRADING_V2_PRODUCTION\scripts\jarvis_gui.py [OK]
-- jarvis_main: /home/turbo\JARVIS\jarvis.py [OK]
-- jarvis_mcp_legacy: /home/turbo\JARVIS\jarvis_mcp_server.py [OK]
-- jarvis_widget: /home/turbo\TRADING_V2_PRODUCTION\scripts\jarvis_widget.py [OK]
-- live_data_connector: /home/turbo\carV1\python_scripts\utils\live_data_connector.py [OK]
-- lmstudio_mcp_bridge: /home/turbo\LMSTUDIO_BACKUP\mcp_configs\lmstudio_mcp_bridge.py [OK]
-- master_interaction: /home/turbo\JARVIS\master_interaction_node.py [OK]
-- mexc_scanner: /home/turbo\carV1\python_scripts\scanners\mexc_scanner.py [OK]
-- multi_ia_orchestrator: /home/turbo\carV1\python_scripts\core\multi_ia_orchestrator.py [OK]
-- perplexity_client: /home/turbo\carV1\python_scripts\utils\perplexity_client.py [OK]
-- pipeline_intensif: /home/turbo\MCP_MCPLMSTUDIO1\scripts\pipeline_intensif.py [OK]
-- pipeline_intensif_v2: /home/turbo\PROD_INTENSIVE_V1\scripts\pipeline_intensif_v2.py [OK]
-- position_tracker: /home/turbo\carV1\python_scripts\utils\position_tracker.py [OK]
-- river_scalp_1min: /home/turbo\TRADING_V2_PRODUCTION\scripts\river_scalp_1min.py [OK]
-- sniper_10cycles: /home/turbo\TRADING_V2_PRODUCTION\scripts\sniper_10cycles.py [OK]
-- sniper_breakout: /home/turbo\TRADING_V2_PRODUCTION\scripts\sniper_breakout.py [OK]
-- trading_mcp_v3: /home/turbo\TRADING_V2_PRODUCTION\trading_mcp_ultimate_v3.py [OK]
-- unified_orchestrator: /home/turbo\carV1\python_scripts\core\unified_orchestrator.py [OK]
-- voice_driver: /home/turbo\TRADING_V2_PRODUCTION\voice_system\voice_driver.py [OK]
-- voice_jarvis: /home/turbo\TRADING_V2_PRODUCTION\voice_system\voice_jarvis.py [OK]
+- advanced_strategies: F:\BUREAU\carV1\python_scripts\strategies\advanced_strategies.py [OK]
+- all_strategies: F:\BUREAU\carV1\python_scripts\strategies\all_strategies.py [OK]
+- auto_cycle_10: F:\BUREAU\TRADING_V2_PRODUCTION\scripts\auto_cycle_10.py [OK]
+- breakout_detector: F:\BUREAU\carV1\python_scripts\scanners\breakout_detector.py [OK]
+- coinglass_client: F:\BUREAU\carV1\python_scripts\utils\coinglass_client.py [OK]
+- commander_v2: F:\BUREAU\TRADING_V2_PRODUCTION\voice_system\commander_v2.py [OK]
+- dashboard: F:\BUREAU\MCP_MCPLMSTUDIO1\dashboard\app.py [OK]
+- disk_cleaner: F:\BUREAU\disk_cleaner\disk_cleaner.py [OK]
+- execute_trident: F:\BUREAU\TRADING_V2_PRODUCTION\scripts\execute_trident.py [OK]
+- fs_agent: F:\BUREAU\JARVIS\fs_agent.py [OK]
+- gap_detector: F:\BUREAU\carV1\python_scripts\scanners\gap_detector.py [OK]
+- gpu_pipeline: F:\BUREAU\carV1\python_scripts\core\gpu_pipeline.py [OK]
+- hyper_scan_v2: F:\BUREAU\TRADING_V2_PRODUCTION\scripts\hyper_scan_v2.py [OK]
+- jarvis_api: F:\BUREAU\TRADING_V2_PRODUCTION\scripts\jarvis_api.py [OK]
+- jarvis_gui: F:\BUREAU\TRADING_V2_PRODUCTION\scripts\jarvis_gui.py [OK]
+- jarvis_main: F:\BUREAU\JARVIS\jarvis.py [OK]
+- jarvis_mcp_legacy: F:\BUREAU\JARVIS\jarvis_mcp_server.py [OK]
+- jarvis_widget: F:\BUREAU\TRADING_V2_PRODUCTION\scripts\jarvis_widget.py [OK]
+- live_data_connector: F:\BUREAU\carV1\python_scripts\utils\live_data_connector.py [OK]
+- lmstudio_mcp_bridge: F:\BUREAU\LMSTUDIO_BACKUP\mcp_configs\lmstudio_mcp_bridge.py [OK]
+- master_interaction: F:\BUREAU\JARVIS\master_interaction_node.py [OK]
+- mexc_scanner: F:\BUREAU\carV1\python_scripts\scanners\mexc_scanner.py [OK]
+- multi_ia_orchestrator: F:\BUREAU\carV1\python_scripts\core\multi_ia_orchestrator.py [OK]
+- perplexity_client: F:\BUREAU\carV1\python_scripts\utils\perplexity_client.py [OK]
+- pipeline_intensif: F:\BUREAU\MCP_MCPLMSTUDIO1\scripts\pipeline_intensif.py [OK]
+- pipeline_intensif_v2: F:\BUREAU\PROD_INTENSIVE_V1\scripts\pipeline_intensif_v2.py [OK]
+- position_tracker: F:\BUREAU\carV1\python_scripts\utils\position_tracker.py [OK]
+- river_scalp_1min: F:\BUREAU\TRADING_V2_PRODUCTION\scripts\river_scalp_1min.py [OK]
+- sniper_10cycles: F:\BUREAU\TRADING_V2_PRODUCTION\scripts\sniper_10cycles.py [OK]
+- sniper_breakout: F:\BUREAU\TRADING_V2_PRODUCTION\scripts\sniper_breakout.py [OK]
+- trading_mcp_v3: F:\BUREAU\TRADING_V2_PRODUCTION\trading_mcp_ultimate_v3.py [OK]
+- unified_orchestrator: F:\BUREAU\carV1\python_scripts\core\unified_orchestrator.py [OK]
+- voice_driver: F:\BUREAU\TRADING_V2_PRODUCTION\voice_system\voice_driver.py [OK]
+- voice_jarvis: F:\BUREAU\TRADING_V2_PRODUCTION\voice_system\voice_jarvis.py [OK]
 
 
 ## ROUTAGE IA

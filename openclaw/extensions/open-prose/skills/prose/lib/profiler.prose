@@ -95,7 +95,7 @@ agent calculator:
        - timestamp (for duration calculation)
     4. From Task prompts in subagent files, extract:
        - Agent name: regex `You are the "([^"]+)" agent`
-       - Binding name: regex `/bindings/([^.]+)\\.md`
+       - Binding name: regex `/bindings/([^.]+)/.md`
     5. Calculate costs using the pricing you fetched
     6. Calculate durations from first to last timestamp per file
     7. Output structured JSON with VM and subagent data SEPARATELY

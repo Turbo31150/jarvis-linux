@@ -21,7 +21,7 @@ import sqlite3
 import sys
 from pathlib import Path
 
-TURBO = Path("/home/turbo/jarvis-linux")
+TURBO = Path("F:/BUREAU/turbo")
 ETOILE = TURBO / "data" / "etoile.db"
 JARVIS = TURBO / "data" / "jarvis.db"
 SNIPER = TURBO / "data" / "sniper.db"

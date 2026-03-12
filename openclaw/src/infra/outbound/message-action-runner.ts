@@ -410,8 +410,8 @@ async function handleSendAction(ctx: ResolvedActionContext): Promise<MessageActi
       required: !mediaHint && !hasCard && !hasComponents,
       allowEmpty: true,
     }) ?? "";
-  if (message.includes("\\n")) {
-    message = message.replaceAll("\\n", "\n");
+  if (message.includes("/n")) {
+    message = message.replaceAll("/n", "\n");
   }
   if (!message.trim() && caption.trim()) {
     message = caption;

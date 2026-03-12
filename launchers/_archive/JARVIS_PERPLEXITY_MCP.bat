@@ -25,6 +25,6 @@ echo.
 echo  The tunnel URL will appear below. Copy it to Perplexity.
 echo  Format: https://xxx-xxx-xxx-xxx.trycloudflare.com/mcp/
 echo.
-"/Program Files (x86)\cloudflared\cloudflared.exe" tunnel --url http://127.0.0.1:8901
+"C:\Program Files (x86)\cloudflared\cloudflared.exe" tunnel --url http://127.0.0.1:8901
 
 pause

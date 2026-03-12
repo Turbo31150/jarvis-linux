@@ -7,10 +7,10 @@ import {
 
 function encodeMountInfoPath(value: string): string {
   return value
-    .replace(/\\/g, "\\134")
-    .replace(/\n/g, "\\012")
-    .replace(/\t/g, "\\011")
-    .replace(/ /g, "\\040");
+    .replace(///g, "/134")
+    .replace(/\n/g, "/012")
+    .replace(/\t/g, "/011")
+    .replace(/ /g, "/040");
 }
 
 describe("detectLinuxSdBackedStateDir", () => {
@@ -100,7 +100,7 @@ describe("detectLinuxSdBackedStateDir", () => {
   it("escapes decoded mountinfo control characters in warning output", () => {
     const mountRoot = "/home/pi/mnt\nspoofed";
     const stateDir = `${mountRoot}/.openclaw`;
-    const encodedSource = "/dev/disk/by-uuid/mmc\\012source";
+    const encodedSource = "/dev/disk/by-uuid/mmc/012source";
     const mountInfo = `30 24 179:2 / ${encodeMountInfoPath(mountRoot)} rw,relatime - ext4 ${encodedSource} rw`;
 
     const result = detectLinuxSdBackedStateDir(stateDir, {
@@ -117,8 +117,8 @@ describe("detectLinuxSdBackedStateDir", () => {
 
     expect(result).not.toBeNull();
     const warning = formatLinuxSdBackedStateDirWarning(stateDir, result!);
-    expect(warning).toContain("device /dev/disk/by-uuid/mmc\\nsource");
-    expect(warning).toContain("mount /home/pi/mnt\\nspoofed");
+    expect(warning).toContain("device /dev/disk/by-uuid/mmc/nsource");
+    expect(warning).toContain("mount /home/pi/mnt/nspoofed");
     expect(warning).not.toContain("device /dev/disk/by-uuid/mmc\nsource");
     expect(warning).not.toContain("mount /home/pi/mnt\nspoofed");
   });

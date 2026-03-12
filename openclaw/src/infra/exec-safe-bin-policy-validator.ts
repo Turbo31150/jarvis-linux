@@ -19,7 +19,7 @@ function isPathLikeToken(value: string): boolean {
   if (trimmed.startsWith("/")) {
     return true;
   }
-  return /^[A-Za-z]:[\\/]/.test(trimmed);
+  return /^[A-Za-z]:[//]/.test(trimmed);
 }
 
 function hasGlobToken(value: string): boolean {

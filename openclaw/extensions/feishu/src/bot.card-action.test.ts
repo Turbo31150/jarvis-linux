@@ -53,7 +53,7 @@ describe("Feishu Card Action Handler", () => {
       expect.objectContaining({
         event: expect.objectContaining({
           message: expect.objectContaining({
-            content: '{"text":"{\\"key\\":\\"val\\"}"}',
+            content: '{"text":"{/"key/":/"val/"}"}',
             chat_id: "u123", // Fallback to open_id
           }),
         }),

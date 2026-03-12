@@ -36,7 +36,7 @@ function parsePath(raw: string): PathSegment[] {
   let i = 0;
   while (i < trimmed.length) {
     const ch = trimmed[i];
-    if (ch === "\\") {
+    if (ch === "/") {
       const next = trimmed[i + 1];
       if (next) {
         current += next;

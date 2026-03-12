@@ -61,15 +61,15 @@ curl -s http://127.0.0.1:11434/api/chat \
 - **Rate limit:** Gemini gratuit → 429 fréquents. Le proxy fait fallback pro→flash automatiquement.
 - **Appel recommandé (via proxy, avec timeout + fallback + filtrage warnings):**
 ```bash
-node /home/turbo/jarvis-linux/gemini-proxy.js "PROMPT_ICI"
+node F:/BUREAU/turbo/gemini-proxy.js "PROMPT_ICI"
 ```
 - **Appel JSON structuré:**
 ```bash
-node /home/turbo/jarvis-linux/gemini-proxy.js --json "PROMPT_ICI"
+node F:/BUREAU/turbo/gemini-proxy.js --json "PROMPT_ICI"
 ```
 - **Appel avec modèle spécifique:**
 ```bash
-node /home/turbo/jarvis-linux/gemini-proxy.js --model gemini-2.5-pro "PROMPT_ICI"
+node F:/BUREAU/turbo/gemini-proxy.js --model gemini-2.5-pro "PROMPT_ICI"
 ```
 - **Appel direct (sans proxy, warnings bruts):**
 ```bash

@@ -37,16 +37,16 @@ M1 est le noeud principal — rapide et fiable pour toutes les taches.
 
 ### GEMINI — Architecture & Vision (Gemini 3 Pro, proxy Node)
 ```
-node /home/turbo/jarvis-linux/gemini-proxy.js "PROMPT"
+node F:/BUREAU/turbo/gemini-proxy.js "PROMPT"
 ```
-JSON: `node /home/turbo/jarvis-linux/gemini-proxy.js --json "PROMPT"`
+JSON: `node F:/BUREAU/turbo/gemini-proxy.js --json "PROMPT"`
 Proxy gere timeout 2min + fallback pro/flash.
 
 ### CLAUDE — Raisonnement Cloud (Claude Code CLI, proxy Node)
 ```
-node /home/turbo/jarvis-linux/claude-proxy.js "PROMPT"
+node F:/BUREAU/turbo/claude-proxy.js "PROMPT"
 ```
-JSON: `node /home/turbo/jarvis-linux/claude-proxy.js --json "PROMPT"`
+JSON: `node F:/BUREAU/turbo/claude-proxy.js --json "PROMPT"`
 Proxy gere timeout 2min + fallback sonnet/haiku/opus.
 
 ## Matrice de Routage (MaJ 2026-03-06)
@@ -262,7 +262,7 @@ Reponds DIRECTEMENT (sans spawn) seulement si:
 
 ## Scripts et Outils (voir TOOLS.md pour details)
 
-- Audit cluster: `python /home/turbo/jarvis-linux/scripts/system_audit.py`
+- Audit cluster: `python F:/BUREAU/turbo/scripts/system_audit.py`
 - Scan marche: `curl.exe -s "https://contract.mexc.com/api/v1/contract/ticker"`
 - Dashboard: `http://127.0.0.1:8080`
-- Launchers: `/home/turbo/jarvis-linux/launchers/`
+- Launchers: `F:/BUREAU/turbo/launchers/`

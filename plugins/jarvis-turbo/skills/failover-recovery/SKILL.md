@@ -52,7 +52,7 @@ curl -s --max-time 3 http://HOST:PORT/endpoint || echo "OFFLINE"
 2. Aucune action urgente requise
 
 **GEMINI offline**:
-1. `node /home/turbo/jarvis-linux/gemini-proxy.js --ping`
+1. `node F:/BUREAU/turbo/gemini-proxy.js --ping`
 2. API quota? Attendre 60s
 3. Fallback: CLAUDE pour architecture
 

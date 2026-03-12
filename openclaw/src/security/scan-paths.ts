@@ -33,7 +33,7 @@ export function isPathInsideWithRealpath(
 }
 
 export function extensionUsesSkippedScannerPath(entry: string): boolean {
-  const segments = entry.split(/[\\/]+/).filter(Boolean);
+  const segments = entry.split(/[//]+/).filter(Boolean);
   return segments.some(
     (segment) =>
       segment === "node_modules" ||

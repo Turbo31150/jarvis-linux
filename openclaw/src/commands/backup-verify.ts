@@ -3,7 +3,7 @@ import * as tar from "tar";
 import type { RuntimeEnv } from "../runtime.js";
 import { resolveUserPath } from "../utils.js";
 
-const WINDOWS_ABSOLUTE_ARCHIVE_PATH_RE = /^[A-Za-z]:[\\/]/;
+const WINDOWS_ABSOLUTE_ARCHIVE_PATH_RE = /^[A-Za-z]:[//]/;
 
 type BackupManifestAsset = {
   kind: string;
@@ -67,7 +67,7 @@ function normalizeArchivePath(entryPath: string, label: string): string {
   if (trimmed.startsWith("/") || WINDOWS_ABSOLUTE_ARCHIVE_PATH_RE.test(trimmed)) {
     throw new Error(`${label} must be relative: ${entryPath}`);
   }
-  if (trimmed.includes("\\")) {
+  if (trimmed.includes("/")) {
     throw new Error(`${label} must use forward slashes: ${entryPath}`);
   }
   if (trimmed.split("/").some((segment) => segment === "." || segment === "..")) {

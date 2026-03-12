@@ -28,8 +28,8 @@ function hasHiddenClass(className: string): boolean {
 
 function isStyleHidden(style: string): boolean {
   for (const [prop, pattern] of HIDDEN_STYLE_PATTERNS) {
-    const escapedProp = prop.replace(/-/g, "\\-");
-    const match = style.match(new RegExp(`(?:^|;)\\s*${escapedProp}\\s*:\\s*([^;]+)`, "i"));
+    const escapedProp = prop.replace(/-/g, "/-");
+    const match = style.match(new RegExp(`(?:^|;)/s*${escapedProp}/s*:/s*([^;]+)`, "i"));
     if (match && pattern.test(match[1])) {
       return true;
     }

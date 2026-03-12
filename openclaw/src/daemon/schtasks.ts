@@ -43,7 +43,7 @@ function quoteSchtasksArg(value: string): string {
   if (!/[ \t"]/g.test(value)) {
     return value;
   }
-  return `"${value.replace(/"/g, '\\"')}"`;
+  return `"${value.replace(/"/g, '/"')}"`;
 }
 
 function resolveTaskUser(env: GatewayServiceEnv): string | null {
@@ -51,12 +51,12 @@ function resolveTaskUser(env: GatewayServiceEnv): string | null {
   if (!username) {
     return null;
   }
-  if (username.includes("\\")) {
+  if (username.includes("/")) {
     return username;
   }
   const domain = env.USERDOMAIN;
   if (domain) {
-    return `${domain}\\${username}`;
+    return `${domain}/${username}`;
   }
   return username;
 }

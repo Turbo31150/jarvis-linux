@@ -171,7 +171,7 @@ describe("createTelegramBot", () => {
       const timestampPattern = escapeRegExp(expectedTimestamp);
       expect(payload.Body).toMatch(
         new RegExp(
-          `^\\[Telegram Ada Lovelace \\(@ada_bot\\) id:1234 (\\+\\d+[smhd] )?${timestampPattern}\\]`,
+          `^/[Telegram Ada Lovelace /(@ada_bot/) id:1234 (/+/d+[smhd] )?${timestampPattern}/]`,
         ),
       );
       expect(payload.Body).toContain("hello world");
@@ -1123,7 +1123,7 @@ describe("createTelegramBot", () => {
           },
         },
         identity: { name: "Bert" },
-        messages: { groupChat: { mentionPatterns: ["\\bbert\\b"] } },
+        messages: { groupChat: { mentionPatterns: ["/bbert/b"] } },
         channels: {
           telegram: {
             groupPolicy: "open",
@@ -1145,7 +1145,7 @@ describe("createTelegramBot", () => {
         const expectedTimestamp = formatEnvelopeTimestamp(new Date("2025-01-09T00:00:00Z"));
         const timestampPattern = escapeRegExp(expectedTimestamp);
         expect(payload.Body).toMatch(
-          new RegExp(`^\\[Telegram Test Group id:7 (\\+\\d+[smhd] )?${timestampPattern}\\]`),
+          new RegExp(`^/[Telegram Test Group id:7 (/+/d+[smhd] )?${timestampPattern}/]`),
         );
       }
     }
@@ -1190,7 +1190,7 @@ describe("createTelegramBot", () => {
     const expectedTimestamp = formatEnvelopeTimestamp(new Date("2025-01-09T00:00:00Z"));
     const timestampPattern = escapeRegExp(expectedTimestamp);
     expect(payload.Body).toMatch(
-      new RegExp(`^\\[Telegram Ops id:42 (\\+\\d+[smhd] )?${timestampPattern}\\]`),
+      new RegExp(`^/[Telegram Ops id:42 (/+/d+[smhd] )?${timestampPattern}/]`),
     );
   });
   it("reacts to mention-gated group messages when ackReaction is enabled", async () => {
@@ -1200,7 +1200,7 @@ describe("createTelegramBot", () => {
       messages: {
         ackReaction: "👀",
         ackReactionScope: "group-mentions",
-        groupChat: { mentionPatterns: ["\\bbert\\b"] },
+        groupChat: { mentionPatterns: ["/bbert/b"] },
       },
       channels: {
         telegram: {
@@ -1236,7 +1236,7 @@ describe("createTelegramBot", () => {
     const cases = [
       {
         name: "mention pattern configured but no match",
-        config: { messages: { groupChat: { mentionPatterns: ["\\bbert\\b"] } } },
+        config: { messages: { groupChat: { mentionPatterns: ["/bbert/b"] } } },
         me: { username: "openclaw_bot" },
         expectedReplyCount: 0,
         expectedWasMentioned: undefined,

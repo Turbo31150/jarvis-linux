@@ -76,10 +76,10 @@ TRASH
           if (text.length > 120000) text = text.slice(-120000);
           const stripAnsi = (value) =>
             value
-              // OSC: ESC ] ... BEL or ESC \\
-              .replace(/\\x1b\\][^\\x07]*(?:\\x07|\\x1b\\\\)/g, \"\")
+              // OSC: ESC ] ... BEL or ESC /
+              .replace(//x1b/][^/x07]*(?:/x07|/x1b//)/g, \"\")
               // CSI: ESC [ ... cmd
-              .replace(/\\x1b\\[[0-?]*[ -/]*[@-~]/g, \"\");
+              .replace(//x1b/[[0-?]*[ -/]*[@-~]/g, \"\");
           // Letters-only: script output sometimes fragments ANSI sequences into digits/letters that
           // can otherwise break substring matching.
           const compact = (value) => stripAnsi(value).toLowerCase().replace(/[^a-z]+/g, \"\");

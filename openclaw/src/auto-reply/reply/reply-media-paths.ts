@@ -6,7 +6,7 @@ import type { ReplyPayload } from "../types.js";
 
 const HTTP_URL_RE = /^https?:\/\//i;
 const FILE_URL_RE = /^file:\/\//i;
-const WINDOWS_DRIVE_RE = /^[a-zA-Z]:[\\/]/;
+const WINDOWS_DRIVE_RE = /^[a-zA-Z]:[//]/;
 const SCHEME_RE = /^[a-zA-Z][a-zA-Z0-9+.-]*:/;
 const HAS_FILE_EXT_RE = /\.\w{1,10}$/;
 
@@ -18,9 +18,9 @@ function isLikelyLocalMediaSource(media: string): boolean {
     media.startsWith("../") ||
     media.startsWith("~") ||
     WINDOWS_DRIVE_RE.test(media) ||
-    media.startsWith("\\\\") ||
+    media.startsWith("//") ||
     (!SCHEME_RE.test(media) &&
-      (media.includes("/") || media.includes("\\") || HAS_FILE_EXT_RE.test(media)))
+      (media.includes("/") || media.includes("/") || HAS_FILE_EXT_RE.test(media)))
   );
 }
 

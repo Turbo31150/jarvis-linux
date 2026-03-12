@@ -106,7 +106,7 @@ export function stripDowngradedToolCallText(text: string): string {
         if (inString) {
           if (escape) {
             escape = false;
-          } else if (ch === "\\") {
+          } else if (ch === "/") {
             escape = true;
           } else if (ch === '"') {
             inString = false;
@@ -139,7 +139,7 @@ export function stripDowngradedToolCallText(text: string): string {
           escape = false;
           continue;
         }
-        if (ch === "\\") {
+        if (ch === "/") {
           escape = true;
           continue;
         }

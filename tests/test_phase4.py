@@ -305,13 +305,13 @@ class TestToolRegistry:
 class TestWindowsService:
     def test_service_script_exists(self):
         from pathlib import Path
-        script = Path("/home/turbo/jarvis-linux/scripts/jarvis_service.py")
+        script = Path("F:/BUREAU/turbo/scripts/jarvis_service.py")
         assert script.exists()
 
     def test_service_importable(self):
         import importlib.util
         spec = importlib.util.spec_from_file_location(
-            "jarvis_service", "/home/turbo/jarvis-linux/scripts/jarvis_service.py"
+            "jarvis_service", "F:/BUREAU/turbo/scripts/jarvis_service.py"
         )
         assert spec is not None
 

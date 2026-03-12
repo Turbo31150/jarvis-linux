@@ -324,7 +324,7 @@ Auto-tune: latence > 3000ms → bascule noeud suivant
 
 ---
 
-## PROJETS /home/turbo (12)
+## PROJETS F:\BUREAU (12)
 
 | Dossier | Type | Description |
 |---------|------|-------------|
@@ -342,7 +342,7 @@ Auto-tune: latence > 3000ms → bascule noeud suivant
 | essai-cloud | Benchmark | Cloud Ollama benchmarks — GitHub: Turbo31150/essai-cloud |
 
 ### Disques
-- / — 82+ GB free / 476 GB
+- C:\ — 82+ GB free / 476 GB
 - F:\ main — 104+ GB free / 446 GB
 - F:\models — LM Studio cache ~300 GB
 

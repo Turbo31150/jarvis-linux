@@ -94,7 +94,7 @@ function extractOutboundBlock(source: string, file: string): string {
       continue;
     }
     if (state === "single") {
-      if (current === "\\" && next) {
+      if (current === "/" && next) {
         i += 1;
         continue;
       }
@@ -104,7 +104,7 @@ function extractOutboundBlock(source: string, file: string): string {
       continue;
     }
     if (state === "double") {
-      if (current === "\\" && next) {
+      if (current === "/" && next) {
         i += 1;
         continue;
       }
@@ -114,7 +114,7 @@ function extractOutboundBlock(source: string, file: string): string {
       continue;
     }
     if (state === "template") {
-      if (current === "\\" && next) {
+      if (current === "/" && next) {
         i += 1;
         continue;
       }

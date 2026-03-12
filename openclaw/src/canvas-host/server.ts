@@ -267,8 +267,8 @@ export async function createCanvasHostHandler(
         },
         usePolling: testMode,
         ignored: [
-          /(^|[\\/])\../, // dotfiles
-          /(^|[\\/])node_modules([\\/]|$)/,
+          /(^|[//])\../, // dotfiles
+          /(^|[//])node_modules([//]|$)/,
         ],
       })
     : null;

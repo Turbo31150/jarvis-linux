@@ -29,7 +29,7 @@ import httpx
 
 from src.config import PATHS, build_ollama_payload
 
-_TURBO_DIR_FWD = str(PATHS.get("turbo", "/home/turbo/jarvis-linux"))
+_TURBO_DIR_FWD = str(PATHS.get("turbo", "F:/BUREAU/turbo"))
 
 logger = logging.getLogger("jarvis.code_review")
 

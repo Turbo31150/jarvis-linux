@@ -21,9 +21,9 @@ DEV = Path(__file__).parent
 DB_PATH = DEV / "data" / "temp_cleaner.db"
 
 TEMP_DIRS = [
-    {"name": "TEMP", "path": os.environ.get("TEMP", "/\Users/franc/AppData/Local/Temp")},
-    {"name": "Windows_Temp", "path": "/\Windows/Temp"},
-    {"name": "Prefetch", "path": "/\Windows/Prefetch"},
+    {"name": "TEMP", "path": os.environ.get("TEMP", "C:/Users/franc/AppData/Local/Temp")},
+    {"name": "Windows_Temp", "path": "C:/Windows/Temp"},
+    {"name": "Prefetch", "path": "C:/Windows/Prefetch"},
     {"name": "ThumbCache", "path": os.path.expanduser("~/AppData/Local/Microsoft/Windows/Explorer")},
 ]
 

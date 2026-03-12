@@ -82,7 +82,7 @@ export function configureProgramHelp(program: Command, ctx: ProgramContext) {
   const formatHelpOutput = (str: string) => {
     let output = str;
     const isRootHelp = new RegExp(
-      `^Usage:\\s+${CLI_NAME_PATTERN}\\s+\\[options\\]\\s+\\[command\\]\\s*$`,
+      `^Usage:/s+${CLI_NAME_PATTERN}/s+/[options/]/s+/[command/]/s*$`,
       "m",
     ).test(output);
     if (isRootHelp && /^Commands:/m.test(output)) {

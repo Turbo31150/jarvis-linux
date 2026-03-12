@@ -321,7 +321,7 @@ openclaw status
 ```bash
 # 消息必须匹配 mentionPatterns 或显式提及；默认值在渠道 groups/guilds 中。
 # 多智能体：`agents.list[].groupChat.mentionPatterns` 覆盖全局模式。
-grep -n "agents\\|groupChat\\|mentionPatterns\\|channels\\.whatsapp\\.groups\\|channels\\.telegram\\.groups\\|channels\\.imessage\\.groups\\|channels\\.discord\\.guilds" \
+grep -n "agents/|groupChat/|mentionPatterns/|channels/.whatsapp/.groups/|channels/.telegram/.groups/|channels/.imessage/.groups/|channels/.discord/.guilds" \
   "${OPENCLAW_CONFIG_PATH:-$HOME/.openclaw/openclaw.json}"
 ```
 
@@ -330,7 +330,7 @@ grep -n "agents\\|groupChat\\|mentionPatterns\\|channels\\.whatsapp\\.groups\\|c
 ```bash
 openclaw logs --follow
 # 或者如果你想快速过滤：
-tail -f "$(ls -t /tmp/openclaw/openclaw-*.log | head -1)" | grep "blocked\\|skip\\|unauthorized"
+tail -f "$(ls -t /tmp/openclaw/openclaw-*.log | head -1)" | grep "blocked/|skip/|unauthorized"
 ```
 
 ### 配对码未到达
@@ -409,7 +409,7 @@ openclaw status
 openclaw status --deep
 
 # 查看最近的连接事件
-openclaw logs --limit 200 | grep "connection\\|disconnect\\|logout"
+openclaw logs --limit 200 | grep "connection/|disconnect/|logout"
 ```
 
 **修复：** 通常在 Gateway 网关运行后会自动重连。如果卡住，重启 Gateway 网关进程（无论你如何监管它），或使用详细输出手动运行：
@@ -443,7 +443,7 @@ ls -la /path/to/your/image.jpg
 **检查 3：** 检查媒体日志
 
 ```bash
-grep "media\\|fetch\\|download" "$(ls -t /tmp/openclaw/openclaw-*.log | head -1)" | tail -20
+grep "media/|fetch/|download" "$(ls -t /tmp/openclaw/openclaw-*.log | head -1)" | tail -20
 ```
 
 ### 高内存使用

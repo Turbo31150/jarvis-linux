@@ -44,7 +44,7 @@ import sqlite3
 import threading
 from collections import defaultdict
 
-TURBO = Path("/home/turbo/jarvis-linux")
+TURBO = Path("F:/BUREAU/turbo")
 sys.path.insert(0, str(TURBO))
 METRICS_DB = str(TURBO / "data" / "devops_metrics.db")
 
@@ -480,14 +480,14 @@ def _query_gemini_rest(provider: Provider, prompt: str) -> str:
 
 def _query_gemini_cli(provider: Provider, prompt: str) -> str:
     """Query Gemini via CLI proxy (fallback)."""
-    cmd = ["node", "/home/turbo/jarvis-linux/gemini-proxy.js", prompt]
+    cmd = ["node", "F:/BUREAU/turbo/gemini-proxy.js", prompt]
     result = subprocess.run(cmd, capture_output=True, timeout=provider.timeout + 5)
     return result.stdout.decode("utf-8", errors="replace").strip()
 
 
 def _query_claude_cli(provider: Provider, prompt: str) -> str:
     """Query Claude via CLI proxy."""
-    cmd = ["node", "/home/turbo/jarvis-linux/claude-proxy.js", prompt]
+    cmd = ["node", "F:/BUREAU/turbo/claude-proxy.js", prompt]
     result = subprocess.run(cmd, capture_output=True, timeout=provider.timeout + 5)
     out = result.stdout.decode("utf-8", errors="replace").strip()
     if not out:

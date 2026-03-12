@@ -579,8 +579,8 @@ describe("exec PATH handling", () => {
   useCapturedEnv([...PATH_SHELL_ENV_KEYS], applyDefaultShellEnv);
 
   it("prepends configured path entries", async () => {
-    const basePath = isWin ? "C:\\Windows\\System32" : "/usr/bin";
-    const prepend = isWin ? ["C:\\custom\\bin", "C:\\oss\\bin"] : ["/custom/bin", "/opt/oss/bin"];
+    const basePath = isWin ? "C:/Windows/System32" : "/usr/bin";
+    const prepend = isWin ? ["C:/custom/bin", "C:/oss/bin"] : ["/custom/bin", "/opt/oss/bin"];
     process.env.PATH = basePath;
 
     const tool = createTestExecTool({ pathPrepend: prepend });
@@ -609,7 +609,7 @@ describe("findPathKey", () => {
   });
 
   it("returns Path when key is mixed-case (Windows style)", () => {
-    expect(findPathKey({ Path: "C:\\Windows\\System32" })).toBe("Path");
+    expect(findPathKey({ Path: "C:/Windows/System32" })).toBe("Path");
   });
 
   it("returns PATH as default when no PATH-like key exists", () => {
@@ -617,17 +617,17 @@ describe("findPathKey", () => {
   });
 
   it("prefers uppercase PATH when both PATH and Path exist", () => {
-    expect(findPathKey({ PATH: "/usr/bin", Path: "C:\\Windows" })).toBe("PATH");
+    expect(findPathKey({ PATH: "/usr/bin", Path: "C:/Windows" })).toBe("PATH");
   });
 });
 
 describe("applyPathPrepend with case-insensitive PATH key", () => {
   it("prepends to Path key on Windows-style env (no uppercase PATH)", () => {
-    const env: Record<string, string> = { Path: "C:\\Windows\\System32" };
-    applyPathPrepend(env, ["C:\\custom\\bin"]);
+    const env: Record<string, string> = { Path: "C:/Windows/System32" };
+    applyPathPrepend(env, ["C:/custom/bin"]);
     // Should write back to the same `Path` key, not create a new `PATH`
-    expect(env.Path).toContain("C:\\custom\\bin");
-    expect(env.Path).toContain("C:\\Windows\\System32");
+    expect(env.Path).toContain("C:/custom/bin");
+    expect(env.Path).toContain("C:/Windows/System32");
     expect("PATH" in env).toBe(false);
   });
 
@@ -635,9 +635,9 @@ describe("applyPathPrepend with case-insensitive PATH key", () => {
     // Use platform-appropriate paths and delimiters
     const delim = path.delimiter;
     const existing = isWin
-      ? ["C:\\Windows\\System32", "C:\\Windows", "C:\\Program Files\\nodejs"]
+      ? ["C:/Windows/System32", "C:/Windows", "C:/Program Files/nodejs"]
       : ["/usr/bin", "/usr/local/bin", "/opt/node/bin"];
-    const prepend = isWin ? ["C:\\custom\\bin"] : ["/custom/bin"];
+    const prepend = isWin ? ["C:/custom/bin"] : ["/custom/bin"];
     const existingPath = existing.join(delim);
     const env: Record<string, string> = { Path: existingPath };
     applyPathPrepend(env, prepend);
@@ -650,7 +650,7 @@ describe("applyPathPrepend with case-insensitive PATH key", () => {
 
   it("respects requireExisting option with Path key", () => {
     const env: Record<string, string> = { HOME: "/home/user" };
-    applyPathPrepend(env, ["C:\\custom\\bin"], { requireExisting: true });
+    applyPathPrepend(env, ["C:/custom/bin"], { requireExisting: true });
     // No Path/PATH key exists, so nothing should be written
     expect("PATH" in env).toBe(false);
     expect("Path" in env).toBe(false);

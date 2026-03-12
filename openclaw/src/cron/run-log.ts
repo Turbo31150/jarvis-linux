@@ -55,7 +55,7 @@ function assertSafeCronRunLogJobId(jobId: string): string {
   if (!trimmed) {
     throw new Error("invalid cron run log job id");
   }
-  if (trimmed.includes("/") || trimmed.includes("\\") || trimmed.includes("\0")) {
+  if (trimmed.includes("/") || trimmed.includes("/") || trimmed.includes("\0")) {
     throw new Error("invalid cron run log job id");
   }
   return trimmed;

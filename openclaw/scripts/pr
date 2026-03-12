@@ -854,7 +854,7 @@ review_validate_artifacts() {
   esac
 
   local invalid_nit_summary_count
-  invalid_nit_summary_count=$(jq '[.nitSweep.summary | select((type != "string") or (gsub("^\\s+|\\s+$";"") | length == 0))] | length' .local/review.json)
+  invalid_nit_summary_count=$(jq '[.nitSweep.summary | select((type != "string") or (gsub("^/s+|/s+$";"") | length == 0))] | length' .local/review.json)
   if [ "$invalid_nit_summary_count" -gt 0 ]; then
     echo "Invalid nit sweep summary in .local/review.json: nitSweep.summary must be a non-empty string"
     exit 1
@@ -890,14 +890,14 @@ review_validate_artifacts() {
   esac
 
   local invalid_issue_summary_count
-  invalid_issue_summary_count=$(jq '[.issueValidation.summary | select((type != "string") or (gsub("^\\s+|\\s+$";"") | length == 0))] | length' .local/review.json)
+  invalid_issue_summary_count=$(jq '[.issueValidation.summary | select((type != "string") or (gsub("^/s+|/s+$";"") | length == 0))] | length' .local/review.json)
   if [ "$invalid_issue_summary_count" -gt 0 ]; then
     echo "Invalid issue validation summary in .local/review.json: issueValidation.summary must be a non-empty string"
     exit 1
   fi
 
   local runtime_file_count
-  runtime_file_count=$(jq '[.files[]? | (.path // "") | select(test("^(src|extensions|apps)/")) | select(test("(^|/)__tests__/|\\.test\\.|\\.spec\\.") | not) | select(test("\\.(md|mdx)$") | not)] | length' .local/pr-meta.json)
+  runtime_file_count=$(jq '[.files[]? | (.path // "") | select(test("^(src|extensions|apps)/")) | select(test("(^|/)__tests__/|/.test/.|/.spec/.") | not) | select(test("/.(md|mdx)$") | not)] | length' .local/pr-meta.json)
 
   local runtime_review_required="false"
   if [ "$runtime_file_count" -gt 0 ]; then
@@ -934,7 +934,7 @@ review_validate_artifacts() {
   esac
 
   local invalid_behavioral_summary_count
-  invalid_behavioral_summary_count=$(jq '[.behavioralSweep.summary | select((type != "string") or (gsub("^\\s+|\\s+$";"") | length == 0))] | length' .local/review.json)
+  invalid_behavioral_summary_count=$(jq '[.behavioralSweep.summary | select((type != "string") or (gsub("^/s+|/s+$";"") | length == 0))] | length' .local/review.json)
   if [ "$invalid_behavioral_summary_count" -gt 0 ]; then
     echo "Invalid behavioral sweep summary in .local/review.json: behavioralSweep.summary must be a non-empty string"
     exit 1

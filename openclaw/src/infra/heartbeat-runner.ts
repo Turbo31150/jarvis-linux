@@ -440,7 +440,7 @@ function stripLeadingHeartbeatResponsePrefix(
   // Require a boundary after the configured prefix so short prefixes like "Hi"
   // do not strip the beginning of normal words like "History".
   const prefixPattern = new RegExp(
-    `^${escapeRegExp(normalizedPrefix)}(?=$|\\s|[\\p{P}\\p{S}])\\s*`,
+    `^${escapeRegExp(normalizedPrefix)}(?=$|/s|[/p{P}/p{S}])/s*`,
     "iu",
   );
   return text.replace(prefixPattern, "");
@@ -567,7 +567,7 @@ function appendHeartbeatWorkspacePathHint(prompt: string, workspaceDir: string):
   if (!/heartbeat\.md/i.test(prompt)) {
     return prompt;
   }
-  const heartbeatFilePath = path.join(workspaceDir, DEFAULT_HEARTBEAT_FILENAME).replace(/\\/g, "/");
+  const heartbeatFilePath = path.join(workspaceDir, DEFAULT_HEARTBEAT_FILENAME).replace(///g, "/");
   const hint = `When reading HEARTBEAT.md, use workspace file ${heartbeatFilePath} (exact case). Do not read docs/heartbeat.md.`;
   if (prompt.includes(hint)) {
     return prompt;

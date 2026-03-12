@@ -153,7 +153,7 @@ function quoteUnsafeIntegerLiterals(input: string): string {
       out += ch;
       if (escaped) {
         escaped = false;
-      } else if (ch === "\\") {
+      } else if (ch === "/") {
         escaped = true;
       } else if (ch === '"') {
         inString = false;

@@ -27,7 +27,7 @@
       "hooks": [
         {
           "type": "command",
-          "command": "python3 -c \"import sqlite3\ntry:\n db=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db')\n db.execute('CREATE TABLE IF NOT EXISTS routing_log(id INTEGER PRIMARY KEY,ts TEXT,category TEXT,node TEXT,latency_ms REAL,success INTEGER)')\n db.commit();db.close()\nexcept: pass\" 2>/dev/null || true",
+          "command": "python3 -c \"import sqlite3\ntry:\n db=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db')\n db.execute('CREATE TABLE IF NOT EXISTS routing_log(id INTEGER PRIMARY KEY,ts TEXT,category TEXT,node TEXT,latency_ms REAL,success INTEGER)')\n db.commit();db.close()\nexcept: pass\" 2>/dev/null || true",
           "timeout": 3000
         }
       ]
@@ -39,7 +39,7 @@
       "hooks": [
         {
           "type": "command",
-          "command": "python3 -c \"import json,datetime,sqlite3\ntry:\n db=sqlite3.connect('/home/turbo/jarvis-linux/data/etoile.db')\n db.execute('CREATE TABLE IF NOT EXISTS sessions(id INTEGER PRIMARY KEY,ts TEXT,event TEXT,data TEXT)')\n db.execute('INSERT INTO sessions(ts,event,data) VALUES(?,?,?)',(datetime.datetime.now().isoformat(),'session_end',json.dumps({'source':'hook'})))\n db.commit();db.close()\nexcept: pass\" 2>/dev/null || true",
+          "command": "python3 -c \"import json,datetime,sqlite3\ntry:\n db=sqlite3.connect('F:/BUREAU/turbo/data/etoile.db')\n db.execute('CREATE TABLE IF NOT EXISTS sessions(id INTEGER PRIMARY KEY,ts TEXT,event TEXT,data TEXT)')\n db.execute('INSERT INTO sessions(ts,event,data) VALUES(?,?,?)',(datetime.datetime.now().isoformat(),'session_end',json.dumps({'source':'hook'})))\n db.commit();db.close()\nexcept: pass\" 2>/dev/null || true",
           "timeout": 5000
         }
       ]

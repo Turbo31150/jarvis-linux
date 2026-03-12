@@ -150,7 +150,7 @@ function resolveGeminiCliDirs(geminiPath: string, resolvedPath: string): string[
   const seen = new Set<string>();
   for (const candidate of candidates) {
     const key =
-      process.platform === "win32" ? candidate.replace(/\\/g, "/").toLowerCase() : candidate;
+      process.platform === "win32" ? candidate.replace(///g, "/").toLowerCase() : candidate;
     if (seen.has(key)) {
       continue;
     }

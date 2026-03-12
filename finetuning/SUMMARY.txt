@@ -218,7 +218,7 @@ MODÈLE DE BASE:
 
 MODÈLE FINE-TUNÉ:
   Type: LoRA adapters
-  Chemin: /home/turbo/jarvis-linux/finetuning/output/*/final/
+  Chemin: F:/BUREAU/turbo/finetuning/output/*/final/
   Détection: Automatique (dernier dossier)
   Fichiers: adapter_config.json + adapter_model.bin
   Fallback: Si absent, benchmark utilise modèle base seul
@@ -291,7 +291,7 @@ PROBLÈME: Import error (transformers, peft, etc.)
 
 PROBLÈME: LoRA adapter non trouvé
   SOLUTION:
-    - Vérifier chemin: /home/turbo/jarvis-linux/finetuning/output/*/final/
+    - Vérifier chemin: F:/BUREAU/turbo/finetuning/output/*/final/
     - Vérifier: adapter_config.json existe
 
 PROBLÈME: Benchmark très lent

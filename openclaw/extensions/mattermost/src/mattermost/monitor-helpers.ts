@@ -79,16 +79,16 @@ export function normalizeMention(text: string, mention: string | undefined): str
   if (!mention) {
     return text.trim();
   }
-  const escaped = mention.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const hasMentionRe = new RegExp(`@${escaped}\\b`, "i");
-  const leadingMentionRe = new RegExp(`^([\\t ]*)@${escaped}\\b[\\t ]*`, "i");
-  const trailingMentionRe = new RegExp(`[\\t ]*@${escaped}\\b[\\t ]*$`, "i");
+  const escaped = mention.replace(/[.*+?^${}()|[\]/]/g, "/$&");
+  const hasMentionRe = new RegExp(`@${escaped}/b`, "i");
+  const leadingMentionRe = new RegExp(`^([/t ]*)@${escaped}/b[/t ]*`, "i");
+  const trailingMentionRe = new RegExp(`[/t ]*@${escaped}/b[/t ]*$`, "i");
   const normalizedLines = text.split("\n").map((line) => {
     const hadMention = hasMentionRe.test(line);
     const normalizedLine = line
       .replace(leadingMentionRe, "$1")
       .replace(trailingMentionRe, "")
-      .replace(new RegExp(`@${escaped}\\b`, "gi"), "")
+      .replace(new RegExp(`@${escaped}/b`, "gi"), "")
       .replace(/(\S)[ \t]{2,}/g, "$1 ");
     return {
       text: normalizedLine,

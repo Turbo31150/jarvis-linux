@@ -61,7 +61,7 @@ describe("cron run log", () => {
     expect(() => resolveCronRunLogPath({ storePath, jobId: "nested/job-1" })).toThrow(
       /invalid cron run log job id/i,
     );
-    expect(() => resolveCronRunLogPath({ storePath, jobId: "..\\job-1" })).toThrow(
+    expect(() => resolveCronRunLogPath({ storePath, jobId: "../job-1" })).toThrow(
       /invalid cron run log job id/i,
     );
   });

@@ -239,7 +239,7 @@ The following escape sequences are supported:
 
 | Sequence | Meaning      |
 | -------- | ------------ |
-| `\\`     | Backslash    |
+| `/`     | Backslash    |
 | `\"`     | Double quote |
 | `\n`     | Newline      |
 | `\t`     | Tab          |
@@ -250,7 +250,7 @@ The following escape sequences are supported:
 session "Hello world"
 session "Line one\nLine two"
 session "She said \"hello\""
-session "Path: C:\\Users\\name"
+session "Path: C:/Users/name"
 session "Column1\tColumn2"
 ```
 
@@ -2953,7 +2953,7 @@ singleString → '"' character* '"'
 tripleString → '"""' ( character | NEWLINE )* '"""'
 interpolatedString → string containing "{" IDENTIFIER "}"
 character   → escape | non-quote
-escape      → "\\" | "\"" | "\n" | "\t"
+escape      → "/" | "\"" | "\n" | "\t"
 ```
 
 ---

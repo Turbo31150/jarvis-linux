@@ -238,7 +238,7 @@ export function createSignalEventHandler(deps: SignalEventHandlerDeps) {
     });
 
     if (shouldLogVerbose()) {
-      const preview = body.slice(0, 200).replace(/\\n/g, "\\\\n");
+      const preview = body.slice(0, 200).replace(//n/g, "//n");
       logVerbose(`signal inbound: from=${ctxPayload.From} len=${body.length} preview="${preview}"`);
     }
 
@@ -351,7 +351,7 @@ export function createSignalEventHandler(deps: SignalEventHandlerDeps) {
       const combinedText = entries
         .map((entry) => entry.bodyText)
         .filter(Boolean)
-        .join("\\n");
+        .join("/n");
       if (!combinedText.trim()) {
         return;
       }

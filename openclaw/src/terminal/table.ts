@@ -105,7 +105,7 @@ function wrapLine(text: string, width: number): string[] {
 
       // OSC-8 link open/close: ESC ] 8 ; ; ... ST (ST = ESC \)
       if (text[i + 1] === "]" && text.slice(i + 2, i + 5) === "8;;") {
-        const st = text.indexOf(`${ESC}\\`, i + 5);
+        const st = text.indexOf(`${ESC}/`, i + 5);
         if (st >= 0) {
           tokens.push({ kind: "ansi", value: text.slice(i, st + 2) });
           i = st + 2;

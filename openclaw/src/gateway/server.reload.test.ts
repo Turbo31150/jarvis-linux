@@ -826,7 +826,7 @@ process.stdin.on("end", () => {
     for (const id of ids) {
       errors[id] = { message: "forced failure" };
     }
-    process.stdout.write(JSON.stringify({ protocolVersion: 1, values: {}, errors }) + "\\n");
+    process.stdout.write(JSON.stringify({ protocolVersion: 1, values: {}, errors }) + "/n");
     return;
   }
 
@@ -834,7 +834,7 @@ process.stdin.on("end", () => {
   for (const id of ids) {
     values[id] = token;
   }
-  process.stdout.write(JSON.stringify({ protocolVersion: 1, values }) + "\\n");
+  process.stdout.write(JSON.stringify({ protocolVersion: 1, values }) + "/n");
 });
 `,
       "utf8",
