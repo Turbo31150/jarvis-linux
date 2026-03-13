@@ -2,31 +2,32 @@
 
 > Cluster autonome multi-GPU, multi-noeud, multi-moteur IA avec voice control, trading, monitoring et self-healing.
 
-**Machine principale** : M1 "La Creatrice" | **OS** : Ubuntu 22.04 (Kernel 6.17) | **SDK** : Claude Agent SDK v0.1.35
+**Machine principale** : M1 "La Creatrice" | **OS** : Ubuntu 24.04.4 LTS (Kernel 6.17.0-14-generic PREEMPT_DYNAMIC) | **SDK** : Claude Agent SDK v0.1.35
 
 ---
 
 ## Table des matieres
 
 1. [Architecture globale](#architecture-globale)
-2. [Hardware & Cluster](#hardware--cluster)
-3. [Installation rapide (1 commande)](#installation-rapide)
-4. [Installation detaillee](#installation-detaillee)
-5. [Cluster IA — Noeuds & Routage](#cluster-ia--noeuds--routage)
-6. [Conteneurs Docker (10 services)](#conteneurs-docker)
-7. [Services Systemd (24 unites)](#services-systemd)
-8. [MCP — Model Context Protocol (609 handlers)](#mcp--model-context-protocol)
-9. [Pipeline Vocal](#pipeline-vocal)
-10. [COWORK — 559 scripts autonomes](#cowork--559-scripts-autonomes)
-11. [Monitoring & Dashboard](#monitoring--dashboard)
-12. [Trading Pipeline](#trading-pipeline)
-13. [ZRAM & Optimisation memoire](#zram--optimisation-memoire)
-14. [Structure du projet](#structure-du-projet)
-15. [Ports reseau](#ports-reseau)
-16. [Variables d'environnement](#variables-denvironnement)
-17. [Commandes & Aliases](#commandes--aliases)
-18. [Troubleshooting](#troubleshooting)
-19. [Dependances completes](#dependances-completes)
+2. [Environnement Linux & Modifications OS](#environnement-linux--modifications-os)
+3. [Hardware & Cluster](#hardware--cluster)
+4. [Installation rapide (1 commande)](#installation-rapide)
+5. [Installation detaillee](#installation-detaillee)
+6. [Cluster IA — Noeuds & Routage](#cluster-ia--noeuds--routage)
+7. [Conteneurs Docker (10 services)](#conteneurs-docker)
+8. [Services Systemd (24 unites)](#services-systemd)
+9. [MCP — Model Context Protocol (609 handlers)](#mcp--model-context-protocol)
+10. [Pipeline Vocal](#pipeline-vocal)
+11. [COWORK — 559 scripts autonomes](#cowork--559-scripts-autonomes)
+12. [Monitoring & Dashboard](#monitoring--dashboard)
+13. [Trading Pipeline](#trading-pipeline)
+14. [ZRAM & Optimisation memoire](#zram--optimisation-memoire)
+15. [Structure du projet](#structure-du-projet)
+16. [Ports reseau](#ports-reseau)
+17. [Variables d'environnement](#variables-denvironnement)
+18. [Commandes & Aliases](#commandes--aliases)
+19. [Troubleshooting](#troubleshooting)
+20. [Dependances completes](#dependances-completes)
 
 ---
 
@@ -85,22 +86,141 @@ Utilisateur (voix/texte/telegram)
 
 ---
 
+## Environnement Linux & Modifications OS
+
+### Systeme d'exploitation
+
+| Element | Detail |
+|---------|--------|
+| **Distribution** | Ubuntu 24.04.4 LTS "Noble Numbat" |
+| **Kernel** | 6.17.0-14-generic PREEMPT_DYNAMIC x86_64 |
+| **Init** | systemd (PID 1) |
+| **Filesystem** | ext4 sur /dev/sdb2 (915 GB, 639 GB utilises) |
+| **Boot** | EFI (/dev/sdb1 vfat) |
+| **NVMe** | /dev/nvme0n1p1 (stockage additionnel) |
+| **Utilisateur** | `turbo` — NOPASSWD sudoers |
+
+### Stack logicielle installee
+
+| Outil | Version | Role |
+|-------|---------|------|
+| **Python** | 3.12.3 | Runtime principal |
+| **uv** | 0.10.9 | Gestionnaire Python (remplacement pip/venv) |
+| **Node.js** | 22.22.1 | Canvas, Telegram, Electron, proxies |
+| **Docker** | 29.3.0 | Conteneurisation (10 services) |
+| **Ollama** | 0.17.7 | Inference IA locale + cloud |
+| **Git** | 2.43.0 | Versioning |
+| **NVIDIA Driver** | 590.48.01 | GPU compute (CUDA) |
+| **LM Studio** | Latest | Inference locale GPU (llama.cpp backend) |
+| **tmux** | Installe | Multiplexeur terminal (panel monitoring) |
+| **lm-sensors** | Installe | Capteurs temperature CPU |
+
+### Modifications Kernel & Securite
+
+```bash
+# /etc/default/grub — Pas de parametres NVIDIA custom (driver 590 natif)
+BOOT_IMAGE=/boot/vmlinuz-6.17.0-14-generic root=UUID=... ro quiet splash
+
+# /etc/modprobe.d/ — NVIDIA DRM modesetting
+options nvidia_drm modeset=1
+# Preserve video memory on suspend/resume (driver 590)
+```
+
+**Modules kernel NVIDIA charges** :
+```
+nvidia              14766080  (913 dependants)
+nvidia_uvm           2142208  (8 dependants)
+nvidia_drm            139264  (67 dependants)
+nvidia_modeset       1683456  (22 dependants)
+```
+
+### Modifications securite systeme
+
+| Parametre | Valeur | Effet |
+|-----------|--------|-------|
+| `kernel.dmesg_restrict` | **0** | Acces dmesg sans root (debug GPU) |
+| `kernel.kptr_restrict` | **0** | Pointeurs kernel visibles (debug) |
+| `kernel.perf_event_paranoid` | **0** | Profiling performance sans restriction |
+| **AppArmor** | **74 profils enforce** | Actif mais permissif pour JARVIS |
+| **Sudoers** | `turbo ALL=(ALL) NOPASSWD:ALL` | Sudo sans mot de passe (fichier `/etc/sudoers.d/jarvis-nopasswd`) |
+
+### Optimisations sysctl actives
+
+```bash
+vm.swappiness = 10              # Valeur courante (180 quand ZRAM charges via tweaks)
+vm.vfs_cache_pressure = 50      # Garde le cache VFS plus longtemps
+vm.dirty_ratio = 40             # Tolerant sur les pages dirty (evite flush disque)
+```
+
+### CPU Governor
+
+```bash
+# Mode performance permanent (pas de throttling)
+cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+# → performance
+```
+
+### ZRAM actif
+
+```
+/dev/zram0  zstd  11.7G (disksize)  5.9G (data)  3.6G (compresse)  priorite 100
+/swap.img   file  8.0G              0 (inutilise)                   priorite -2
+```
+Le swap fichier classique (8GB) n'est jamais utilise — ZRAM a priorite 100 absorbe tout.
+
+### Timers systemd actifs (en production)
+
+| Timer | Intervalle | Derniere execution |
+|-------|------------|--------------------|
+| `jarvis-health.timer` | Toutes les 30 min | En continu |
+| `jarvis-wave@1.timer` | Toutes les 4h | Cycle automatique |
+| `jarvis-wave@2.timer` | Toutes les 4h (+10min) | Cascade |
+| `jarvis-wave@3.timer` | Toutes les 4h (+20min) | Cascade |
+| `jarvis-wave@4.timer` | Toutes les 4h (+30min) | Cascade |
+| `jarvis-wave@5.timer` | Toutes les 4h (+40min) | Cascade |
+| `jarvis-wave@6.timer` | Toutes les 4h (+50min) | Cascade |
+| `jarvis-cowork@1.timer` | Toutes les 6h | Scripts autonomes |
+
+### 15 services systemd en production
+
+```
+jarvis-brain.service             JARVIS Self-Improvement Engine
+jarvis-dashboard-resilient       JARVIS Resilient Dashboard Monitor
+jarvis-gpu-fan                   JARVIS GPU Fan Manager
+jarvis-gpu-monitor               JARVIS GPU Monitor & Alerting
+jarvis-gpu-watcher               JARVIS GPU Watcher Service
+jarvis-lms-guard                 JARVIS LM Studio Health Guard
+jarvis-mcp                       JARVIS MCP Flask Server
+jarvis-pipeline                  JARVIS Pipeline Engine Daemon
+jarvis-proxy                     JARVIS Canvas Proxy
+jarvis-resource-manager          JARVIS Resource Manager (RAM/VRAM Auto-Tune)
+jarvis-turbo-ws                  JARVIS-TURBO WebSocket Bridge
+jarvis-voice                     JARVIS Voice Pipeline v3 (Wake Word & Command)
+jarvis-whisper                   JARVIS Whisper (Native)
+jarvis-ws                        JARVIS WebSocket Server
+lmstudio-bridge                  LM Studio Docker Bridge
+```
+
+---
+
 ## Hardware & Cluster
 
 ### M1 — "La Creatrice" (Noeud Principal)
 
 | Composant | Detail |
 |-----------|--------|
-| **CPU** | AMD Ryzen 7 5700X3D — 8 cores / 16 threads @ Performance Governor |
+| **CPU** | AMD Ryzen 7 5700X3D — 8 cores / 16 threads @ **Performance Governor** |
 | **RAM** | 46 GB DDR4 |
-| **ZRAM** | 12 GB compresse (zstd) — swap en RAM |
+| **ZRAM** | 12 GB compresse (zstd, ratio 1.6:1) — swap en RAM priorite 100 |
+| **Swap fichier** | 8 GB /swap.img (inutilise, priorite -2) |
 | **GPU 0** | NVIDIA RTX 2060 12GB — Inference principale |
 | **GPU 1-4** | 4x NVIDIA GTX 1660 SUPER 6GB — Compute distribue |
 | **GPU 5** | NVIDIA RTX 3080 10GB — Inference lourde |
 | **VRAM Total** | 46 GB (12+6+6+6+6+10) |
-| **Stockage** | SSD NVMe |
-| **OS** | Ubuntu 22.04 LTS, Kernel 6.17 |
-| **Driver NVIDIA** | Avec `NVreg_EnableGpuFirmware=0` (stabilite Turing) |
+| **Stockage** | SSD 915 GB ext4 (/dev/sdb2) + NVMe additionnel |
+| **OS** | Ubuntu 24.04.4 LTS, Kernel 6.17.0-14-generic PREEMPT_DYNAMIC |
+| **Driver NVIDIA** | 590.48.01 avec `nvidia_drm modeset=1` |
+| **Init** | systemd — 15 services JARVIS + 8 timers actifs |
 
 ### Topologie du Cluster
 
@@ -833,11 +953,27 @@ espeak-ng ffmpeg
 
 ## Bases de donnees
 
+Toutes les bases sont en SQLite3 (aucun serveur DB externe).
+
 | Base | Emplacement | Tables | Lignes | Usage |
 |------|-------------|--------|--------|-------|
-| `etoile.db` | `data/etoile.db` | 42 | 13.5K | Patterns agents, commandes vocales, dispatch logs |
-| `jarvis.db` | `data/jarvis.db` | — | — | Memoire episodique, signaux trading |
+| `etoile.db` | `core/memory/etoile.db` | 42 | 13.5K | Patterns agents, commandes vocales, dispatch logs, cowork mappings |
+| `jarvis.db` | `core/memory/jarvis.db` | — | — | Memoire episodique, signaux trading, conversations |
 | `trading.db` | `projects/trading_v2/database/` | — | — | Historique trades, predictions |
+| `sniper_scan.db` | `core/memory/` | — | — | Scanner trading MEXC |
+| `agent_memory.db` | `core/memory/` | — | — | Etat des agents (40+ agents) |
+| `decisions.db` | `core/memory/` | — | — | Journal de decisions |
+| `scheduler.db` | `core/memory/` | — | — | Planificateur de taches |
+| `task_queue.db` | `core/memory/` | — | — | File d'attente des taches |
+| `conversations.db` | `core/memory/` | — | — | Historique des dialogues |
+| `audit_trail.db` | `core/memory/` | — | — | Piste d'audit systeme |
+| `sessions.db` | `core/memory/` | — | — | Sessions utilisateur |
+| `browser_memory.db` | `core/memory/` | — | — | Etat navigateur |
+| `auto_heal.db` | `core/memory/` | — | — | Tentatives auto-reparation |
+| `pipeline.db` | `core/memory/` | — | — | Execution pipelines |
+
+**Total** : 35+ fichiers SQLite, ~160 MB combines.
+**Symlink** : `data/ → core/memory/` (acces unifie)
 
 ---
 
@@ -852,4 +988,15 @@ espeak-ng ffmpeg
 
 ---
 
-*Status : Operational | Architecture : Multi-Agent Distribue Autonome | v12.4 — Mars 2026*
+## Licence & Credits
+
+- **Auteur** : Turbo31150
+- **Machine** : M1 "La Creatrice" — Ubuntu 24.04.4 LTS
+- **Kernel** : 6.17.0-14-generic PREEMPT_DYNAMIC
+- **IA** : Claude Agent SDK (Anthropic) + LM Studio + Ollama + Gemini
+- **GPU** : 6x NVIDIA (RTX 3080 + RTX 2060 12GB + 4x GTX 1660 SUPER) — 46GB VRAM
+- **Driver** : NVIDIA 590.48.01, CUDA, nvidia_drm modeset=1
+
+---
+
+*Status : Operational | Plateforme : Linux x86_64 | Architecture : Multi-Agent Distribue Autonome | v12.4 — Mars 2026*
