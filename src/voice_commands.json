@@ -1,0 +1,55 @@
+{
+    "état du cluster": {
+        "type": "mcp",
+        "tool": "get_cluster_status",
+        "args": {}
+    },
+    "état des gpus": {
+        "type": "bash",
+        "command": "nvidia-smi --query-gpu=index,name,utilization.gpu,temperature.gpu,memory.used --format=csv"
+    },
+    "démarre la vague": {
+        "type": "mcp",
+        "tool": "run_wave",
+        "args": {"wave": 3}
+    },
+    "scale gpu": {
+        "type": "mcp",
+        "tool": "gpu_scale",
+        "args": {"nodes": 6}
+    },
+    "prix du bitcoin": {
+        "type": "mcp",
+        "tool": "crypto_trade",
+        "args": {"symbol": "BTCUSDT", "action": "check"}
+    },
+    "prix ethereum": {
+        "type": "mcp",
+        "tool": "crypto_trade",
+        "args": {"symbol": "ETHUSDT", "action": "check"}
+    },
+    "état mémoire": {
+        "type": "bash",
+        "command": "free -h && echo '---' && zramctl 2>/dev/null && echo '---' && swapon -s"
+    },
+    "dashboard": {
+        "type": "bash",
+        "command": "tmux new-session -d -s jarvis 'htop' \\; split-window -h 'watch -n 2 nvidia-smi' \\; attach"
+    },
+    "containers docker": {
+        "type": "bash",
+        "command": "docker ps --format 'table {{.Names}}\\t{{.Status}}\\t{{.Ports}}'"
+    },
+    "santé système": {
+        "type": "bash",
+        "command": "python3 ~/jarvis-m1-ops/monitoring-m1/m1-health.py 2>/dev/null || echo 'Script health non trouvé'"
+    },
+    "température cpu": {
+        "type": "bash",
+        "command": "sensors | grep -i 'tctl\\|tdie\\|temp1' | head -5"
+    },
+    "espace disque": {
+        "type": "bash",
+        "command": "df -h / /home /tmp"
+    }
+}

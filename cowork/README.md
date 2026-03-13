@@ -68,6 +68,7 @@ telegram_commander, telegram_scheduler, telegram_stats, telegram_features. Hub T
 | Noeud | Machine | GPU / VRAM | Modele | Score | Poids |
 |-------|---------|------------|--------|-------|-------|
 | **M1** | PC principal | 6 GPU / 46 GB | **qwen3-8b** | **98.4/100** | **1.8** |
+| **M1B** | PC principal | 6 GPU / 46 GB | **gpt-oss-20b** (deep) | — | 1.7 |
 | **M2** | PC secondaire | 3 GPU / 24 GB | **deepseek-r1-0528-qwen3-8b** | — | 1.5 |
 | **M3** | PC tertiaire | 1 GPU / 8 GB | **deepseek-r1-0528-qwen3-8b** | — | 1.2 |
 
@@ -75,11 +76,12 @@ telegram_commander, telegram_scheduler, telegram_stats, telegram_features. Hub T
 
 | Service | Modele | Score | Poids |
 |---------|--------|-------|-------|
-| **(cloud disabled)** | *gpt-oss, devstral removed from active config* | — | — |
+| **gpt-oss:120b** | GPT-OSS 120B | **100/100** | **1.9** |
+| **devstral-2:123b** | Devstral 2 123B | ~94/100 | 1.5 |
 | **GEMINI** | Gemini 3 Pro/Flash | 74/100 | 1.2 |
 | **CLAUDE** | Opus/Sonnet/Haiku | variable | 1.2 |
 
-**Fallback cascade** : M1 → M2 → M3 → OL1
+**Fallback cascade** : M1 → M1B → M2 → M3 → gpt-oss → devstral → Gemini → Claude
 
 ---
 
@@ -183,4 +185,49 @@ Le systeme fonctionne en boucle fermee auto-alimentee :
 
 ---
 
-*JARVIS Etoile v12.1 — Systeme d'IA distribue autonome multi-GPU*
+## Integration WhisperFlow (Voix)
+
+Ce workspace s'integre avec [jarvis-whisper-flow](https://github.com/Turbo31150/jarvis-whisper-flow) pour le controle vocal :
+
+```
+Micro → Whisper STT → Wake Word "Jarvis" → Commander (140 commandes)
+                                              |
+                                         Si inconnu → cluster_bridge.py
+                                              |
+                                    cluster_race(M1 vs OL1) → TTS reponse
+```
+
+### Fichiers de liaison
+
+| Fichier | Repo | Role |
+|---------|------|------|
+| `cluster_bridge.py` | whisper-flow | Race M1/OL1, dispatch cowork |
+| `cowork_mcp_bridge.py` | cowork | Expose 395 scripts via MCP tools |
+| `cowork_dispatcher.py` | cowork | Routage query → scripts par keywords |
+| `cowork_engine.py` | cowork | Test-all, gaps, anticipate, improve |
+
+### Lancer le systeme complet
+
+```bash
+# Terminal 1: LM Studio (M1 qwen3-8b deja charge)
+# Terminal 2: Ollama (OL1 qwen3:1.7b)
+ollama serve
+
+# Terminal 3: WhisperFlow (ecoute micro)
+cd F:\BUREAU\jarvis-whisper-flow
+python -m whisperflow.jarvis
+
+# Terminal 4: OpenClaw Gateway (Telegram)
+openclaw gateway --port 18789
+```
+
+### Benchmark (100 cycles)
+
+```
+100 cycles: 98% success, 91.2/100 score, 1.59s latency moyenne
+Commander: 59/100 (instant) | OL1: 36/100 (~3s) | M1: 3/100 (~6s)
+```
+
+---
+
+*JARVIS Etoile v12.4 -- Systeme d'IA distribue autonome multi-GPU*

@@ -74,17 +74,17 @@ edge-tts --voice fr-FR-HenriNeural --text "TEXTE" --write-media /tmp/mail.mp3
 ```
 Puis envoyer via l'API Telegram Bot (token en env TELEGRAM_BOT_TOKEN, chat_id en env TELEGRAM_CHAT_ID).
 
-## Scripts Python (/home/turbo/jarvis-linux\scripts\)
+## Scripts Python (F:\BUREAU\turbo\scripts\)
 
 - **system_audit.py** — Audit complet du cluster (5 noeuds, scores, grade A-F)
   `python F:/BUREAU/turbo/scripts/system_audit.py [--json|--quick|--save]`
 - **scan_sniper.py** — Scan MEXC Futures: breakout/retournement pre-pump, top 3 avec entree/TP/SL
-  `Set-Location /home/turbo/jarvis-linux; & /home/turbo\.local\bin\uv.exe run python scripts/scan_sniper.py`
+  `Set-Location F:\BUREAU\turbo; & C:\Users\franc\.local\bin\uv.exe run python scripts/scan_sniper.py`
   JSON: ajouter `--json` | Top N: ajouter `--top 5`
 - **gen_catalogue.py** — Genere le catalogue des commandes
 - **update_etoile_full.py** — Met a jour la BDD etoile.db
 
-## Launchers (/home/turbo/jarvis-linux\launchers\)
+## Launchers (F:\BUREAU\turbo\launchers\)
 
 - `JARVIS.bat` — Desktop Electron (principal)
 - `JARVIS_VOICE.bat` — Mode vocal (wake word + Whisper + TTS)
@@ -94,7 +94,7 @@ Puis envoyer via l'API Telegram Bot (token en env TELEGRAM_BOT_TOKEN, chat_id en
 - `JARVIS_BOOT.bat` — Boot complet du cluster
 - `JARVIS_COMMANDER.bat` — Mode commandant
 
-## Proxies IA (/home/turbo/jarvis-linux\)
+## Proxies IA (F:\BUREAU\turbo\)
 
 - **gemini-proxy.js** — Proxy Gemini 3 Pro/Flash avec timeout + fallback
   `node F:/BUREAU/turbo/gemini-proxy.js "PROMPT"`
@@ -106,7 +106,7 @@ Puis envoyer via l'API Telegram Bot (token en env TELEGRAM_BOT_TOKEN, chat_id en
 ## Bases de Donnees
 
 - **etoile.db** (`F:\BUREAU\etoile.db`) — 11 tables, 2273 map entries, carte complete HEXA_CORE
-- **jarvis.db** (`/home/turbo/jarvis-linux\data\jarvis.db`) — 6 tables: skills, actions, historique
+- **jarvis.db** (`F:\BUREAU\turbo\data\jarvis.db`) — 6 tables: skills, actions, historique
 - **trading_latest.db** (`F:\BUREAU\carV1\database\trading_latest.db`) — trades/signaux
 - **trading.db** (`F:\BUREAU\TRADING_V2_PRODUCTION\database\trading.db`) — predictions
 
@@ -124,13 +124,13 @@ Config: levier 10x, TP 0.4%, SL 0.25%, taille 10 USDT, score min 70/100
 
 - URL: `http://127.0.0.1:8080`
 - API: `/api/cluster`
-- Server: `/home/turbo/jarvis-linux\dashboard\server.py`
+- Server: `F:\BUREAU\turbo\dashboard\server.py`
 
 ## Python / uv
 
 - Python 3.13
-- uv: `/home/turbo\.local\bin\uv.exe`
-- Projet: `/home/turbo/jarvis-linux` (pyproject.toml)
+- uv: `C:\Users\franc\.local\bin\uv.exe`
+- Projet: `F:\BUREAU\turbo` (pyproject.toml)
 - Exec: `cd F:/BUREAU/turbo && C:/Users/franc/.local/bin/uv.exe run python SCRIPT`
 
 ## n8n
@@ -160,7 +160,7 @@ L'outil `exec` execute du PowerShell natif. Utilise-le pour TOUT controle system
 
 Pour les commandes complexes qui necessitent analyse IA, collecte d'abord les donnees via `exec` puis dispatche au noeud adapte (M2 pour code/analyse, OL1 pour rapidite, GEMINI pour architecture/securite).
 
-## COWORK Scripts Autonomes (/home/turbo\.openclaw\workspace\dev\)
+## COWORK Scripts Autonomes (C:\Users\franc\.openclaw\workspace\dev\)
 
 10 scripts deployes, tous testés OK. Lancer le scheduler pour tout automatiser:
 ```
@@ -180,6 +180,6 @@ python C:/Users/franc/.openclaw/workspace/dev/auto_scheduler.py --start
 | context_engine.py | Memoire persistante SQLite | `--stats` / `--context` |
 | task_queue.py | File d'attente priorite + retry | `--add` / `--run` / `--loop` |
 
-## Structure Source (/home/turbo/jarvis-linux\src\) — 28 modules
+## Structure Source (F:\BUREAU\turbo\src\) — 28 modules
 
 config, agents, tools, skills, commands, orchestrator, commander, voice, voice_correction, cluster_startup, windows, database, scenarios, trading, brain, executor, mcp_server, dashboard, systray, whisper_worker, output, wake_word, tts_streaming, commands_pipelines, commands_navigation, commands_maintenance, commands_dev, __init__

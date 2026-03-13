@@ -1,0 +1,240 @@
+# 🚀 JARVIS-TURBO ULTIMATE ORCHESTRATOR — v10.5
+# 🎯 Objectif : Path Fixes, Security Bypass, local Inference Active
+
+services:
+
+  # ── [SECTION: SERVER] JARVIS WebSocket & Central API ──────────
+  jarvis-ws:
+    build:
+      context: .
+      dockerfile: projects/linux/Dockerfile
+    container_name: jarvis-ws
+    gpus: all
+    ports:
+      - "19742:9742"
+    volumes:
+      - ./data:/app/data
+      - ./.env:/app/.env:ro
+      - ./jarvis.db:/app/jarvis.db
+      - ./src:/app/src
+    environment:
+      - TURBO=/app
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=.
+      - TURBO_MODE=ACTIVE
+      - LM_STUDIO_1_URL=http://host.docker.internal:2234
+      - LM_STUDIO_1_KEY=
+      - LM_STUDIO_2_URL=http://192.168.1.26:1234
+      - OLLAMA_URL=http://host.docker.internal:21434
+      - JARVIS_LINUX_ROOT=/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9742/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ── [SECTION: VOCAL] Whisper & Voice Interaction ──────────────
+  vocal-whisper:
+    image: wlk:gpu-voxtral
+    container_name: vocal-whisper
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    ports:
+      - "18001:8000"
+    volumes:
+      - hf-cache:/root/.cache/huggingface/hub
+    environment:
+      - HF_TOKEN=${HF_TOKEN}
+    restart: always
+
+  vocal-engine:
+    build:
+      context: .
+      dockerfile: projects/linux/Dockerfile
+    container_name: vocal-engine
+    volumes:
+      - ./data:/app/data
+      - ./.env:/app/.env:ro
+      - ./src:/app/src
+    environment:
+      - TURBO=/app
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=.
+      - WS_URL=ws://jarvis-ws:9742
+      - LM_STUDIO_1_URL=http://host.docker.internal:2234
+      - LM_STUDIO_1_KEY=
+      - OLLAMA_URL=http://host.docker.internal:21434
+      - JARVIS_LINUX_ROOT=/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command: python main.py -v
+    restart: always
+    depends_on:
+      - jarvis-ws
+
+  # ── [SECTION: PIPELINE] Dispatch & Workflow Engine ────────────
+  jarvis-pipeline:
+    build:
+      context: .
+      dockerfile: projects/linux/Dockerfile
+    container_name: jarvis-pipeline
+    volumes:
+      - ./data:/app/data
+      - ./.env:/app/.env:ro
+      - ./src:/app/src
+      - ./scripts:/app/scripts
+    environment:
+      - TURBO=/app
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=.
+      - WS_URL=ws://jarvis-ws:9742
+      - JARVIS_LINUX_ROOT=/app
+    command: python scripts/pipeline_engine.py --daemon
+    restart: always
+    depends_on:
+      - jarvis-ws
+
+  # ── [SECTION: DOMINO] Automation Cascades ─────────────────────
+  jarvis-domino:
+    build:
+      context: .
+      dockerfile: projects/linux/Dockerfile
+    container_name: jarvis-domino
+    volumes:
+      - ./data:/app/data
+      - ./.env:/app/.env:ro
+      - ./src:/app/src
+    environment:
+      - TURBO=/app
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=.
+      - WS_URL=ws://jarvis-ws:9742
+      - JARVIS_LINUX_ROOT=/app
+    command: python src/domino_executor.py --daemon
+    restart: always
+    depends_on:
+      - jarvis-ws
+
+  # ── [SECTION: NODE] OpenClaw Gateway ──────────────────────────
+  openclaw-node:
+    build:
+      context: ./openclaw
+      dockerfile: Dockerfile
+    container_name: openclaw-node
+    ports:
+      - "28789:18789"
+    volumes:
+      - /home/turbo/.openclaw:/home/node/.openclaw
+      - ./openclaw/skills:/app/skills
+      - ./openclaw/dist:/app/dist
+    environment:
+      - NODE_ENV=production
+      - WS_URL=ws://jarvis-ws:9742
+      - OPENCLAW_GATEWAY_CONTROL_UI_DANGEROUSLY_ALLOW_HOST_HEADER_ORIGIN_FALLBACK=true
+      - OPENCLAW_ALLOWED_ORIGINS=http://localhost:28789,http://127.0.0.1:28789
+    command: sh /app/start-gateway.sh
+    restart: always
+    depends_on:
+      - jarvis-ws
+
+  # ── [SECTION: COWORK] Mega-Runners & Multi-Agents ──────────────
+  cowork-engine:
+    build:
+      context: ./cowork
+      dockerfile: ../projects/linux/Dockerfile
+    container_name: cowork-engine
+    volumes:
+      - ./cowork:/app
+      - ./data:/app/data
+      - ./.env:/app/.env:ro
+    environment:
+      - TURBO=/app
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=.
+      - WS_URL=ws://jarvis-ws:9742
+      - LM_STUDIO_1_URL=http://host.docker.internal:2234
+      - LM_STUDIO_1_KEY=
+      - LM_STUDIO_2_URL=http://192.168.1.26:1234
+      - OLLAMA_URL=http://host.docker.internal:21434
+      - JARVIS_LINUX_ROOT=/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command: python cowork_engine.py
+    restart: always
+    depends_on:
+      - jarvis-ws
+
+  cowork-dispatcher:
+    build:
+      context: ./cowork
+      dockerfile: ../projects/linux/Dockerfile
+    container_name: cowork-dispatcher
+    volumes:
+      - ./cowork:/app
+      - ./data:/app/data
+      - ./.env:/app/.env:ro
+    environment:
+      - TURBO=/app
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=.
+      - WS_URL=ws://jarvis-ws:9742
+      - OLLAMA_URL=http://host.docker.internal:21434
+      - JARVIS_LINUX_ROOT=/app
+    command: python cowork_dispatcher.py --daemon
+    restart: always
+    depends_on:
+      - jarvis-ws
+
+  # ── [SECTION: MCP] Domino MCP Bridge ──────────────────────────
+  domino-mcp:
+    build:
+      context: .
+      dockerfile: projects/linux/Dockerfile
+    container_name: domino-mcp
+    ports:
+      - "18901:8901"
+    volumes:
+      - ./data:/app/data
+      - ./.env:/app/.env:ro
+      - ./src:/app/src
+    environment:
+      - TURBO=/app
+      - PYTHONPATH=.
+      - WS_URL=ws://jarvis-ws:9742
+      - JARVIS_LINUX_ROOT=/app
+    command: python -m src.mcp_server_sse --port 8901 --light
+    restart: always
+    depends_on:
+      - jarvis-ws
+
+  # ── [SECTION: TELEGRAM] Remote Interface ──────────────────────
+  jarvis-telegram:
+    build:
+      context: ./canvas
+      dockerfile: ../projects/linux/Dockerfile.node
+    container_name: jarvis-telegram
+    volumes:
+      - ./canvas:/app
+      - ./data:/data
+      - ./.env:/app/.env:ro
+    environment:
+      - PROXY_URL=http://host.docker.internal:18800
+      - WS_URL=ws://jarvis-ws:9742
+      - PYTHON_BIN=python3
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command: node telegram-bot.js
+    restart: always
+    depends_on:
+      - jarvis-ws
+
+volumes:
+  hf-cache:
