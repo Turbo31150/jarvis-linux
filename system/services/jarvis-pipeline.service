@@ -4,11 +4,12 @@ After=network.target jarvis-ws.service
 
 [Service]
 Type=simple
-WorkingDirectory=/home/turbo/jarvis
-ExecStart=/home/turbo/jarvis/.venv/bin/python scripts/pipeline_engine.py --daemon
+WorkingDirectory=/home/turbo/jarvis-linux
+ExecStart=/home/turbo/jarvis-linux/.venv/bin/python /home/turbo/jarvis-linux/scripts/pipeline_engine.py --daemon
 Restart=always
 RestartSec=30
-Environment=TURBO=/home/turbo/jarvis
+Environment=TURBO=/home/turbo/jarvis-linux
+Environment=PYTHONPATH=/home/turbo/jarvis-linux
 
 [Install]
 WantedBy=default.target

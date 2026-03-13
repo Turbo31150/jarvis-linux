@@ -22,7 +22,7 @@ from pathlib import Path
 
 DEV = Path(__file__).parent
 DB_PATH = DEV / "data" / "changelog_generator.db"
-from _paths import TURBO_DIR
+TURBO_DIR = Path("F:/BUREAU/turbo")
 
 
 def init_db():

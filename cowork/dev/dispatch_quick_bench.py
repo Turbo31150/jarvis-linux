@@ -11,7 +11,6 @@ Usage:
 """
 
 import argparse
-from _paths import TURBO_DIR
 import asyncio
 import json
 import sqlite3
@@ -39,7 +38,7 @@ BENCH_PROMPTS = {
     "architecture": "Design un systeme de notification en temps reel pour 1M utilisateurs",
 }
 
-DB_PATH = str(ETOILE_DB)
+DB_PATH = "F:/BUREAU/turbo/etoile.db"
 
 
 async def run_benchmark():

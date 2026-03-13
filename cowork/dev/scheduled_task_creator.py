@@ -15,10 +15,9 @@ import argparse
 import subprocess
 import sys
 from typing import List
-from _paths import TELEGRAM_TOKEN, TELEGRAM_CHAT
 
-# TELEGRAM_TOKEN loaded from _paths (.env)
-TELEGRAM_CHAT_ID = TELEGRAM_CHAT
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT_ID = "2010747443"
 TASK_PREFIX = "JARVIS_"
 
 def telegram_send(msg: str):

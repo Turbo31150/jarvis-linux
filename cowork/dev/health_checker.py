@@ -16,7 +16,7 @@ Il regroupe les vérifications suivantes :
 Chaque critère reçoit un score 0‑100 (plus haut = meilleur).  La moyenne pondérée fourni le
 score global (0‑100) qui est traduit en grade : A (≥90), B (≥80), C (≥70), D (≥60), F (<60).
 Le résultat est affiché et, si l’option ``--once`` ou ``--loop`` est utilisée, envoyé sur Telegram
-( bot token ``{TELEGRAM_TOKEN}`` , chat ``2010747443`` ).
+( bot token ``TELEGRAM_TOKEN_REDACTED`` , chat ``2010747443`` ).
 
 CLI :
     --once            : exécuter un check unique et afficher le résumé.
@@ -27,7 +27,6 @@ Le script ne dépend que de la bibliothèque standard, avec ``psutil`` en option
 """
 
 import argparse
-from _paths import TURBO_DIR, ETOILE_DB, JARVIS_DB, TELEGRAM_TOKEN, TELEGRAM_CHAT
 import json
 import os
 import shutil
@@ -46,8 +45,8 @@ if hasattr(sys.stderr, "reconfigure"):
 # ---------------------------------------------------------------------------
 # Configuration Telegram
 # ---------------------------------------------------------------------------
-# TELEGRAM_TOKEN loaded from _paths (.env)
-TELEGRAM_CHAT_ID = TELEGRAM_CHAT
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT_ID = "2010747443"
 
 # ---------------------------------------------------------------------------
 # Helper – exécuter une commande et récupérer la sortie (texte)
@@ -92,9 +91,9 @@ def check_cluster() -> Dict[str, Any]:
 
 def check_databases() -> Dict[str, Any]:
     db_paths = {
-        "etoile.db": Path(str(ETOILE_DB)),
-        "jarvis.db": Path(str(JARVIS_DB)),
-        "trading_latest.db": TURBO_DIR / "projects/carV1_data/database/trading_latest.db",
+        "etoile.db": Path("F:/BUREAU/etoile.db"),
+        "jarvis.db": Path("F:/BUREAU/turbo/data/jarvis.db"),
+        "trading_latest.db": Path("F:/BUREAU/carV1/database/trading_latest.db"),
     }
     exists = 0
     total = len(db_paths)
@@ -137,9 +136,9 @@ def check_services() -> Dict[str, Any]:
 
 def check_disk() -> Dict[str, Any]:
     # Check free space on C: (and F: if exists)
-    drives = ["C:/"]
-    if os.path.isdir("F:/"):
-        drives.append("F:/")
+    drives = ["C:\\"]
+    if os.path.isdir("F:\\"):
+        drives.append("F:\\")
     free_total_gb = 0.0
     total_gb = 0.0
     for d in drives:

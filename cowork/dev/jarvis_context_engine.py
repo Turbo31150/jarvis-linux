@@ -10,7 +10,6 @@ Usage:
     python dev/jarvis_context_engine.py --stats
 """
 import argparse
-from _paths import TURBO_DIR
 import json
 import os
 import re
@@ -28,7 +27,7 @@ SOURCES = [
     {"type": "claude_md", "path": "C:/Users/franc/.claude/CLAUDE.md"},
     {"type": "memory", "path": "C:/Users/franc/.claude/projects/C--Users-franc/memory/MEMORY.md"},
     {"type": "dev_scripts", "glob": "C:/Users/franc/.openclaw/workspace/dev/*.py"},
-    {"type": "src_modules", "glob": str(TURBO_DIR / "src" / "*.py")},
+    {"type": "src_modules", "glob": "F:/BUREAU/turbo/src/*.py"},
 ]
 
 

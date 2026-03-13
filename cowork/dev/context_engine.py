@@ -2,11 +2,10 @@
 """JARVIS Context Engine — Moteur de contexte persistant (conversations + preferences)."""
 import json, sys, os, sqlite3
 from datetime import datetime
-from _paths import TELEGRAM_TOKEN, TELEGRAM_CHAT
 
 DB_PATH = "C:/Users/franc/.openclaw/workspace/dev/context.db"
-# TELEGRAM_TOKEN loaded from _paths (.env)
-# TELEGRAM_CHAT loaded from _paths (.env)
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT = "2010747443"
 
 def init_db():
     conn = sqlite3.connect(DB_PATH)

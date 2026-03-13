@@ -16,7 +16,7 @@ from pathlib import Path
 
 DEV = Path(__file__).parent
 DB_PATH = DEV / "data" / "routing_optimizer.db"
-from _paths import ETOILE_DB
+ETOILE_DB = Path("F:/BUREAU/turbo/data/etoile.db")
 CATEGORIES = ["code", "math", "trading", "system", "web", "general"]
 
 def init_db():
@@ -51,7 +51,7 @@ def do_optimize():
     for cat in CATEGORIES:
         agents = matrix.get(cat, {})
         if not agents:
-            recommendations.append({"category": cat, "best": "M1", "reason": "default", "confidence": 0.5})
+            recommendations.append({"category": cat, "best": "gpt-oss:120b", "reason": "default", "confidence": 0.5})
             continue
         best_agent, best_score = None, -1
         for agent, stats in agents.items():

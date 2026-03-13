@@ -2,11 +2,10 @@
 """JARVIS Network Monitor — Surveillance reseau cluster."""
 import json, sys, os, sqlite3, subprocess, time
 from datetime import datetime
-from _paths import TELEGRAM_TOKEN, TELEGRAM_CHAT
 
 DB_PATH = "C:/Users/franc/.openclaw/workspace/dev/network.db"
-# TELEGRAM_TOKEN loaded from _paths (.env)
-# TELEGRAM_CHAT loaded from _paths (.env)
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT = "2010747443"
 
 TARGETS = {
     "M1": "127.0.0.1",

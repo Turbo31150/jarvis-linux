@@ -2,7 +2,7 @@
 """ia_autonomous_coder.py — Codeur autonome JARVIS.
 
 Genere, ameliore et review des scripts sans intervention humaine.
-Utilise M1 qwen3-8b (local).
+Utilise gpt-oss:120b via OL1.
 
 Usage:
     python dev/ia_autonomous_coder.py --once
@@ -41,15 +41,14 @@ def init_db():
 
 
 def query_gpt_oss(prompt, timeout=120):
-    """Query M1 qwen3-8b via LM Studio."""
+    """Query gpt-oss:120b via Ollama."""
     try:
         data = json.dumps({
-            "model": "qwen3-8b",
-            "input": f"/nothink\n{prompt}",
-            "temperature": 0.2, "max_output_tokens": 4096,
-            "stream": False, "store": False,
+            "model": "gpt-oss:120b-cloud",
+            "messages": [{"role": "user", "content": prompt}],
+            "stream": False, "think": False,
         }).encode()
-        req = urllib.request.Request("http://127.0.0.1:1234/api/v1/chat", data=data, headers={"Content-Type": "application/json"})
+        req = urllib.request.Request(OL1_URL, data=data, headers={"Content-Type": "application/json"})
         with urllib.request.urlopen(req, timeout=timeout) as r:
             result = json.loads(r.read().decode())
             return result.get("message", {}).get("content", "")
@@ -136,7 +135,7 @@ Reponds UNIQUEMENT avec le code Python complet, pas d'explication."""
         if not code:
             db.execute(
                 "INSERT INTO generations (ts, description, filename, model, success, attempt, error) VALUES (?,?,?,?,?,?,?)",
-                (time.time(), description, filename, "M1", 0, attempt, "no_code_extracted")
+                (time.time(), description, filename, "gpt-oss", 0, attempt, "no_code_extracted")
             )
             continue
 
@@ -146,7 +145,7 @@ Reponds UNIQUEMENT avec le code Python complet, pas d'explication."""
             prompt += f"\n\nERREUR PRECEDENTE: {error}\nCorrige le code."
             db.execute(
                 "INSERT INTO generations (ts, description, filename, model, success, attempt, error) VALUES (?,?,?,?,?,?,?)",
-                (time.time(), description, filename, "M1", 0, attempt, error)
+                (time.time(), description, filename, "gpt-oss", 0, attempt, error)
             )
             continue
 
@@ -158,7 +157,7 @@ Reponds UNIQUEMENT avec le code Python complet, pas d'explication."""
         if test_script(filepath):
             db.execute(
                 "INSERT INTO generations (ts, description, filename, model, success, attempt, error) VALUES (?,?,?,?,?,?,?)",
-                (time.time(), description, filename, "M1", 1, attempt, "")
+                (time.time(), description, filename, "gpt-oss", 1, attempt, "")
             )
             db.commit()
             db.close()
@@ -167,7 +166,7 @@ Reponds UNIQUEMENT avec le code Python complet, pas d'explication."""
             filepath.unlink()
             db.execute(
                 "INSERT INTO generations (ts, description, filename, model, success, attempt, error) VALUES (?,?,?,?,?,?,?)",
-                (time.time(), description, filename, "M1", 0, attempt, "test_failed")
+                (time.time(), description, filename, "gpt-oss", 0, attempt, "test_failed")
             )
 
     db.commit()

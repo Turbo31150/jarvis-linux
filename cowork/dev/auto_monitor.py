@@ -2,14 +2,13 @@
 """JARVIS Auto Monitor — Surveillance cluster en continu."""
 import json, time, sys, urllib.request, urllib.error
 from datetime import datetime
-from _paths import TELEGRAM_TOKEN, TELEGRAM_CHAT
 
 NODES = {
     "M1": {"url": "http://127.0.0.1:1234/api/v1/models", "type": "lmstudio"},
     "OL1": {"url": "http://127.0.0.1:11434/api/tags", "type": "ollama"},
 }
-# TELEGRAM_TOKEN loaded from _paths (.env)
-# TELEGRAM_CHAT loaded from _paths (.env)
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT = "2010747443"
 LOG_FILE = "C:/Users/franc/.openclaw/workspace/dev/monitor_log.json"
 
 def check_node(name, cfg):

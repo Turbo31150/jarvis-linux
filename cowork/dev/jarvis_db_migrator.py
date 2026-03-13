@@ -10,7 +10,6 @@ Usage:
     python dev/jarvis_db_migrator.py --rollback
 """
 import argparse
-from _paths import ETOILE_DB, JARVIS_DB, SNIPER_DB
 import json
 import os
 import shutil
@@ -22,9 +21,9 @@ from pathlib import Path
 DEV = Path(__file__).parent
 DB_PATH = DEV / "data" / "db_migrator.db"
 DATABASES = [
-    {"name": "etoile", "path": str(ETOILE_DB)},
-    {"name": "jarvis", "path": str(JARVIS_DB)},
-    {"name": "sniper", "path": str(SNIPER_DB)},
+    {"name": "etoile", "path": "F:/BUREAU/turbo/data/etoile.db"},
+    {"name": "jarvis", "path": "F:/BUREAU/turbo/data/jarvis.db"},
+    {"name": "sniper", "path": "F:/BUREAU/turbo/data/sniper.db"},
 ]
 
 EXPECTED_TABLES = {

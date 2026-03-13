@@ -11,7 +11,6 @@ CLI :
 """
 
 import argparse
-from _paths import TURBO_DIR, ETOILE_DB, JARVIS_DB, TELEGRAM_TOKEN, TELEGRAM_CHAT
 import json
 import os
 import sqlite3
@@ -20,8 +19,8 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Any
 
-# TELEGRAM_TOKEN loaded from _paths (.env)
-TELEGRAM_CHAT_ID = TELEGRAM_CHAT
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT_ID = "2010747443"
 
 def telegram_send(msg: str):
     import urllib.parse, urllib.request
@@ -45,9 +44,9 @@ def run_cmd(cmd: list, timeout: int = 10) -> str:
 def check_databases() -> Dict[str, Any]:
     """Vérifie les bases SQLite JARVIS."""
     dbs = {
-        "etoile.db": Path(str(ETOILE_DB)),
-        "jarvis.db": Path(str(JARVIS_DB)),
-        "trading_latest.db": TURBO_DIR / "projects/carV1_data/database/trading_latest.db",
+        "etoile.db": Path("F:/BUREAU/etoile.db"),
+        "jarvis.db": Path("F:/BUREAU/turbo/data/jarvis.db"),
+        "trading_latest.db": Path("F:/BUREAU/carV1/database/trading_latest.db"),
     }
     issues = []
     ok = 0
@@ -110,9 +109,9 @@ def check_disk() -> Dict[str, Any]:
     """Vérifie l'espace disque."""
     import shutil
     issues = []
-    drives = ["C:/"]
-    if os.path.isdir("F:/"):
-        drives.append("F:/")
+    drives = ["C:\\"]
+    if os.path.isdir("F:\\"):
+        drives.append("F:\\")
 
     ok = 0
     for d in drives:

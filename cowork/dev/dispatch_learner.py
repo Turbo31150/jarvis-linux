@@ -26,12 +26,12 @@ from datetime import datetime
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-from _paths import ETOILE_DB, TELEGRAM_TOKEN, TELEGRAM_CHAT
+ETOILE_DB = Path("F:/BUREAU/turbo/data/etoile.db")
 DATA_DIR = SCRIPT_DIR / "data"
 GAPS_DB = DATA_DIR / "cowork_gaps.db"
 
-# TELEGRAM_TOKEN loaded from _paths (.env)
-TELEGRAM_CHAT_ID = TELEGRAM_CHAT
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT_ID = "2010747443"
 
 # Minimum dispatches needed to draw conclusions
 MIN_SAMPLES = 1
@@ -272,8 +272,8 @@ def main():
     if args.routing:
         routing = analyze_routing(edb)
         print("\n=== Optimal Routing Table ===")
-        for t, nodes in sorted(routing.items(), key=lambda x: (x[0] or "")):
-            print(f"\n  {t or 'unknown'}:")
+        for t, nodes in sorted(routing.items()):
+            print(f"\n  {t}:")
             for n in nodes:
                 print(f"    {n['node']:6} score={n['composite_score']:.3f} "
                       f"ok={n['success_rate']}% q={n['avg_quality']:.2f} "
@@ -314,9 +314,9 @@ def main():
                  f"Data: {total} dispatches"]
         if routing:
             lines.append("")
-            for t, nodes in sorted(routing.items(), key=lambda x: (x[0] or "")):
+            for t, nodes in sorted(routing.items()):
                 if nodes:
-                    lines.append(f"  {t or 'unknown'} -> {nodes[0]['node']} (q={nodes[0]['avg_quality']:.2f})")
+                    lines.append(f"  {t} -> {nodes[0]['node']} (q={nodes[0]['avg_quality']:.2f})")
         if trends:
             lines.append("")
             for t in trends[:3]:
@@ -332,9 +332,9 @@ def main():
         # 1. Analyze routing
         routing = analyze_routing(edb)
         print(f"\n1. Routing: {len(routing)} task types analyzed")
-        for t, nodes in sorted(routing.items(), key=lambda x: (x[0] or "")):
+        for t, nodes in sorted(routing.items()):
             if nodes:
-                print(f"   {t or 'unknown'} -> {nodes[0]['node']} (score={nodes[0]['composite_score']:.3f})")
+                print(f"   {t} -> {nodes[0]['node']} (score={nodes[0]['composite_score']:.3f})")
 
         # 2. Check trends
         trends = analyze_trends(edb)

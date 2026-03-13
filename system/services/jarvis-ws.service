@@ -4,11 +4,12 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/turbo/jarvis
-ExecStart=/home/turbo/jarvis/.venv/bin/python -m python_ws.server
+WorkingDirectory=/home/turbo/jarvis-linux
+ExecStart=/home/turbo/jarvis-linux/.venv/bin/python -m python_ws.server
 Restart=always
 RestartSec=5
-Environment=TURBO=/home/turbo/jarvis
+Environment=TURBO=/home/turbo/jarvis-linux
+Environment=PYTHONPATH=/home/turbo/jarvis-linux
 
 [Install]
 WantedBy=default.target

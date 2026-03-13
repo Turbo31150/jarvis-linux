@@ -37,7 +37,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_DIR = SCRIPT_DIR / "data"
 DB_PATH = DATA_DIR / "cowork_gaps.db"
-from _paths import ETOILE_DB
+ETOILE_DB = Path(r"F:/BUREAU/turbo/data/etoile.db")
 
 # French phonetic similar-sound substitutions
 PHONETIC_SUBS = {

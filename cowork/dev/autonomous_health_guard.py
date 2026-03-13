@@ -10,7 +10,6 @@ Usage:
     python dev/autonomous_health_guard.py --report
 """
 import argparse
-from _paths import ETOILE_DB, JARVIS_DB
 import json
 import os
 import sqlite3
@@ -29,12 +28,12 @@ TELEGRAM_PROXY = "http://127.0.0.1:18800"
 
 # Health components and their weights
 COMPONENTS = {
-    "ws_server": {"weight": 0.20, "url": f"{WS_URL}/api/automation/status"},
+    "ws_server": {"weight": 0.20, "url": f"{WS_URL}/api/status"},
     "ol1": {"weight": 0.15, "url": f"{OL1_URL}/api/tags"},
     "m1": {"weight": 0.15, "url": f"{M1_URL}/api/v1/models"},
     "autonomous_loop": {"weight": 0.20, "url": f"{WS_URL}/api/autonomous/status"},
     "prediction_engine": {"weight": 0.10, "url": f"{WS_URL}/api/predictions/stats"},
-    "event_bus": {"weight": 0.10, "url": f"{WS_URL}/api/eventbus/stats"},
+    "event_bus": {"weight": 0.10, "url": f"{WS_URL}/api/event_bus/stats"},
     "databases": {"weight": 0.10, "check": "db"},
 }
 
@@ -69,8 +68,8 @@ def check_url(url, timeout=5):
 def check_databases():
     """Check integrity of critical databases."""
     dbs = {
-        "etoile": Path(str(ETOILE_DB)),
-        "jarvis": Path(str(JARVIS_DB)),
+        "etoile": Path("F:/BUREAU/turbo/data/etoile.db"),
+        "jarvis": Path("F:/BUREAU/turbo/data/jarvis.db"),
     }
     results = {}
     for name, path in dbs.items():

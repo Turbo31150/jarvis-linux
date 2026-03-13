@@ -16,9 +16,9 @@ from pathlib import Path
 
 DEV = Path(__file__).parent
 DB_PATH = DEV / "data" / "cost_tracker.db"
-from _paths import ETOILE_DB
+ETOILE_DB = Path("F:/BUREAU/turbo/data/etoile.db")
 COST_RATES = {
-    "glm-4.7": 0.0001,
+    "gpt-oss:120b": 0.0003, "devstral-2:123b": 0.0002, "glm-4.7": 0.0001,
     "qwen3-coder:480b": 0.0004, "minimax-m2.5": 0.0001, "kimi-k2.5": 0.0002,
 }
 DAILY_BUDGET = 5.0

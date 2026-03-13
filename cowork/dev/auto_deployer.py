@@ -13,7 +13,7 @@ import time
 from pathlib import Path
 
 DB_PATH = Path(__file__).parent / "deployer.db"
-from _paths import TURBO_DIR as TURBO
+TURBO = Path("F:/BUREAU/turbo")
 
 def init_db():
     db = sqlite3.connect(str(DB_PATH))
@@ -124,9 +124,9 @@ def deploy_pipeline(db, full_tests=False):
 
     # Quick syntax tests
     quick = run_quick_tests()
-    print(f"  Syntax: {quick['passed']} OK {quick['failed']} FAIL")
+    print(f"  Syntax: {quick['passed']}✓ {quick['failed']}✗")
     for err in quick["errors"]:
-        print(f"    FAIL: {err}")
+        print(f"    ✗ {err}")
 
     if quick["failed"] > 0:
         db.execute(

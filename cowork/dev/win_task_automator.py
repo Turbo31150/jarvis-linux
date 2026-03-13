@@ -15,7 +15,7 @@ Templates (pre-filled command strings) are provided for common JARVIS services:
   * Backup health check
 
 Typical usage:
-  python win_task_automator.py --create "JARVIS_LM_Studio" /TR "C:/Program Files/LMStudio/lmstudio.exe" /SC DAILY /ST 09:00
+  python win_task_automator.py --create "JARVIS_LM_Studio" /TR "C:\\Program Files\\LMStudio\\lmstudio.exe" /SC DAILY /ST 09:00
   python win_task_automator.py --list
 
 The script only uses the Python standard library (subprocess, argparse, json, os, sys).
@@ -25,12 +25,7 @@ import argparse, subprocess, json, os, sys
 
 JARVIS_TAG = "[JARVIS]"
 
-ALLOWED_COMMANDS = {"schtasks", "whoami"}
-
 def run_cmd(cmd):
-    base = cmd.split()[0].lower() if cmd.strip() else ""
-    if base not in ALLOWED_COMMANDS:
-        return "", f"Blocked: {base} not in allowed commands", 1
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     return result.stdout.strip(), result.stderr.strip(), result.returncode
 

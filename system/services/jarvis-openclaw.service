@@ -1,11 +1,15 @@
 [Unit]
-Description=OpenClaw Engine
+Description=OpenClaw Gateway (LM Studio local)
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/node /home/turbo/jarvis-m1-ops/openclaw/openclaw.mjs
-WorkingDirectory=/home/turbo/jarvis-m1-ops/openclaw
+Type=simple
+WorkingDirectory=/home/turbo
+Environment=HOME=/home/turbo
+Environment=OPENCLAW_STATE_DIR=/home/turbo/.openclaw
+ExecStart=/usr/bin/openclaw gateway --port 18790
 Restart=always
+RestartSec=5
 
 [Install]
 WantedBy=default.target

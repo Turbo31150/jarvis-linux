@@ -13,7 +13,7 @@ import time
 from pathlib import Path
 
 DB_PATH = Path(__file__).parent / "night_ops.db"
-from _paths import TURBO_DIR as TURBO
+TURBO = Path("F:/BUREAU/turbo")
 
 def init_db():
     db = sqlite3.connect(str(DB_PATH))

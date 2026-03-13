@@ -27,18 +27,13 @@ import urllib.parse
 import urllib.request
 from datetime import datetime
 from pathlib import Path
-from _paths import TELEGRAM_TOKEN, TELEGRAM_CHAT
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-TURBO_ROOT = SCRIPT_DIR.parent.parent
 DATA_DIR = SCRIPT_DIR / "data"
 DB_PATH = DATA_DIR / "cowork_gaps.db"
 
-# TELEGRAM_TOKEN loaded from _paths (.env)
-TELEGRAM_CHAT_ID = TELEGRAM_CHAT
-
-def _alerts_enabled():
-    return not (TURBO_ROOT / "data" / ".trading_alerts_off").exists()
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT_ID = "2010747443"
 
 MEXC_TICKER_URL = "https://api.mexc.com/api/v3/ticker/24hr"
 
@@ -93,9 +88,7 @@ def fetch_price(pair):
 
 
 def send_telegram(text):
-    """Send message to Telegram. Respects global alert flag."""
-    if not _alerts_enabled():
-        return 0
+    """Send message to Telegram."""
     data = urllib.parse.urlencode({
         "chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML"
     }).encode()

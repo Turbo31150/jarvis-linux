@@ -26,7 +26,7 @@ from datetime import datetime
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-from _paths import ETOILE_DB
+ETOILE_DB = Path("F:/BUREAU/turbo/data/etoile.db")
 GAPS_DB = SCRIPT_DIR / "data" / "cowork_gaps.db"
 
 TESTS = []

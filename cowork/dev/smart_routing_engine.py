@@ -29,7 +29,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_DIR = SCRIPT_DIR / "data"
 GAPS_DB = DATA_DIR / "cowork_gaps.db"
-from _paths import ETOILE_DB
+ETOILE_DB = Path("F:/BUREAU/turbo/data/etoile.db")
 
 # Circuit breaker thresholds
 CB_FAIL_THRESHOLD = 3      # Open circuit after N consecutive fails
@@ -37,19 +37,19 @@ CB_RECOVERY_TIME_S = 300   # Try again after 5 minutes
 
 # Node capabilities
 NODE_CAPABILITIES = {
-    "M1":       {"speed": "fast", "reasoning": True, "code": True, "max_ctx": 32768},
-    "M2":       {"speed": "slow", "reasoning": True, "code": True, "max_ctx": 27000},
-    "M3":       {"speed": "slow", "reasoning": True, "code": True, "max_ctx": 25000},
-    "OL1":      {"speed": "fast", "reasoning": False, "code": False, "max_ctx": 8192},
+    "M1":  {"speed": "fast", "reasoning": True, "code": True, "max_ctx": 32768},
+    "M2":  {"speed": "slow", "reasoning": True, "code": True, "max_ctx": 27000},
+    "M3":  {"speed": "slow", "reasoning": True, "code": True, "max_ctx": 25000},
+    "OL1": {"speed": "fast", "reasoning": False, "code": False, "max_ctx": 8192},
 }
 
 # Default routing (used when no learned data)
 DEFAULT_ROUTES = {
     "simple":       ["OL1", "M1"],
-    "code":         ["M1", "OL1", "M2"],
-    "analysis":     ["M1", "OL1", "M2"],
-    "math":         ["M1", "OL1"],           # M2/M3 too slow for math
-    "reasoning":    ["M1", "M2", "M3"],      # M2/M3 ok for deep reasoning
+    "code":         ["M1", "OL1"],
+    "analysis":     ["M1", "OL1"],
+    "math":         ["M1", "OL1"],
+    "reasoning":    ["M1", "M2", "M3"],
     "trading":      ["M1", "OL1"],
     "system":       ["OL1", "M1"],
     "creative":     ["M1", "OL1"],

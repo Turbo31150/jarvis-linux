@@ -14,7 +14,7 @@ Fonctionnalités :
   - Seuils statiques : CPU>90 %, RAM>85 %, GPU Temp>80 °C, disque libre <10 GB.
   - Déviation standard (z‑score) : |z|>2 pour chaque métrique (calculé sur l’historique stocké).
 * Alertes :
-  - Telegram (token/chat from .env via _paths, chat 2010747443)
+  - Telegram (bot token `TELEGRAM_TOKEN_REDACTED`, chat 2010747443)
   - Toast Windows via le script existant `win_notify.py` (appelé avec le texte).
 * CLI :
   --once   : collecte unique + détection.
@@ -44,8 +44,8 @@ if hasattr(sys.stderr, "reconfigure"):
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
-from _paths import TELEGRAM_TOKEN, TELEGRAM_CHAT
-TELEGRAM_CHAT_ID = TELEGRAM_CHAT
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT_ID = "2010747443"
 DB_PATH = Path(__file__).with_name("anomalies.db")
 
 THRESHOLDS = {
@@ -70,7 +70,7 @@ def get_cpu_percent() -> float:
         # Fallback: PowerShell Get-Counter
         try:
             out = subprocess.check_output(
-                ["powershell", "-Command", "(Get-Counter '/Processor(_Total)/% Processor Time').CounterSamples[0].CookedValue"],
+                ["powershell", "-Command", "(Get-Counter '\\Processor(_Total)\\% Processor Time').CounterSamples[0].CookedValue"],
                 text=True,
             )
             return float(out.strip())
@@ -87,7 +87,7 @@ def get_ram_percent() -> float:
     except Exception:
         try:
             out = subprocess.check_output(
-                ["powershell", "-Command", "(Get-Counter '/Memory/% Committed Bytes In Use').CounterSamples[0].CookedValue"],
+                ["powershell", "-Command", "(Get-Counter '\\Memory\\% Committed Bytes In Use').CounterSamples[0].CookedValue"],
                 text=True,
             )
             return float(out.strip())
@@ -230,8 +230,8 @@ def collect_and_store(conn: sqlite3.Connection):
     cpu = get_cpu_percent()
     ram = get_ram_percent()
     gpu_temp = get_gpu_temperature()
-    disk_c = get_disk_free_gb("C:/")
-    disk_f = get_disk_free_gb("F:/")
+    disk_c = get_disk_free_gb("C:\\")
+    disk_f = get_disk_free_gb("F:\\")
     insert_measure(conn, ts, cpu, ram, gpu_temp, disk_c, disk_f)
     return {
         "cpu": cpu,

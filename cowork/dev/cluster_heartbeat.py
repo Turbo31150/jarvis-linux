@@ -26,14 +26,13 @@ import time
 import urllib.request
 from datetime import datetime
 from pathlib import Path
-from _paths import TELEGRAM_TOKEN, TELEGRAM_CHAT
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_DIR = SCRIPT_DIR / "data"
 DB_PATH = DATA_DIR / "cowork_gaps.db"
 
-# TELEGRAM_TOKEN loaded from _paths (.env)
-TELEGRAM_CHAT_ID = TELEGRAM_CHAT
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT_ID = "2010747443"
 
 NODES = {
     "M1": {"url": "http://127.0.0.1:1234/api/v1/models", "type": "lmstudio"},

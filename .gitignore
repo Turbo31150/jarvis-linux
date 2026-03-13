@@ -94,3 +94,4 @@ data/browser_profile/
 *.db.bak_corrupt
 *.db.corrupt_*
 data/improvement_*
+*.pt

@@ -13,7 +13,28 @@ from src.commands import (
     JarvisCommand, APP_PATHS, SITE_ALIASES,
     match_command, correct_voice_text, format_commands_help,
 )
-from src.windows import run_powershell
+import platform
+import shutil
+
+
+def _run_open(target: str, timeout: int = 10) -> dict[str, Any]:
+    """Open a URL or application using the platform-appropriate command."""
+    if platform.system() == "Linux":
+        opener = shutil.which("xdg-open") or "xdg-open"
+    elif platform.system() == "Darwin":
+        opener = "open"
+    else:
+        # Windows fallback
+        try:
+            from src.windows import run_powershell
+            return run_powershell(f"Start-Process '{target}'", timeout=timeout)
+        except Exception as e:
+            return {"success": False, "stdout": "", "stderr": str(e)}
+    try:
+        r = subprocess.run([opener, target], capture_output=True, text=True, timeout=timeout)
+        return {"success": r.returncode == 0, "stdout": r.stdout, "stderr": r.stderr}
+    except Exception as e:
+        return {"success": False, "stdout": "", "stderr": str(e)}
 from src.config import SCRIPTS
 from src.signal_formatter import parse_sniper_json, format_telegram_signals, format_chat_signals
 
@@ -36,16 +57,15 @@ async def execute_command(cmd: JarvisCommand, params: dict[str, str]) -> str:
             for k, v in params.items():
                 app_name = app_name.replace(f"{{{k}}}", v)
         resolved = APP_PATHS.get(app_name.lower(), app_name)
-        safe_resolved = resolved.replace("'", "''")
-        result = run_powershell(f"Start-Process '{safe_resolved}'", timeout=10)
+        result = _run_open(resolved)
         if result["success"]:
             return f"Application {app_name} ouverte."
         else:
             return f"Impossible d'ouvrir {app_name}: {result['stderr']}"
 
     if cmd.action_type == "ms_settings":
-        uri = cmd.action.replace("'", "''")
-        result = run_powershell(f"Start-Process '{uri}'", timeout=10)
+        uri = cmd.action
+        result = _run_open(uri)
         if result["success"]:
             return f"Parametres ouverts: {uri}"
         else:
@@ -67,8 +87,7 @@ async def execute_command(cmd: JarvisCommand, params: dict[str, str]) -> str:
             url = SITE_ALIASES.get(url.lower(), url)
             if not url.startswith("http"):
                 url = f"https://{url}"
-            safe_url = url.replace("'", "''")
-            result = run_powershell(f"Start-Process chrome '{safe_url}'", timeout=10)
+            result = _run_open(url)
             if result["success"]:
                 return f"Navigation vers {url}."
             else:
@@ -78,23 +97,26 @@ async def execute_command(cmd: JarvisCommand, params: dict[str, str]) -> str:
             query = action[len("search:"):]
             from urllib.parse import quote_plus
             url = f"https://www.google.com/search?q={quote_plus(query)}"
-            safe_url = url.replace("'", "''")
-            result = run_powershell(f"Start-Process chrome '{safe_url}'", timeout=10)
+            result = _run_open(url)
             if result["success"]:
                 return f"Recherche Google: {query}."
             else:
                 return f"Erreur recherche: {result['stderr']}"
 
     if cmd.action_type == "powershell":
+        # Sur Linux, executer via bash au lieu de powershell
         action = cmd.action
         for k, v in params.items():
-            action = action.replace(f"{{{k}}}", v.replace("'", "''"))
-        result = run_powershell(action, timeout=30)
-        if result["success"]:
-            output = result["stdout"][:200] if result["stdout"] else "OK"
-            return f"Commande executee. {output}"
-        else:
-            return f"Erreur: {result['stderr'][:200]}"
+            action = action.replace(f"{{{k}}}", v)
+        try:
+            r = subprocess.run(["bash", "-c", action], capture_output=True, text=True, timeout=30)
+            if r.returncode == 0:
+                output = r.stdout[:200] if r.stdout else "OK"
+                return f"Commande executee. {output}"
+            else:
+                return f"Erreur: {r.stderr[:200]}"
+        except Exception as e:
+            return f"Erreur: {e}"
 
     if cmd.action_type == "script":
         import sys

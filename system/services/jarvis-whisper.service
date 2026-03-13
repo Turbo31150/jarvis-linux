@@ -1,11 +1,14 @@
 [Unit]
-Description=Whisper-Flow WebSocket Server
-After=docker.service
+Description=JARVIS WhisperFlow Backend
+After=network.target
 
 [Service]
-ExecStart=/usr/bin/docker compose -f /home/turbo/jarvis-m1-ops/whisper_streaming_web/docker-compose.yml up
-WorkingDirectory=/home/turbo/jarvis-m1-ops/whisper_streaming_web
+Type=simple
+WorkingDirectory=/home/turbo/jarvis-linux
+Environment=PYTHONPATH=/home/turbo/jarvis-linux
+ExecStart=/home/turbo/jarvis-linux/.venv/bin/python -m uvicorn python_ws.server:app --host 127.0.0.1 --port 9742
 Restart=always
+RestartSec=5
 
 [Install]
 WantedBy=default.target

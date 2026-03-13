@@ -23,7 +23,6 @@ Usage :
 """
 
 import argparse
-from _paths import TURBO_DIR, TELEGRAM_TOKEN, TELEGRAM_CHAT
 import json
 import os
 import re
@@ -32,10 +31,10 @@ import sys
 import time
 import urllib.request
 
-TURBO_ROOT = str(TURBO_DIR)
+TURBO_ROOT = "F:/BUREAU/turbo"
 PROXY_URL = "http://127.0.0.1:18800"
-# TELEGRAM_TOKEN loaded from _paths (.env)
-# TELEGRAM_CHAT loaded from _paths (.env)
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT = "2010747443"
 TASK_FILE = os.path.join(os.path.dirname(__file__), "AUTONOMY_TASKS.json")
 
 # Categories de taches avec priorite
@@ -64,7 +63,7 @@ def scan_s():
                         for marker in ("", "FIXME", "STUB", "HACK", "XXX"):
                             if marker in line and not line.strip().startswith("#!"):
                                 s.append({
-                                    "file": fpath.replace("/", "/"),
+                                    "file": fpath.replace("\\", "/"),
                                     "line": i,
                                     "marker": marker,
                                     "text": line.strip()[:120],
@@ -88,7 +87,7 @@ def scan_stubs():
                 # Find functions with just pass or NotImplementedError
                 for m in re.finditer(r'def (\w+)\(.*?\).*?:\s*\n\s*(""".*?"""\s*\n\s*)?(pass|raise NotImplementedError)', content, re.DOTALL):
                     stubs.append({
-                        "file": fpath.replace("/", "/"),
+                        "file": fpath.replace("\\", "/"),
                         "function": m.group(1),
                         "type": "stub",
                     })

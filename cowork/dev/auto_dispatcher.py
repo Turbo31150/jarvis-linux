@@ -6,7 +6,7 @@ Features:
 - CLI: --start, --stop, --status, --config <path>
 - SQLite DB at dev/data/dispatcher.db (tables: tasks, runs, nodes)
 - Simple routing based on intent, load, thermal (mocked).
-- Priority order: M1 (qwen3-8b), M2 (deepseek-r1), OL1, M3.
+- Priority order: gpt-oss (M1), devstral (M2), OL1, M3.
 - Config JSON defines node endpoints and thermal limits.
 - Uses only Python stdlib (argparse, json, sqlite3, threading, time, logging, pathlib)
 """
@@ -23,7 +23,7 @@ from typing import Dict, Any, List
 DB_PATH = Path(__file__).parent.parent / "data" / "dispatcher.db"
 DEFAULT_CONFIG = {
     "nodes": {
-        "M1": {"endpoint": "http://127.0.0.1:1234/v1/chat/completions", "thermal_limit": 85},
+        "M1": {"endpoint": "http://10.5.0.2:1234/v1/chat/completions", "thermal_limit": 85},
         "M2": {"endpoint": "http://192.168.1.26:1234/v1/chat/completions", "thermal_limit": 80},
         "OL1": {"endpoint": "http://127.0.0.1:11434/api/chat", "thermal_limit": 90},
         "M3": {"endpoint": "http://192.168.1.113:1234/v1/chat/completions", "thermal_limit": 80},

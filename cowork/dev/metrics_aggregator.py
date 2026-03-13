@@ -31,11 +31,11 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_DIR = SCRIPT_DIR / "data"
 GAPS_DB = DATA_DIR / "cowork_gaps.db"
-from _paths import ETOILE_DB, TELEGRAM_TOKEN, TELEGRAM_CHAT
-from _paths import JARVIS_DB
+ETOILE_DB = Path("F:/BUREAU/turbo/data/etoile.db")
+JARVIS_DB = Path("F:/BUREAU/turbo/data/jarvis.db")
 
-# TELEGRAM_TOKEN loaded from _paths (.env)
-TELEGRAM_CHAT_ID = TELEGRAM_CHAT
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT_ID = "2010747443"
 
 
 def get_db(path, timeout=10):
@@ -214,10 +214,10 @@ def collect_infra_metrics():
             import ctypes
             free = ctypes.c_ulonglong()
             ctypes.windll.kernel32.GetDiskFreeSpaceExW(
-                "F:/", None, None, ctypes.pointer(free))
+                "F:\\", None, None, ctypes.pointer(free))
             metrics["disk_f_free_gb"] = round(free.value / (1024**3), 1)
             ctypes.windll.kernel32.GetDiskFreeSpaceExW(
-                "C:/", None, None, ctypes.pointer(free))
+                "C:\\", None, None, ctypes.pointer(free))
             metrics["disk_c_free_gb"] = round(free.value / (1024**3), 1)
     except Exception:
         pass

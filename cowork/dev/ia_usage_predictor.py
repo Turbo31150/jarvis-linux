@@ -21,7 +21,7 @@ from pathlib import Path
 
 DEV = Path(__file__).parent
 DB_PATH = DEV / "data" / "usage_predictor.db"
-from _paths import ETOILE_DB
+ETOILE_DB = Path("F:/BUREAU/turbo/data/etoile.db")
 
 
 def init_db():
@@ -83,7 +83,7 @@ def predict_next_hours(hourly, n=6):
 
         # Determine recommended models
         if load > 20:
-            models = ["qwen3-8b", "deepseek-r1-0528-qwen3-8b", "qwen3:1.7b"]
+            models = ["qwen3-8b", "gpt-oss:120b", "devstral-2:123b"]
             level = "high"
         elif load > 5:
             models = ["qwen3-8b", "qwen3:14b"]

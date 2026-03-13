@@ -12,7 +12,7 @@ import hashlib
 from pathlib import Path
 
 DB_PATH = Path(__file__).parent / "conversation_memory.db"
-from _paths import TURBO_DIR as TURBO
+TURBO = Path("F:/BUREAU/turbo")
 
 def init_db():
     db = sqlite3.connect(str(DB_PATH))
@@ -101,7 +101,7 @@ def init_user_profile(db):
         "language": "fr",
         "ai_name": "JARVIS",
         "voice": "fr-FR-DeniseNeural",
-        "workspace": "F:/BUREAU/turbo",
+        "workspace": "F:\\BUREAU\\turbo",
         "gpu_count": "10",
         "cluster_nodes": "M1,M2,M3,OL1",
         "trading_pairs": "BTC,ETH,SOL,SUI,PEPE,DOGE,XRP,ADA,AVAX,LINK",

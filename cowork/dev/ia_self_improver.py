@@ -19,7 +19,6 @@ Usage :
 """
 
 import argparse
-from _paths import TURBO_DIR, TELEGRAM_TOKEN, TELEGRAM_CHAT
 import json
 import os
 import sqlite3
@@ -27,11 +26,11 @@ import sys
 import time
 import urllib.request
 
-TURBO_ROOT = str(TURBO_DIR)
+TURBO_ROOT = "F:/BUREAU/turbo"
 PROXY_URL = "http://127.0.0.1:18800"
 DB_PATH = os.path.join(TURBO_ROOT, "data", "etoile.db")
-# TELEGRAM_TOKEN loaded from _paths (.env)
-# TELEGRAM_CHAT loaded from _paths (.env)
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT = "2010747443"
 REPORT_FILE = os.path.join(os.path.dirname(__file__), "SELF_IMPROVE_REPORT.json")
 
 

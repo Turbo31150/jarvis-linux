@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """JARVIS Usage Analytics — Analytics d'utilisation du systeme."""
 import json, sys, os, sqlite3, glob
-from _paths import JARVIS_DB
 from datetime import datetime
 from collections import Counter
 
 ANALYTICS_DB = "C:/Users/franc/.openclaw/workspace/dev/analytics.db"
-JARVIS_DB = str(JARVIS_DB)
+JARVIS_DB = "F:/BUREAU/turbo/data/jarvis.db"
 LOG_DIR = os.path.expandvars(r"%USERPROFILE%\.openclaw\agents\main\logs")
 SESSION_DIR = os.path.expandvars(r"%USERPROFILE%\.openclaw\agents\main\sessions")
 

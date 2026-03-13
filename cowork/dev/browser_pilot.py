@@ -38,7 +38,7 @@ CDP_PORT = 9222
 CDP_URL = f"http://127.0.0.1:{CDP_PORT}"
 COMET_PATHS = [
     os.path.expandvars(r"%LOCALAPPDATA%\Perplexity\Comet\Application\comet.exe"),
-    r"/home/turbo\AppData\Local\Perplexity\Comet\Application\comet.exe",
+    r"C:\Users\franc\AppData\Local\Perplexity\Comet\Application\comet.exe",
 ]
 CHROME_PATHS = [
     r"C:\Program Files\Google\Chrome\Application\chrome.exe",
@@ -268,7 +268,7 @@ def click_text(text: str):
 def type_text(text: str):
     """Tape du texte dans l'element actif."""
     # Escape for JS
-    escaped = text.replace("/", "//").replace("'", "/'").replace("\n", "/n")
+    escaped = text.replace("\\", "\\\\").replace("'", "\\'").replace("\n", "\\n")
     js = f"""
     var el = document.activeElement;
     if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.contentEditable === 'true')) {{

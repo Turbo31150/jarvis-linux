@@ -4,12 +4,12 @@ After=network.target jarvis-ws.service
 
 [Service]
 Type=simple
-WorkingDirectory=/home/turbo/jarvis
-ExecStart=/home/turbo/jarvis/.venv/bin/python -m scripts.openclaw_watchdog
+WorkingDirectory=/home/turbo/jarvis-linux
+ExecStart=/home/turbo/jarvis-linux/.venv/bin/python -m scripts.openclaw_watchdog
 Restart=always
 RestartSec=60
-Environment=TURBO=/home/turbo/jarvis
-Environment=TURBO_DIR=/home/turbo/jarvis
+Environment=TURBO=/home/turbo/jarvis-linux
+Environment=TURBO_DIR=/home/turbo/jarvis-linux
 
 [Install]
 WantedBy=default.target

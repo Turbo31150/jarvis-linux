@@ -3,10 +3,13 @@ Description=JARVIS Jarvis-proxy
 After=network.target
 
 [Service]
-ExecStart=/home/turbo/jarvis-m1-ops/scripts/jarvis-boot.sh proxy
-WorkingDirectory=/home/turbo/jarvis-m1-ops
+Type=simple
+WorkingDirectory=/home/turbo/jarvis-linux/canvas
+ExecStart=/usr/bin/node /home/turbo/jarvis-linux/canvas/direct-proxy.js
 Restart=always
 RestartSec=5
+Environment=TURBO=/home/turbo/jarvis-linux
+Environment=TURBO_DIR=/home/turbo/jarvis-linux
 StandardOutput=journal
 StandardError=journal
 

@@ -1,29 +1,28 @@
 #!/usr/bin/env python3
 """JARVIS Win Backup — Backup automatique fichiers importants."""
 import json, sys, os, shutil, zipfile
-from _paths import TURBO_DIR, ETOILE_DB, JARVIS_DB, SNIPER_DB, TELEGRAM_TOKEN, TELEGRAM_CHAT
 from datetime import datetime
 
-# TELEGRAM_TOKEN loaded from _paths (.env)
-# TELEGRAM_CHAT loaded from _paths (.env)
-BACKUP_DIR = str(TURBO_DIR / "backups_auto")
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT = "2010747443"
+BACKUP_DIR = "F:/BACKUP_JARVIS"
 
 TARGETS = {
     "configs": [
         "C:/Users/franc/.claude/CLAUDE.md",
         "C:/Users/franc/.openclaw/openclaw.json",
-        str(TURBO_DIR / "pyproject.toml"),
-        str(TURBO_DIR / ".env"),
+        "F:/BUREAU/turbo/pyproject.toml",
+        "F:/BUREAU/turbo/.env",
     ],
     "databases": [
-        str(ETOILE_DB),
-        str(JARVIS_DB),
-        str(SNIPER_DB),
-        str(TURBO_DIR / "finetuning" / "finetuning.db"),
+        "F:/BUREAU/etoile.db",
+        "F:/BUREAU/turbo/data/jarvis.db",
+        "F:/BUREAU/turbo/data/sniper.db",
+        "F:/BUREAU/turbo/finetuning/finetuning.db",
     ],
     "scripts": [
         "C:/Users/franc/.openclaw/workspace/dev/",
-        str(TURBO_DIR / "scripts/"),
+        "F:/BUREAU/turbo/scripts/",
     ],
     "workspace": [
         "C:/Users/franc/.openclaw/workspace/TOOLS.md",
@@ -54,7 +53,7 @@ def backup_files():
             path = path.replace("/", os.sep)
             try:
                 if os.path.isdir(path):
-                    dest = os.path.join(cat_dir, os.path.basename(path.rstrip("//")))
+                    dest = os.path.join(cat_dir, os.path.basename(path.rstrip("/\\")))
                     shutil.copytree(path, dest, dirs_exist_ok=True)
                     stats["dirs"] += 1
                 elif os.path.isfile(path):

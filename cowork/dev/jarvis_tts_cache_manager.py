@@ -10,7 +10,6 @@ Usage:
     python dev/jarvis_tts_cache_manager.py --benchmark
 """
 import argparse
-from _paths import TURBO_DIR, DATA_DIR
 import json
 import os
 import sqlite3
@@ -21,8 +20,8 @@ from pathlib import Path
 DEV = Path(__file__).parent
 DB_PATH = DEV / "data" / "tts_cache_manager.db"
 TTS_CACHE_DIRS = [
-    TURBO_DIR / "data/tts_cache",
-    TURBO_DIR / "cache/tts",
+    Path("F:/BUREAU/turbo/data/tts_cache"),
+    Path("F:/BUREAU/turbo/cache/tts"),
     Path.home() / "AppData" / "Local" / "Temp" / "tts_cache",
 ]
 MAX_CACHE_MB = 500

@@ -26,7 +26,7 @@ def init_db():
         rounds INTEGER DEFAULT 3,
         pro_model TEXT DEFAULT 'M1',
         contra_model TEXT DEFAULT 'OL1',
-        judge_model TEXT DEFAULT 'M1',
+        judge_model TEXT DEFAULT 'gpt-oss',
         status TEXT DEFAULT 'pending',
         winner TEXT,
         pro_score REAL,
@@ -52,7 +52,7 @@ def query_m1(prompt):
     """Query M1 via curl."""
     payload = json.dumps({
         "model": "qwen3-8b",
-        "input": f"/nothink/n{prompt}",
+        "input": f"/nothink\\n{prompt}",
         "temperature": 0.4,
         "max_output_tokens": 1024,
         "stream": False,
@@ -100,9 +100,9 @@ def query_ol1(prompt):
         return None, 0
 
 def query_gptoss(prompt):
-    """Query M1 qwen3-8b via LM Studio."""
+    """Query gpt-oss:120b cloud via OL1."""
     payload = json.dumps({
-        "model": "qwen3-8b",
+        "model": "gpt-oss:120b-cloud",
         "messages": [{"role": "user", "content": prompt}],
         "stream": False,
         "think": False
@@ -159,7 +159,7 @@ def do_debate(topic, rounds=3):
         results["rounds"].append(round_data)
         db.commit()
 
-    # Judge (M1 primary)
+    # Judge (gpt-oss or M1 fallback)
     all_args = ""
     for rd in results["rounds"]:
         pro_arg = rd.get("pro", {}).get("argument", "N/A")

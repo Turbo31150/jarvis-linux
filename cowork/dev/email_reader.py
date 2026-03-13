@@ -3,7 +3,6 @@
 import json, sys, os, imaplib, email, sqlite3
 from email.header import decode_header
 from datetime import datetime
-from _paths import TELEGRAM_TOKEN, TELEGRAM_CHAT
 
 DB_PATH = "C:/Users/franc/.openclaw/workspace/dev/emails.db"
 CONFIG_PATH = "C:/Users/franc/.openclaw/workspace/dev/email_config.json"
@@ -142,7 +141,7 @@ def format_email_telegram(emails):
 
 def send_telegram(msg):
     import urllib.request
-    token = "{TELEGRAM_TOKEN}"
+    token = "TELEGRAM_TOKEN_REDACTED"
     url = f"https://api.telegram.org/bot{token}/sendMessage"
     data = json.dumps({"chat_id": "2010747443", "text": msg[:4000], "parse_mode": "Markdown"}).encode()
     try:

@@ -2,10 +2,9 @@
 """JARVIS Win Optimizer — Nettoyage et optimisation Windows."""
 import json, sys, os, subprocess, shutil
 from datetime import datetime
-from _paths import TELEGRAM_TOKEN, TELEGRAM_CHAT
 
-# TELEGRAM_TOKEN loaded from _paths (.env)
-# TELEGRAM_CHAT loaded from _paths (.env)
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT = "2010747443"
 LOG_FILE = "C:/Users/franc/.openclaw/workspace/dev/optimizer_log.json"
 
 TEMP_DIRS = [

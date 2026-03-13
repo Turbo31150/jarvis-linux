@@ -14,10 +14,9 @@ import json
 import subprocess
 import sys
 from typing import List
-from _paths import TELEGRAM_TOKEN, TELEGRAM_CHAT
 
-# TELEGRAM_TOKEN loaded from _paths (.env)
-TELEGRAM_CHAT_ID = TELEGRAM_CHAT
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT_ID = "2010747443"
 
 def telegram_send(msg: str):
     import urllib.parse, urllib.request
@@ -90,7 +89,7 @@ def list_restore_points():
 # ---------------------------------------------------------------------------
 def show_info():
     # Protection status
-    status = ps("Get-ItemProperty 'HKLM:/SOFTWARE/Microsoft/Windows NT/CurrentVersion/SystemRestore' -Name RPSessionInterval -ErrorAction SilentlyContinue | Select-Object -ExpandProperty RPSessionInterval")
+    status = ps("Get-ItemProperty 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\SystemRestore' -Name RPSessionInterval -ErrorAction SilentlyContinue | Select-Object -ExpandProperty RPSessionInterval")
     enabled = ps("(Get-ComputerRestorePoint -ErrorAction SilentlyContinue) -ne $null")
 
     # Disk usage
@@ -99,7 +98,7 @@ def show_info():
     print("=== Restauration système Windows ===")
 
     # Check if protection is enabled
-    protection = ps("Get-ItemProperty 'HKLM:/SOFTWARE/Microsoft/Windows NT/CurrentVersion/SystemRestore' -ErrorAction SilentlyContinue | Select-Object RPSessionInterval,DisableSR | ConvertTo-Json -Compress")
+    protection = ps("Get-ItemProperty 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\SystemRestore' -ErrorAction SilentlyContinue | Select-Object RPSessionInterval,DisableSR | ConvertTo-Json -Compress")
     if protection:
         try:
             data = json.loads(protection)

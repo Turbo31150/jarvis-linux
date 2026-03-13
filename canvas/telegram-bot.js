@@ -45,29 +45,36 @@ function setCache(text, result) {
 
 // Charge .env manuellement (pas de dépendance dotenv)
 function loadEnv() {
-  const envPath = path.join(__dirname, '..', '.env');
-  if (!fs.existsSync(envPath)) return;
-  for (const line of fs.readFileSync(envPath, 'utf-8').split('\n')) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#')) continue;
-    const eq = trimmed.indexOf('=');
-    if (eq < 0) continue;
-    const key = trimmed.slice(0, eq).trim();
-    const val = trimmed.slice(eq + 1).trim();
-    if (!process.env[key]) process.env[key] = val;
+  const envCandidates = [
+    path.join(__dirname, '.env'),
+    path.join(__dirname, '..', '.env'),
+  ];
+  for (const envPath of envCandidates) {
+    if (!fs.existsSync(envPath)) continue;
+    for (const line of fs.readFileSync(envPath, 'utf-8').split('\n')) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      const eq = trimmed.indexOf('=');
+      if (eq < 0) continue;
+      const key = trimmed.slice(0, eq).trim();
+      const val = trimmed.slice(eq + 1).trim();
+      if (!process.env[key]) process.env[key] = val;
+    }
+    return;
   }
 }
 loadEnv();
 
 const TOKEN = process.env.TELEGRAM_TOKEN;
 const CHAT_ID = process.env.TELEGRAM_CHAT;
-const PROXY_URL = 'http://127.0.0.1:18800';
+const PROXY_URL = process.env.PROXY_URL || 'http://host.docker.internal:18800';
 const POLL_TIMEOUT = 30; // secondes (long polling Telegram)
 const MAX_MSG_LEN = 4096; // limite Telegram
 const RECONNECT_DELAY = 5000; // ms avant retry si proxy down
-const TTS_SCRIPT = 'F:/BUREAU/turbo/cowork/dev/win_tts.py';
-const VENV_PYTHON = 'F:/BUREAU/turbo/.venv/Scripts/python.exe';
-const VOICE_MODE = false; // Texte uniquement — WhisperFlow gère le vocal séparément
+const PYTHON_BIN = process.env.PYTHON_BIN || 'python3';
+const TTS_SCRIPT = process.env.JARVIS_TTS_SCRIPT || path.join(__dirname, '..', 'scripts', 'jarvis-tts.sh');
+const VENV_PYTHON = process.env.VENV_PYTHON || PYTHON_BIN;
+const VOICE_MODE = true; // Reponses vocales activees via TTS
 const CLUSTER_RACE = true; // Utiliser tout le cluster en parallèle
 const ALERTS_FLAG_FILE = path.join(__dirname, '..', 'data', '.trading_alerts_off');
 let TRADING_ALERTS = !fs.existsSync(ALERTS_FLAG_FILE); // Lit le flag persistant au demarrage
@@ -75,8 +82,8 @@ let TRADING_ALERTS = !fs.existsSync(ALERTS_FLAG_FILE); // Lit le flag persistant
 // ─── Cluster nodes (direct, sans passer par le proxy) ─────────────────────────
 // RACE nodes — only fast, reliable nodes (M2 degraded, M3 too slow for race)
 const CLUSTER_NODES = [
-  { id: 'M1', url: 'http://127.0.0.1:1234/v1/chat/completions', model: 'qwen3-8b', weight: 1.9, timeout: 15000, maxTokens: 512 },
-  { id: 'OL1', url: 'http://127.0.0.1:11434/api/chat', model: 'qwen3:1.7b', isOllama: true, weight: 1.4, timeout: 8000, maxTokens: 200 },
+  { id: 'M1', url: 'http://host.docker.internal:1234/v1/chat/completions', model: 'qwen3-8b', weight: 1.9, timeout: 15000, maxTokens: 512 },
+  { id: 'OL1', url: 'http://host.docker.internal:11434/api/chat', model: 'qwen3:1.7b', isOllama: true, weight: 1.4, timeout: 8000, maxTokens: 200 },
   { id: 'HF', url: 'https://router.huggingface.co/v1/chat/completions', model: 'Qwen/Qwen3.5-27B', weight: 1.6, timeout: 20000, maxTokens: 512, isCloud: true },
   { id: 'GEMINI', url: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent', model: 'gemini-2.5-flash', isGemini: true, isCloud: true, weight: 1.5, timeout: 25000, maxTokens: 512 },
 ];
@@ -93,13 +100,15 @@ const CLASSIFY_PATTERNS = {
   code: /\b(code|fonction|script|debug|bug|erreur|python|javascript|typescript|rust|class|import|npm|pip|git|commit|api|endpoint|refactor|compile|regex|json|html|css)\b/i,
   trading: /\b(bitcoin|btc|eth|sol|sui|crypto|trading|tendance|cours|marche|futures|signal|scan|long|short|achat|vente|usdt|mexc|binance|funding|whale)\b/i,
   system: /\b(gpu|vram|nvidia|temperature|service|port|process|daemon|restart|boot|disque|ram|cpu|memoire|cluster|noeud|node|modele)\b/i,
-  web: /\b(cherche|recherche|google|internet|actualite|news|meteo|prix|site|url|web)\b/i,
+  web: /\b(cherche|recherche|google|internet|actualite|actualité|news|meteo|météo|mét[ée]o|prix|site|url|web|temps.*demain|temps.*aujourd)\b/i,
 };
 
 function classifyQuery(text) {
   const low = text.toLowerCase();
+  // Also test with accents stripped for robust matching
+  const stripped = low.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   for (const [type, pattern] of Object.entries(CLASSIFY_PATTERNS)) {
-    if (pattern.test(low)) return type;
+    if (pattern.test(low) || pattern.test(stripped)) return type;
   }
   return 'simple';
 }
@@ -419,7 +428,7 @@ async function directClusterHealth() {
         const count = (data.models || []).length;
         results.push({ nodeId: node.id, status: 'online', model: `${node.model} (${count} models)`, latency: Date.now() - start });
       } else if (node.isOllama) {
-        const r = await httpRequest(`http://127.0.0.1:11434/api/tags`, { timeout: 5000 });
+        const r = await httpRequest(`http://host.docker.internal:11434/api/tags`, { timeout: 5000 });
         const data = JSON.parse(r.body);
         const models = (data.models || []).map(m => m.name).join(', ');
         results.push({ nodeId: node.id, status: 'online', model: models || node.model, latency: Date.now() - start });
@@ -607,7 +616,7 @@ async function handleCommand(chatId, cmd, args, isAdmin) {
 
     case '/queue': {
       try {
-        const data = await httpRequest('http://127.0.0.1:9742/api/queue/status', { timeout: 8000 });
+        const data = await httpRequest(`${WS_API}/api/queue/status`, { timeout: 8000 });
         const q = JSON.parse(data.body);
         const bs = q.by_status || {};
         const lines = [
@@ -642,7 +651,7 @@ async function handleCommand(chatId, cmd, args, isAdmin) {
       }
       try {
         const payload = JSON.stringify({ prompt: args.trim(), task_type: 'code', priority: 3 });
-        const data = await httpRequest('http://127.0.0.1:9742/api/queue/enqueue', {
+        const data = await httpRequest(`${WS_API}/api/queue/enqueue`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           timeout: 8000,
@@ -661,10 +670,10 @@ async function handleCommand(chatId, cmd, args, isAdmin) {
     case '/cluster': {
       try {
         const [qData, aData, siData, sgData] = await Promise.allSettled([
-          httpRequest('http://127.0.0.1:9742/api/queue/status', { timeout: 5000 }).then(r => JSON.parse(r.body)),
-          httpRequest('http://127.0.0.1:9742/api/automation/status', { timeout: 5000 }).then(r => JSON.parse(r.body)),
-          httpRequest('http://127.0.0.1:9742/api/self-improve/status', { timeout: 5000 }).then(r => JSON.parse(r.body)),
-          httpRequest('http://127.0.0.1:9742/api/singletons/list', { timeout: 5000 }).then(r => JSON.parse(r.body)),
+          httpRequest(`${WS_API}/api/queue/status`, { timeout: 5000 }).then(r => JSON.parse(r.body)),
+          httpRequest(`${WS_API}/api/automation/status`, { timeout: 5000 }).then(r => JSON.parse(r.body)),
+          httpRequest(`${WS_API}/api/self-improve/status`, { timeout: 5000 }).then(r => JSON.parse(r.body)),
+          httpRequest(`${WS_API}/api/singletons/list`, { timeout: 5000 }).then(r => JSON.parse(r.body)),
         ]);
 
         const lines = ['🏗️ *JARVIS Cluster Cockpit*', ''];
@@ -726,7 +735,7 @@ async function handleCommand(chatId, cmd, args, isAdmin) {
 
     case '/retry': {
       try {
-        const data = await httpRequest('http://127.0.0.1:9742/api/queue/retry', {
+        const data = await httpRequest(`${WS_API}/api/queue/retry`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           timeout: 8000,
@@ -747,7 +756,7 @@ async function handleCommand(chatId, cmd, args, isAdmin) {
       }
       try {
         const payload = JSON.stringify({ task_id: args.trim() });
-        const data = await httpRequest('http://127.0.0.1:9742/api/queue/cancel', {
+        const data = await httpRequest(`${WS_API}/api/queue/cancel`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           timeout: 8000,
@@ -811,7 +820,7 @@ async function handleCommand(chatId, cmd, args, isAdmin) {
         } catch { /* ignore */ }
         // Telegram bot status via WS API
         try {
-          const tgRes = await httpRequest('http://127.0.0.1:9742/api/telegram/status', { timeout: 5000 });
+          const tgRes = await httpRequest(`${WS_API}/api/telegram/status`, { timeout: 5000 });
           const tg = JSON.parse(tgRes.body);
           if (tg.bot_name) lines.push(`🤖 *Bot* — ${tg.bot_name}`);
         } catch { /* ignore */ }
@@ -924,7 +933,7 @@ async function handleCommand(chatId, cmd, args, isAdmin) {
       const cycles = parseInt(args) || 10;
       // Also trigger a self-improve engine cycle via WS API
       try {
-        httpRequest('http://127.0.0.1:9742/api/self-improve/run', { method: 'POST', timeout: 10000 })
+        httpRequest(`${WS_API}/api/self-improve/run`, { method: 'POST', timeout: 10000 })
           .then(() => log('[improve] Self-improve cycle triggered via WS API'))
           .catch(e => log('[improve] Self-improve API unavailable:', e.message));
       } catch { /* non-blocking */ }
@@ -940,8 +949,8 @@ async function handleCommand(chatId, cmd, args, isAdmin) {
     case '/demarre': {
       await sendMessage(chatId, '🔄 Diagnostic JARVIS en cours...');
       try {
-        const bootOut = execSync('python "F:/BUREAU/turbo/scripts/jarvis_boot_telegram.py"', {
-          timeout: 30000, encoding: 'utf8', windowsHide: true, cwd: 'F:/BUREAU/turbo'
+        const bootOut = execSync(`${PYTHON_BIN} "${path.join(__dirname, '..', 'scripts', 'jarvis_boot_telegram.py')}"`, {
+          timeout: 30000, encoding: 'utf8', windowsHide: true, cwd: path.join(__dirname, '..')
         }).trim();
         return sendMessage(chatId, '```\n' + bootOut + '\n```', 'Markdown');
       } catch (e) {
@@ -1122,7 +1131,7 @@ async function handleCommand(chatId, cmd, args, isAdmin) {
     case '/reload': {
       if (!isAdmin) return sendMessage(chatId, 'Admin only.');
       try {
-        const res = await httpRequest(`http://127.0.0.1:9742/api/dictionary/reload`, {
+        const res = await httpRequest(`${WS_API}/api/dictionary/reload`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           timeout: 10000,
@@ -1142,7 +1151,7 @@ async function handleCommand(chatId, cmd, args, isAdmin) {
       const [, wrong, correct] = match;
       try {
         const body = JSON.stringify({ wrong: wrong.trim(), correct: correct.trim() });
-        const res = await httpRequest(`http://127.0.0.1:9742/api/dictionary/correction`, {
+        const res = await httpRequest(`${WS_API}/api/dictionary/correction`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           timeout: 10000,
@@ -1476,7 +1485,7 @@ conn.close()
       if (!args) return sendMessage(chatId, 'Usage: `/broadcast <message>`', 'Markdown');
       try {
         const body = JSON.stringify({ chat_id: CHAT_ID, text: args });
-        const res = await httpRequest(`http://127.0.0.1:9742/api/telegram/send`, {
+        const res = await httpRequest(`${WS_API}/api/telegram/send`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           timeout: 10000,
@@ -1567,8 +1576,8 @@ conn.close()
     case '/logs': {
       const logArgs = args ? args.trim() : '20';
       try {
-        const out = execSync(`python "F:/BUREAU/turbo/scripts/jarvis_logs_telegram.py" ${logArgs}`, {
-          timeout: 10000, encoding: 'utf8', windowsHide: true, cwd: 'F:/BUREAU/turbo'
+        const out = execSync(`python3 "/home/turbo/jarvis-linux/scripts/jarvis_logs_telegram.py" ${logArgs}`, {
+          timeout: 10000, encoding: 'utf8', cwd: '/home/turbo/jarvis-linux'
         }).trim();
         let msg = '```\n' + out + '\n```';
         if (msg.length > 4000) msg = msg.slice(0, 3950) + '\n```\n... (tronque)';
@@ -1589,7 +1598,7 @@ async function handleCockpitCommand(chatId, reportType) {
   const cockpit = path.join(__dirname, '..', 'scripts', 'telegram_cockpit.py');
   try {
     const result = execSync(
-      `python "${cockpit}" --report ${reportType}`,
+      `${PYTHON_BIN} "${cockpit}" --report ${reportType}`,
       { timeout: 30000, encoding: 'utf-8', cwd: path.join(__dirname, '..') }
     );
     return sendMessage(chatId, result.trim() || 'Rapport vide', 'Markdown');
@@ -1602,7 +1611,7 @@ async function handleCockpitFix(chatId, taskId) {
   const cockpit = path.join(__dirname, '..', 'scripts', 'telegram_cockpit.py');
   try {
     const result = execSync(
-      `python "${cockpit}" --fix "${taskId}"`,
+      `${PYTHON_BIN} "${cockpit}" --fix "${taskId}"`,
       { timeout: 45000, encoding: 'utf-8', cwd: path.join(__dirname, '..') }
     );
     return sendMessage(chatId, result.trim() || 'Aucun resultat', 'Markdown');
@@ -1615,7 +1624,7 @@ async function handleCockpitAutoFix(chatId) {
   const cockpit = path.join(__dirname, '..', 'scripts', 'telegram_cockpit.py');
   try {
     const result = execSync(
-      `python "${cockpit}" --watch-errors --auto-fix`,
+      `${PYTHON_BIN} "${cockpit}" --watch-errors --auto-fix`,
       { timeout: 60000, encoding: 'utf-8', cwd: path.join(__dirname, '..') }
     );
     return sendMessage(chatId, result.trim() || 'Aucune erreur', 'Markdown');
@@ -1628,8 +1637,8 @@ async function handleCockpitAutoFix(chatId) {
 
 async function handleAutoFixEnhanced(chatId) {
   try {
-    const out = execSync('python "F:/BUREAU/turbo/scripts/jarvis_autofix_telegram.py"', {
-      timeout: 120000, encoding: 'utf8', windowsHide: true, cwd: 'F:/BUREAU/turbo'
+    const out = execSync(`${PYTHON_BIN} "${path.join(__dirname, '..', 'scripts', 'jarvis_autofix_telegram.py')}"`, {
+      timeout: 120000, encoding: 'utf8', windowsHide: true, cwd: path.join(__dirname, '..')
     }).trim();
     let msg = '```\n' + out + '\n```';
     if (msg.length > 4000) msg = msg.slice(0, 3950) + '\n```\n... (tronque)';
@@ -1643,8 +1652,8 @@ async function handleAutoFixEnhanced(chatId) {
 
 async function handleFullStatus(chatId) {
   try {
-    const out = execSync('python "F:/BUREAU/turbo/scripts/jarvis_fullstatus_telegram.py"', {
-      timeout: 30000, encoding: 'utf8', windowsHide: true, cwd: 'F:/BUREAU/turbo'
+    const out = execSync(`${PYTHON_BIN} "${path.join(__dirname, '..', 'scripts', 'jarvis_fullstatus_telegram.py')}"`, {
+      timeout: 30000, encoding: 'utf8', windowsHide: true, cwd: path.join(__dirname, '..')
     }).trim();
     let msg = '```\n' + out + '\n```';
     if (msg.length > 4000) msg = msg.slice(0, 3950) + '\n```\n... (tronque)';
@@ -1659,8 +1668,8 @@ async function handleFullStatus(chatId) {
 async function handleSqlQuery(chatId, query) {
   try {
     const arg = query ? `"${query.replace(/"/g, '/"')}"` : 'stats';
-    const out = execSync(`python "F:/BUREAU/turbo/scripts/jarvis_sql_telegram.py" ${arg}`, {
-      timeout: 15000, encoding: 'utf8', windowsHide: true, cwd: 'F:/BUREAU/turbo'
+    const out = execSync(`${PYTHON_BIN} "${path.join(__dirname, '..', 'scripts', 'jarvis_sql_telegram.py')}" ${arg}`, {
+      timeout: 15000, encoding: 'utf8', windowsHide: true, cwd: path.join(__dirname, '..')
     }).trim();
     let msg = '```\n' + out + '\n```';
     if (msg.length > 4000) msg = msg.slice(0, 3950) + '\n```\n... (tronque)';
@@ -1674,8 +1683,8 @@ async function handleSqlQuery(chatId, query) {
 
 async function handleModels(chatId) {
   try {
-    const out = execSync('python "F:/BUREAU/turbo/scripts/jarvis_models_telegram.py"', {
-      timeout: 15000, encoding: 'utf8', windowsHide: true, cwd: 'F:/BUREAU/turbo'
+    const out = execSync(`${PYTHON_BIN} "${path.join(__dirname, '..', 'scripts', 'jarvis_models_telegram.py')}"`, {
+      timeout: 15000, encoding: 'utf8', windowsHide: true, cwd: path.join(__dirname, '..')
     }).trim();
     let msg = '```\n' + out + '\n```';
     if (msg.length > 4000) msg = msg.slice(0, 3950) + '\n```\n... (tronque)';
@@ -1689,8 +1698,8 @@ async function handleModels(chatId) {
 
 async function handleWeights(chatId) {
   try {
-    const out = execSync('python "F:/BUREAU/turbo/scripts/jarvis_weights_telegram.py"', {
-      timeout: 15000, encoding: 'utf8', windowsHide: true, cwd: 'F:/BUREAU/turbo'
+    const out = execSync(`${PYTHON_BIN} "${path.join(__dirname, '..', 'scripts', 'jarvis_weights_telegram.py')}"`, {
+      timeout: 15000, encoding: 'utf8', windowsHide: true, cwd: path.join(__dirname, '..')
     }).trim();
     let msg = '```\n' + out + '\n```';
     if (msg.length > 4000) msg = msg.slice(0, 3950) + '\n```\n... (tronque)';
@@ -1704,8 +1713,8 @@ async function handleWeights(chatId) {
 
 async function handleSupervisor(chatId) {
   try {
-    const out = execSync('python "F:/BUREAU/turbo/scripts/jarvis_supervisor.py"', {
-      timeout: 30000, encoding: 'utf8', windowsHide: true, cwd: 'F:/BUREAU/turbo'
+    const out = execSync(`${PYTHON_BIN} "${path.join(__dirname, '..', 'scripts', 'jarvis_supervisor.py')}"`, {
+      timeout: 30000, encoding: 'utf8', windowsHide: true, cwd: path.join(__dirname, '..')
     }).trim();
     let msg = '```\n' + out + '\n```';
     if (msg.length > 4000) msg = msg.slice(0, 3950) + '\n```\n... (tronque)';
@@ -2258,7 +2267,7 @@ async function handleDominos(chatId, name) {
 
 // ─── Dictionary / Voice / Commands / Pipeline handlers ─────────────────────────
 
-const WS_API = 'http://127.0.0.1:9742';
+const WS_API = process.env.WS_URL ? process.env.WS_URL.replace('ws://', 'http://').replace('wss://', 'https://') : 'http://127.0.0.1:9742';
 
 async function handleDictSearch(chatId, query) {
   try {
@@ -2580,7 +2589,7 @@ Reponds avec des donnees concretes: prix, pourcentages, niveaux, R:R.`;
       const toolName = intent.tool || 'jarvis_diagnostics_quick';
       await sendMessage(chatId, `Tool ${toolName}...`);
       try {
-        const resp = await fetch('http://127.0.0.1:9742/api/tools/execute', {
+        const resp = await fetch(`${WS_API}/api/tools/execute`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ tool_name: toolName, arguments: {} }),
@@ -2904,7 +2913,7 @@ async function queryWsApi(text) {
   return new Promise((resolve) => {
     const postData = JSON.stringify({ content: text });
     const options = {
-      hostname: '127.0.0.1', port: 9742, path: '/api/chat/send',
+      hostname: new URL(WS_API).hostname, port: new URL(WS_API).port || 9742, path: '/api/chat/send',
       method: 'POST', agent: httpAgent,
       headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(postData) },
       timeout: 125000,
@@ -3001,7 +3010,7 @@ async function transcribeVoice(fileId) {
     const tmpJson = path.join(os.tmpdir(), `tg_whisper_${Date.now()}.json`);
     fs.writeFileSync(tmpJson, postData);
     const wsResult = execSync(
-      `curl -s --max-time 15 -X POST http://127.0.0.1:9742/api/voice/transcribe_blob -H "Content-Type: application/json" -d @"${tmpJson}"`,
+      `curl -s --max-time 15 -X POST ${WS_API}/api/voice/transcribe_blob -H "Content-Type: application/json" -d @"${tmpJson}"`,
       { timeout: 20000, encoding: 'utf-8' }
     );
     try { fs.unlinkSync(tmpJson); } catch (_) {}
@@ -3016,7 +3025,7 @@ async function transcribeVoice(fileId) {
   if (!text) {
     try {
       text = execSync(
-        `"${VENV_PYTHON}" "F:/BUREAU/turbo/scripts/transcribe.py" "${tmpWav}" --language fr`,
+        `"${VENV_PYTHON}" "/home/turbo/jarvis-linux/scripts/transcribe.py" "${tmpWav}" --language fr`,
         { timeout: 30000, encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] }
       ).trim();
       if (text) log(`  Whisper via script (fallback)`);
@@ -3036,28 +3045,75 @@ async function transcribeVoice(fileId) {
 
 async function sendVoiceReply(chatId, text) {
   try {
-    const cleanText = text.replace(/[\r\n]+/g, ' ').replace(/"/g, '').replace(/'/g, '').slice(0, 500);
+    const cleanText = text.replace(/[\r\n]+/g, ' ').replace(/"/g, '\\"').replace(/'/g, '').slice(0, 500);
     if (!cleanText.trim()) return false;
 
-    // Non-blocking: spawn TTS in background (don't block the event loop)
-    const { spawn } = require('child_process');
-    const child = spawn(VENV_PYTHON, [TTS_SCRIPT, '--speak', cleanText, '--telegram'], {
-      cwd: path.join(__dirname, '..'),
-      stdio: 'ignore',
-      timeout: 25000,
-    });
-    child.on('close', (code) => {
-      if (code === 0) {
-        log(`  VOICE sent via DeniseNeural`);
+    const tmpMp3 = `/tmp/jarvis_tts_${Date.now()}.mp3`;
+    const { execSync } = require('child_process');
+
+    // Generate MP3 via edge-tts on the HOST (not inside Docker)
+    try {
+      // Call host via host.docker.internal or direct if running on host
+      const ttsCmd = `edge-tts --voice fr-FR-DeniseNeural --rate=+10% --text "${cleanText}" --write-media ${tmpMp3}`;
+      execSync(ttsCmd, { timeout: 15000, stdio: 'pipe' });
+    } catch (e) {
+      // edge-tts not in container — call host MCP to speak + generate file
+      try {
+        execSync(`espeak-ng -v fr -w ${tmpMp3} "${cleanText}"`, { timeout: 10000, stdio: 'pipe' });
+      } catch (_) {
+        // Last resort: use curl to generate via host
+        try {
+          execSync(
+            `curl -s -X POST "http://host.docker.internal:8080/mcp" -H "Authorization: Bearer 1202" -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"speak","arguments":{"text":"${cleanText.replace(/'/g, '')}"}}}' > /dev/null`,
+            { timeout: 10000, stdio: 'pipe' }
+          );
+          log('  VOICE: played on host speakers via MCP (no Telegram audio)');
+          return true; // Audio played on host, not sent to Telegram
+        } catch (__) {
+          logErr('  VOICE TTS: no engine available');
+          return false;
+        }
+      }
+    }
+
+    // Check file exists
+    if (!fs.existsSync(tmpMp3)) {
+      logErr('  VOICE TTS: file not generated');
+      return false;
+    }
+
+    // Send voice via Telegram API (multipart form)
+    const FormData = require('form-data') || null;
+    if (FormData) {
+      const form = new FormData();
+      form.append('chat_id', String(chatId));
+      form.append('voice', fs.createReadStream(tmpMp3));
+      const resp = await fetch(`https://api.telegram.org/bot${TOKEN}/sendVoice`, {
+        method: 'POST',
+        body: form,
+      });
+      const result = await resp.json();
+      if (result.ok) {
+        log(`  VOICE sent via DeniseNeural (${(fs.statSync(tmpMp3).size / 1024).toFixed(0)}KB)`);
         stats.messages_out++;
       } else {
-        logErr(`  VOICE TTS exited with code ${code}`);
+        logErr(`  VOICE Telegram sendVoice failed: ${JSON.stringify(result)}`);
       }
-    });
-    child.on('error', (e) => logErr('TTS spawn error:', e.message));
+    } else {
+      // No form-data module — use curl fallback
+      execSync(
+        `curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendVoice" -F "chat_id=${chatId}" -F "voice=@${tmpMp3}"`,
+        { timeout: 15000, stdio: 'pipe' }
+      );
+      log(`  VOICE sent via curl fallback`);
+      stats.messages_out++;
+    }
+
+    // Cleanup
+    try { fs.unlinkSync(tmpMp3); } catch (_) {}
     return true;
   } catch (e) {
-    logErr('sendVoiceReply failed:', e.message.slice(0, 100));
+    logErr('sendVoiceReply failed:', e.message.slice(0, 200));
   }
   return false;
 }
@@ -3156,8 +3212,8 @@ async function processMessage(msg) {
   if (/\b(demarre|boot|diagnostic complet|lance jarvis|status complet|etat du systeme)\b/i.test(low)) {
     try {
       await sendMessage(chatId, '🔄 Diagnostic JARVIS en cours...');
-      const bootOut = execSync('python "F:/BUREAU/turbo/scripts/jarvis_boot_telegram.py"', {
-        timeout: 30000, encoding: 'utf8', windowsHide: true, cwd: 'F:/BUREAU/turbo'
+      const bootOut = execSync(`${PYTHON_BIN} "${path.join(TURBO_ROOT, 'scripts', 'jarvis_boot_telegram.py')}"`, {
+        timeout: 30000, encoding: 'utf8', windowsHide: true, cwd: TURBO_ROOT
       }).trim();
       await sendMessage(chatId, '```\n' + bootOut + '\n```', 'Markdown');
       addToMemory(chatId, 'user', text);
@@ -3176,8 +3232,8 @@ async function processMessage(msg) {
   if (/\b(ameliore|auto.?improve|self.?improve|optimise.?toi)\b/i.test(low)) {
     try {
       await sendMessage(chatId, '🧠 Self-improve en cours...');
-      const improveOut = execSync('python "F:/BUREAU/turbo/scripts/jarvis_auto_improve_telegram.py"', {
-        timeout: 30000, encoding: 'utf8', windowsHide: true, cwd: 'F:/BUREAU/turbo'
+      const improveOut = execSync(`${PYTHON_BIN} "${path.join(TURBO_ROOT, 'scripts', 'jarvis_auto_improve_telegram.py')}"`, {
+        timeout: 30000, encoding: 'utf8', windowsHide: true, cwd: TURBO_ROOT
       }).trim();
       await sendMessage(chatId, '```\n' + improveOut + '\n```', 'Markdown');
       return;
@@ -3199,8 +3255,8 @@ async function processMessage(msg) {
   // Disk keywords → direct disk check
   if (/\b(disque|disk|espace disque|stockage|free space)\b/i.test(low) && low.length < 80) {
     try {
-      const diskOut = execSync('powershell -Command "Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Used -gt 0 } | ForEach-Object { $n=$_.Name; $f=[math]::Round($_.Free/1GB); $t=[math]::Round(($_.Used+$_.Free)/1GB); Write-Output (/"$n`: $f/$t GB free/") }"', {
-        timeout: 8000, encoding: 'utf8', windowsHide: true
+      const diskOut = execSync("df -h --output=target,avail,size,pcent / /home 2>/dev/null || df -h / /home", {
+        timeout: 8000, encoding: 'utf8'
       }).trim();
       return sendMessage(chatId, '💾 *Disques:*\n```\n' + diskOut + '\n```', 'Markdown');
     } catch { /* fall through to cluster */ }
@@ -3233,7 +3289,7 @@ async function processMessage(msg) {
     !(/\b(cree|crée|ecris|écris|fais|fait|ajoute|modifie|supprime|lance|installe|deploy|commit|push|debug|corrige|fixe|analyse|scan|cherche|trouve|lis|ouvre|configure|genere|génère|build|compile|refactor|optimise|teste|execute|run)\b/i.test(low))
   );
 
-  if (isAdmin(chatId) && !isSimpleChat) {
+  if (isAdmin && !isSimpleChat) {
     // Route to OpenClaw agent — it has 25 tools and decides autonomously
     const queryType = classifyQuery(text);
     const AGENT_FOR_TYPE = {
@@ -3250,20 +3306,14 @@ async function processMessage(msg) {
 
     try {
       const ocStart = Date.now();
-      const sessionId = `tg-${chatId}-${Math.floor(Date.now() / 60000)}`; // 1 session per minute for context
-      const { execFile } = require('child_process');
-      const ocResult = await new Promise((resolve, reject) => {
-        const args = ['agent', '--agent', agentId, '--message', text, '--json', '--timeout', '120', '--session-id', sessionId];
-        const proc = execFile('openclaw', args, {
-          cwd: 'C:/Users/franc/.openclaw',
-          timeout: 130000,
-          maxBuffer: 1024 * 1024,
-          encoding: 'utf-8',
-          env: { ...process.env, OPENCLAW_GATEWAY_PORT: '18789', OPENCLAW_GATEWAY_TOKEN: 'ae1cd158a0975c30e7712b274859e202896e7f67203de9d2' },
-        }, (err, stdout, stderr) => {
-          if (err && !stdout) reject(err);
-          else resolve(stdout || stderr);
-        });
+      // Call OpenClaw gateway via HTTP (works inside Docker via host.docker.internal)
+      const ocGateway = 'http://host.docker.internal:18789';
+      const ocPayload = JSON.stringify({ message: text, agent: agentId });
+      const ocResp = await httpRequest(`${ocGateway}/api/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: ocPayload,
+        timeout: 60000,
       });
       clearInterval(typingRefresh);
       const ocMs = Date.now() - ocStart;
@@ -3271,13 +3321,11 @@ async function processMessage(msg) {
       let ocReply = '';
       let ocModel = agentId;
       try {
-        const parsed = JSON.parse(ocResult);
-        const payloads = parsed.result?.payloads || [];
-        const meta = parsed.result?.meta?.agentMeta || {};
-        ocReply = payloads.map(p => p.text).filter(Boolean).join('\n\n') || '';
-        ocModel = `${meta.provider || 'oc'}/${meta.model || agentId}`;
+        const parsed = JSON.parse(ocResp.body);
+        ocReply = (parsed.response || parsed.message || parsed.content || '').trim();
+        ocModel = `oc/${parsed.model || agentId}`;
       } catch {
-        ocReply = stripThink(ocResult).slice(0, 4000);
+        ocReply = (ocResp.body || '').trim().slice(0, 4000);
       }
 
       if (ocReply) {
@@ -3453,8 +3501,9 @@ async function processMessage(msg) {
     textPromise = sendFullResponse(chatId, finalText, 'Markdown');
   }
 
-  // TTS only when user sent a vocal — text replies stay text-only for speed
-  if (isVoice && cleanReply.length < 2000) {
+  // TTS: send voice reply when user sent a vocal OR when VOICE_MODE is enabled
+  const skipVoice = /```|^\s*[\[{]/.test(cleanReply) || cleanReply.length > 1500;
+  if ((isVoice || VOICE_MODE) && !skipVoice) {
     sendVoiceReply(chatId, cleanReply).catch(e => logErr('Voice:', e.message));
   }
 
@@ -3617,7 +3666,7 @@ async function checkProactiveAlerts() {
   if (!TRADING_ALERTS) return; // Alertes desactivees par /alertoff
   try {
     const helperAlerts = path.join(__dirname, 'bot-helpers.py');
-    const result = execSync(`python "${helperAlerts}" proactive-alerts`, { timeout: 10000, encoding: 'utf-8', cwd: path.join(__dirname, '..') });
+    const result = execSync(`${PYTHON_BIN} "${helperAlerts}" proactive-alerts`, { timeout: 10000, encoding: 'utf-8', cwd: path.join(__dirname, '..') });
     const d = JSON.parse(result.trim());
 
     // Notify TP hits (only new ones)
@@ -3750,7 +3799,7 @@ function registerService() {
     name: 'telegram-bot', url: `${PROXY_URL}/chat`,
     service_type: 'notification',
   });
-  httpRequest('http://127.0.0.1:9742/api/services/register', {
+  httpRequest(`${WS_API}/api/services/register`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, timeout: 5000,
   }, body).then(() => log('Service enregistré dans le registry'))
     .catch(() => {}); // silencieux si WS backend pas up
@@ -3758,7 +3807,7 @@ function registerService() {
 
 /** Heartbeat périodique */
 function heartbeat() {
-  httpRequest('http://127.0.0.1:9742/api/services/heartbeat', {
+  httpRequest(`${WS_API}/api/services/heartbeat`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, timeout: 3000,
   }, JSON.stringify({ name: 'telegram-bot' })).catch(() => {});
 }

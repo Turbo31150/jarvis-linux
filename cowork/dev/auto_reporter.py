@@ -2,10 +2,9 @@
 """JARVIS Auto Reporter — Rapport quotidien cluster/trading/systeme."""
 import json, sys, os, subprocess, urllib.request
 from datetime import datetime
-from _paths import TELEGRAM_TOKEN, TELEGRAM_CHAT
 
-# TELEGRAM_TOKEN loaded from _paths (.env)
-# TELEGRAM_CHAT loaded from _paths (.env)
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT = "2010747443"
 REPORT_DIR = "C:/Users/franc/.openclaw/workspace/dev/reports"
 
 NODES = {

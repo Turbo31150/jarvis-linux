@@ -3,10 +3,9 @@
 import json, sys, os, re
 from datetime import datetime, timedelta
 from collections import Counter
-from _paths import TELEGRAM_TOKEN, TELEGRAM_CHAT
 
-# TELEGRAM_TOKEN loaded from _paths (.env)
-# TELEGRAM_CHAT loaded from _paths (.env)
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT = "2010747443"
 
 LOG_SOURCES = [
     {"name": "OpenClaw", "path": os.path.expandvars(r"%USERPROFILE%\.openclaw\agents\main\logs"), "pattern": "*.log"},

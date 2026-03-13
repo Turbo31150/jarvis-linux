@@ -86,9 +86,7 @@ def find_window(app_name):
 
 def launch_app(app_name):
     """Launch an application."""
-    cmd = APP_PATHS.get(app_name.lower())
-    if cmd is None:
-        return {"ok": False, "app": app_name, "error": f"Unknown app: {app_name}. Known: {', '.join(APP_PATHS)}"}
+    cmd = APP_PATHS.get(app_name.lower(), app_name)
     try:
         subprocess.Popen(cmd, shell=True)
         return {"ok": True, "app": app_name, "action": "launched"}

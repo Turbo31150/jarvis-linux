@@ -17,10 +17,9 @@ import re
 import sys
 from pathlib import Path
 from typing import Dict, List, Any
-from _paths import TELEGRAM_TOKEN, TELEGRAM_CHAT
 
-# TELEGRAM_TOKEN loaded from _paths (.env)
-TELEGRAM_CHAT_ID = TELEGRAM_CHAT
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT_ID = "2010747443"
 
 def telegram_send(msg: str):
     import urllib.parse, urllib.request

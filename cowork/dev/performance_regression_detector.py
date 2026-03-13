@@ -27,7 +27,7 @@ PYTHON = sys.executable
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_DIR = SCRIPT_DIR / "data"
 GAPS_DB = DATA_DIR / "cowork_gaps.db"
-from _paths import ETOILE_DB
+ETOILE_DB = Path(r"F:/BUREAU/turbo/etoile.db")
 
 # Thresholds for regression detection
 THRESH_SUCCESS_DROP = 0.10      # >10% success-rate drop

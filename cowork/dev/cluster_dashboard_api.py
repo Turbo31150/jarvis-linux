@@ -14,7 +14,6 @@ objects with an ``error`` key so the front-end can handle them gracefully.
 """
 
 import json
-from _paths import TURBO_DIR
 import os
 import subprocess
 import sys
@@ -60,7 +59,7 @@ def get_trading():
     ``ts`` (ISO timestamp) and ``signal`` (text).  If the DB or table is
     missing we return an empty list.
     """
-    db_path = TURBO_DIR / "projects/carV1_data/database/trading_latest.db"
+    db_path = Path(r"F:/BUREAU/carV1/database/trading_latest.db")
     if not db_path.is_file():
         return []
     try:
@@ -89,13 +88,13 @@ def get_metrics():
         # PowerShell fallback (Windows only)
         try:
             cpu_out = subprocess.check_output(
-                ["powershell", "-Command", "(Get-Counter '/Processor(_Total)/% Processor Time').CounterSamples[0].CookedValue"],
+                ["powershell", "-Command", "(Get-Counter '\\Processor(_Total)\\% Processor Time').CounterSamples[0].CookedValue"],
                 text=True,
                 timeout=5,
             )
             result["cpu_percent"] = float(cpu_out.strip())
             ram_out = subprocess.check_output(
-                ["powershell", "-Command", "(Get-Counter '/Memory/% Committed Bytes In Use').CounterSamples[0].CookedValue"],
+                ["powershell", "-Command", "(Get-Counter '\\Memory\\% Committed Bytes In Use').CounterSamples[0].CookedValue"],
                 text=True,
                 timeout=5,
             )
@@ -172,7 +171,7 @@ class APIHandler(BaseHTTPRequestHandler):
 # ---------------------------------------------------------------------------
 # Server entry point
 # ---------------------------------------------------------------------------
-def run_server(host="127.0.0.1", port=8085):
+def run_server(host="0.0.0.0", port=8085):
     server = HTTPServer((host, port), APIHandler)
     print(f"[cluster_dashboard_api] Listening on http://{host}:{port}")
     try:
@@ -184,7 +183,7 @@ def run_server(host="127.0.0.1", port=8085):
 def main():
     import argparse
     parser = argparse.ArgumentParser(description="REST API for the JARVIS Electron dashboard (port 8085).")
-    parser.add_argument("--host", default="127.0.0.1", help="Bind address (default: 127.0.0.1)")
+    parser.add_argument("--host", default="0.0.0.0", help="Bind address (default: 0.0.0.0)")
     parser.add_argument("--port", type=int, default=8085, help="Bind port (default: 8085)")
     args = parser.parse_args()
     run_server(host=args.host, port=args.port)

@@ -18,10 +18,9 @@ import time
 from datetime import datetime
 from pathlib import Path
 from typing import List, Dict
-from _paths import TELEGRAM_TOKEN, TELEGRAM_CHAT
 
-# TELEGRAM_TOKEN loaded from _paths (.env)
-TELEGRAM_CHAT_ID = TELEGRAM_CHAT
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT_ID = "2010747443"
 DB_PATH = Path(__file__).parent / "usb.db"
 
 def telegram_send(msg: str):

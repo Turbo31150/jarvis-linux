@@ -3,10 +3,12 @@ Description=JARVIS Jarvis-mcp
 After=network.target
 
 [Service]
-ExecStart=/home/turbo/jarvis-m1-ops/scripts/jarvis-boot.sh mcp
-WorkingDirectory=/home/turbo/jarvis-m1-ops
+Type=simple
+ExecStart=/home/turbo/jarvis-linux/.venv/bin/python -m src.mcp_server
+WorkingDirectory=/home/turbo/jarvis-linux
 Restart=always
 RestartSec=5
+Environment=PYTHONPATH=/home/turbo/jarvis-linux
 StandardOutput=journal
 StandardError=journal
 

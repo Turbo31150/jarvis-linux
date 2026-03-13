@@ -27,9 +27,13 @@ from datetime import datetime
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(SCRIPT_DIR.parent))
+
+from path_resolver import resolve_db_with_table
+
 DATA_DIR = SCRIPT_DIR / "data"
 GAPS_DB = DATA_DIR / "cowork_gaps.db"
-from _paths import ETOILE_DB
+ETOILE_DB = resolve_db_with_table("etoile.db", "agent_dispatch_log")
 
 # Circuit breaker config
 CB_FAIL_THRESHOLD = 3
@@ -212,6 +216,24 @@ def dispatch_to_node(node_name, prompt, timeout=None):
 def log_dispatch(edb, node, task_type, prompt, result, attempt=1):
     """Log dispatch attempt."""
     try:
+        edb.execute("""
+            CREATE TABLE IF NOT EXISTS agent_dispatch_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp TEXT,
+                request_text TEXT,
+                classified_type TEXT,
+                agent_id TEXT,
+                model_used TEXT,
+                node TEXT,
+                strategy TEXT,
+                latency_ms INTEGER,
+                tokens_in INTEGER,
+                tokens_out INTEGER,
+                success INTEGER,
+                error_msg TEXT,
+                quality_score REAL
+            )
+        """)
         edb.execute("""
             INSERT INTO agent_dispatch_log
             (timestamp, request_text, classified_type, agent_id, model_used, node,

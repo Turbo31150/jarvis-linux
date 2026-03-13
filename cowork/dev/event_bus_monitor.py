@@ -10,7 +10,6 @@ Usage:
     python dev/event_bus_monitor.py --report
 """
 import argparse
-from _paths import ETOILE_DB
 import json
 import os
 import sqlite3
@@ -61,7 +60,7 @@ def get_event_stats():
         pass
 
     # Fallback: try to read from etoile.db event_log if it exists
-    etoile = Path(str(ETOILE_DB))
+    etoile = Path("F:/BUREAU/turbo/data/etoile.db")
     if etoile.exists():
         try:
             conn = sqlite3.connect(str(etoile))

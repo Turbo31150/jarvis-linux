@@ -11,7 +11,7 @@ import time
 from pathlib import Path
 
 DB_PATH = Path(__file__).parent / "voice_optimizer.db"
-from _paths import TURBO_DIR as TURBO
+TURBO = Path("F:/BUREAU/turbo")
 CORRECTIONS_FILE = TURBO / "data" / "voice_corrections.json"
 COMMANDS_FILE = TURBO / "src" / "commands.py"
 DOMINOS_FILE = TURBO / "data" / "dominos.json"

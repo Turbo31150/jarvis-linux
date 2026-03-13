@@ -20,7 +20,7 @@ from pathlib import Path
 
 DEV = Path(__file__).parent
 DB_PATH = DEV / "data" / "command_predictor.db"
-from _paths import ETOILE_DB
+ETOILE_DB = Path("F:/BUREAU/turbo/data/etoile.db")
 
 
 def init_db():

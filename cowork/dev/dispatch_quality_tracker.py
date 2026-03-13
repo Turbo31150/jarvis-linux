@@ -25,12 +25,12 @@ from datetime import datetime
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-from _paths import ETOILE_DB, TELEGRAM_TOKEN, TELEGRAM_CHAT
+ETOILE_DB = Path("F:/BUREAU/turbo/data/etoile.db")
 DATA_DIR = SCRIPT_DIR / "data"
 GAPS_DB = DATA_DIR / "cowork_gaps.db"
 
-# TELEGRAM_TOKEN loaded from _paths (.env)
-TELEGRAM_CHAT_ID = TELEGRAM_CHAT
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT_ID = "2010747443"
 
 # Cluster nodes
 NODES = {
@@ -42,11 +42,6 @@ NODES = {
             "auth": None, "max_tokens": 2048, "timeout": 60},
     "OL1": {"url": "http://127.0.0.1:11434/api/chat", "model": "qwen3:1.7b",
             "auth": None, "ollama": True},
-    # Cloud nodes (via Ollama proxy, may be rate-limited)
-    # Cloud nodes disabled — active config: M1+M2+M3+OL1 only
-    #             "auth": None, "ollama": True, "timeout": 120},
-    # (gpt-oss/devstral removed, were cloud-only)
-    #              "auth": None, "ollama": True, "timeout": 120},
 }
 
 # Quality test prompts with expected outputs

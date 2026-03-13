@@ -22,9 +22,13 @@ from datetime import datetime
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(SCRIPT_DIR.parent))
+
+from path_resolver import resolve_db_with_table
+
 DATA_DIR = SCRIPT_DIR / "data"
 GAPS_DB = DATA_DIR / "cowork_gaps.db"
-from _paths import ETOILE_DB
+ETOILE_DB = resolve_db_with_table("etoile.db", "agent_dispatch_log")
 
 
 def get_db(path):

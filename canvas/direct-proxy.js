@@ -587,7 +587,7 @@ try {
 
 // ── Safety Gate ─────────────────────────────────────────────────────────────
 const DANGEROUS_EXEC = /\b(rm\s+-rf|del\s+\/[sfq]|rmdir\s+\/s|format\s|fdisk|drop\s+table|truncate\s|push\s+--force|reset\s+--hard|shutdown|restart-computer)\b/i;
-const DANGEROUS_WRITE = /\.(env|credentials|pem|key|p12)$|system32|/windows//i;
+const DANGEROUS_WRITE = /(\.(env|credentials|pem|key|p12)$|system32|[\\/]windows[\\/])/i;
 const DANGEROUS_SQL = /\b(DELETE|DROP|TRUNCATE|ALTER|UPDATE)\b/i;
 
 const pendingConfirms = new Map();

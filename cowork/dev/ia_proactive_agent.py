@@ -3,7 +3,7 @@
 
 Monitors system state, identifies opportunities, and executes
 improvements without human intervention. Dispatches to the full
-cluster (M1+M2+M3+OL1) for complex tasks.
+cluster (M1+M2+OL1+gpt-oss+devstral) for complex tasks.
 """
 import argparse
 import json
@@ -14,7 +14,7 @@ import urllib.request
 from pathlib import Path
 
 DB_PATH = Path(__file__).parent / "proactive.db"
-from _paths import TURBO_DIR as TURBO
+TURBO = Path("F:/BUREAU/turbo")
 
 def init_db():
     db = sqlite3.connect(str(DB_PATH))

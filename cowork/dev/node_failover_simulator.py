@@ -23,8 +23,8 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-from _paths import ETOILE_DB
-GAPS_DB = Path(__file__).parent / "data" / "cowork_gaps.db"
+ETOILE_DB = Path(r"F:/BUREAU/turbo/etoile.db")
+GAPS_DB = Path(r"F:/BUREAU/turbo/cowork/dev/data/cowork_gaps.db")
 
 # Fallback chain: if a node dies, redistribute to these in order
 FALLBACK_CHAIN = ["M1", "M2", "M3", "OL1"]
@@ -108,20 +108,26 @@ def model_to_node(model_str):
         return None
     s = model_str.strip()
 
-    # Explicit node prefix (e.g. "M2:deepseek-r1", "M1:qwen3-8b")
-    for prefix in ["M1:", "M2:", "M3:", "OL1:"]:
+    # Explicit node prefix (e.g. "M2:deepseek-r1", "M1:qwen3-8b", "M1B:gpt-oss-20b")
+    for prefix in ["M1B:", "M1:", "M2:", "M3:", "OL1:"]:
         if s.startswith(prefix):
-            return prefix.rstrip(":")
+            node = prefix.rstrip(":")
+            # Normalize M1B -> M1 for simulation purposes
+            return "M1" if node == "M1B" else node
 
     # Cloud models route through OL1 (Ollama)
-    if "cloud" in s or s.startswith("minimax"):
+    if "cloud" in s or s.startswith("minimax") or s.startswith("gpt-oss") or s.startswith("devstral"):
         return "OL1"
 
     # Known model -> node mappings
-    if s in ("qwen3-8b", "qwen/qwen3-8b"):
+    if s in ("qwen3-8b", "qwen/qwen3-8b", "gpt-oss-20b"):
         return "M1"
+    if s in ("deepseek-coder-v2-lite-instruct",):
+        return "M2"
     if s.startswith("deepseek-r1"):
-        return "M2"  # M2 primary reasoning; M3 also runs deepseek-r1 but use M2 by default
+        return "M2"  # primary reasoning node
+    if s in ("mistral-7b-instruct-v0.3",):
+        return "M3"
     if s.startswith("qwen3:") or s == "qwen3:1.7b":
         return "OL1"
 

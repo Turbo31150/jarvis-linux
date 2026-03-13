@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """JARVIS Feature Builder — Scan /FIXME/STUB in codebase, generate feature specs.
 
-Continuously scans F:/BUREAU/turbo/src/ for incomplete features,
+Continuously scans F:\BUREAU\turbo\src\ for incomplete features,
 generates implementation specs, and dispatches to cluster for coding.
 """
 import argparse
@@ -12,7 +12,7 @@ import sqlite3
 import time
 from pathlib import Path
 
-from _paths import TURBO_DIR as TURBO
+TURBO = Path("F:/BUREAU/turbo")
 SRC = TURBO / "src"
 DB_PATH = Path(__file__).parent / "features.db"
 REPORT_DIR = Path(__file__).parent / "reports"

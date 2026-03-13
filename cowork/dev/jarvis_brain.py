@@ -12,7 +12,7 @@ import hashlib
 from pathlib import Path
 
 DB_PATH = Path(__file__).parent / "brain.db"
-from _paths import TURBO_DIR as TURBO
+TURBO = Path("F:/BUREAU/turbo")
 
 def init_db():
     db = sqlite3.connect(str(DB_PATH))
@@ -100,7 +100,7 @@ def predict_next_actions(db):
         predictions.append(("Check emails et Telegram", "morning_routine", 0.7))
     # Work hours (9-18)
     elif 9 <= hour <= 18:
-        predictions.append(("Session code intensive — precharger M1 et M2", "work_pattern", 0.6))
+        predictions.append(("Session code intensive — precharger gpt-oss et M1", "work_pattern", 0.6))
     # Evening (18-23)
     elif 18 <= hour <= 23:
         predictions.append(("Backup quotidien et rapport", "evening_routine", 0.5))

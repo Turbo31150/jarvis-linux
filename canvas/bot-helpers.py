@@ -1,7 +1,54 @@
 """Helper scripts for telegram-bot.js — avoids multiline execSync issues on Windows."""
 import sys, json, os
+import sqlite3
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+SNIPER_DB = os.path.join(os.path.dirname(__file__), '..', 'data', 'sniper_scan.db')
+
+
+def _ensure_signal_tracker_schema(db):
+    try:
+        db.executescript("""
+            CREATE TABLE IF NOT EXISTS signal_tracker (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                signal_id INTEGER,
+                symbol TEXT,
+                direction TEXT,
+                entry_price REAL,
+                tp1 REAL, tp2 REAL, tp3 REAL, sl REAL,
+                score REAL,
+                validations INTEGER DEFAULT 0,
+                emitted_at TEXT,
+                checked_at TEXT,
+                current_price REAL,
+                tp1_hit INTEGER DEFAULT 0,
+                tp2_hit INTEGER DEFAULT 0,
+                tp3_hit INTEGER DEFAULT 0,
+                sl_hit INTEGER DEFAULT 0,
+                pnl_pct REAL DEFAULT 0,
+                status TEXT DEFAULT 'OPEN'
+            );
+            CREATE INDEX IF NOT EXISTS idx_tracker_symbol ON signal_tracker(symbol);
+            CREATE INDEX IF NOT EXISTS idx_tracker_status ON signal_tracker(status);
+        """)
+        db.commit()
+    except sqlite3.OperationalError:
+        pass
+
+
+def _open_sniper_db():
+    db = sqlite3.connect(SNIPER_DB)
+    _ensure_signal_tracker_schema(db)
+    return db
+
+
+def _table_exists(db, name):
+    row = db.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?",
+        (name,),
+    ).fetchone()
+    return bool(row)
 
 def domino_list():
     from src.domino_pipelines import DOMINO_PIPELINES, get_domino_stats
@@ -57,8 +104,7 @@ def domino_run(name):
     }))
 
 def scan_stats():
-    import sqlite3
-    db = sqlite3.connect(os.path.join(os.path.dirname(__file__), '..', 'data', 'sniper_scan.db'))
+    db = _open_sniper_db()
     scans = db.execute('SELECT COUNT(*) FROM scan_runs').fetchone()[0]
     snaps = db.execute('SELECT COUNT(*) FROM coin_snapshots').fetchone()[0]
     reg = db.execute('SELECT COUNT(*) FROM coin_registry').fetchone()[0]
@@ -77,8 +123,7 @@ def scan_stats():
     db.close()
 
 def hot_coins(limit=10):
-    import sqlite3
-    db = sqlite3.connect(os.path.join(os.path.dirname(__file__), '..', 'data', 'sniper_scan.db'))
+    db = _open_sniper_db()
     rows = db.execute(
         'SELECT clean_name, scan_count, avg_score, best_score, best_direction, '
         'last_price, last_change FROM coin_registry '
@@ -91,8 +136,15 @@ def hot_coins(limit=10):
     db.close()
 
 def perf_stats():
-    import sqlite3
-    db = sqlite3.connect(os.path.join(os.path.dirname(__file__), '..', 'data', 'sniper_scan.db'))
+    db = _open_sniper_db()
+    if not _table_exists(db, "signal_tracker"):
+        print(json.dumps({
+            'total': 0, 'tp1': 0, 'tp2': 0, 'sl': 0,
+            'expired': 0, 'open': 0, 'avg_pnl': 0,
+            'best': [], 'worst': [],
+        }))
+        db.close()
+        return
     total = db.execute('SELECT COUNT(*) FROM signal_tracker').fetchone()[0]
     tp1 = db.execute("SELECT COUNT(*) FROM signal_tracker WHERE status='TP1_HIT'").fetchone()[0]
     tp2 = db.execute("SELECT COUNT(*) FROM signal_tracker WHERE status='TP2_HIT'").fetchone()[0]
@@ -117,8 +169,14 @@ def perf_stats():
     db.close()
 
 def realtime_status():
-    import sqlite3
-    db = sqlite3.connect(os.path.join(os.path.dirname(__file__), '..', 'data', 'sniper_scan.db'))
+    db = _open_sniper_db()
+    if not _table_exists(db, "signal_tracker"):
+        print(json.dumps({
+            'total': 0, 'open': 0, 'tp1': 0, 'sl': 0, 'expired': 0,
+            'last5': []
+        }))
+        db.close()
+        return
     total = db.execute('SELECT COUNT(*) FROM signal_tracker').fetchone()[0]
     recent_open = db.execute("SELECT COUNT(*) FROM signal_tracker WHERE status='OPEN'").fetchone()[0]
     tp1 = db.execute("SELECT COUNT(*) FROM signal_tracker WHERE status='TP1_HIT'").fetchone()[0]
@@ -161,8 +219,16 @@ def loop_status():
     db.close()
 
 def backtest():
-    import sqlite3
-    db = sqlite3.connect(os.path.join(os.path.dirname(__file__), '..', 'data', 'sniper_scan.db'))
+    db = _open_sniper_db()
+    if not _table_exists(db, "signal_tracker"):
+        print(json.dumps({
+            'total': 0, 'bt_ok': 0, 'bt_warn': 0,
+            'bt_tp1': 0, 'bt_total_t': 0,
+            'nobt_tp1': 0, 'nobt_total': 0,
+            'vwap': 0, 'streak': 0
+        }))
+        db.close()
+        return
     total = db.execute('SELECT COUNT(*) FROM scan_signals').fetchone()[0]
     bt_ok = db.execute("SELECT COUNT(*) FROM scan_signals WHERE pattern LIKE '%BACKTEST_OK%'").fetchone()[0]
     bt_warn = db.execute("SELECT COUNT(*) FROM scan_signals WHERE pattern LIKE '%BACKTEST_WARN%'").fetchone()[0]
@@ -199,8 +265,11 @@ def market():
     }))
 
 def proactive_alerts():
-    import sqlite3
-    db = sqlite3.connect(os.path.join(os.path.dirname(__file__), '..', 'data', 'sniper_scan.db'))
+    db = _open_sniper_db()
+    if not _table_exists(db, "signal_tracker"):
+        print(json.dumps({'tp_hits': [], 'sl_hits': []}))
+        db.close()
+        return
     hits = db.execute(
         "SELECT id, symbol, direction, entry_price, tp1, pnl_pct, score, status, checked_at "
         "FROM signal_tracker WHERE status IN ('TP1_HIT','TP2_HIT','TP3_HIT') "
@@ -229,8 +298,7 @@ def disk_usage():
     }))
 
 def whales():
-    import sqlite3
-    db = sqlite3.connect(os.path.join(os.path.dirname(__file__), '..', 'data', 'sniper_scan.db'))
+    db = _open_sniper_db()
     rows = db.execute(
         'SELECT clean_name, scan_count, avg_score, best_direction, best_score, last_price '
         'FROM coin_registry WHERE best_score > 70 ORDER BY best_score DESC LIMIT 10'

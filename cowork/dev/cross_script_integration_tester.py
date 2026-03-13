@@ -33,7 +33,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_DIR = SCRIPT_DIR / "data"
 DB_PATH = DATA_DIR / "cowork_gaps.db"
-from _paths import ETOILE_DB
+ETOILE_DB = Path(r"F:/BUREAU/turbo/etoile.db")
 PYTHON = sys.executable
 
 
@@ -286,7 +286,7 @@ def test_dashboard_sections():
     Verify each returns a (text, keyboard) tuple.
     """
     # Build inline test code that imports the dashboard and calls each section
-    escaped_dir = str(SCRIPT_DIR).replace("/", "//")
+    escaped_dir = str(SCRIPT_DIR).replace("\\", "\\\\")
     test_code = (
         "import sys, json\n"
         f"sys.path.insert(0, r\"{escaped_dir}\")\n"

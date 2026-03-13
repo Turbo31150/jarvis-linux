@@ -20,7 +20,6 @@ Le script utilise uniquement la bibliothèque standard : ``os``, ``pathlib``, 
 """
 
 import argparse
-from _paths import TURBO_DIR, DATA_DIR
 import gzip
 import os
 import shutil
@@ -33,7 +32,7 @@ from pathlib import Path
 HOME = Path.home()
 LOG_DIRS = [
     HOME / ".openclaw" / "agents" / "main" / "logs",
-    DATA_DIR,
+    Path(r"F:/BUREAU/turbo/data"),
     HOME / ".openclaw" / "workspace" / "dev",
 ]
 

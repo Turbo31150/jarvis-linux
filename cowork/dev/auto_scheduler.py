@@ -2,10 +2,9 @@
 """JARVIS Auto Scheduler — Planificateur de taches recurrentes (cron-like)."""
 import json, sys, os, subprocess, time
 from datetime import datetime, timedelta
-from _paths import TELEGRAM_TOKEN, TELEGRAM_CHAT
 
-# TELEGRAM_TOKEN loaded from _paths (.env)
-# TELEGRAM_CHAT loaded from _paths (.env)
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT = "2010747443"
 SCHEDULE_FILE = "C:/Users/franc/.openclaw/workspace/dev/schedule.json"
 LOG_FILE = "C:/Users/franc/.openclaw/workspace/dev/scheduler_log.json"
 

@@ -13,11 +13,10 @@ import re
 import subprocess
 import sys
 import tempfile
-from _paths import TELEGRAM_TOKEN, TELEGRAM_CHAT
 
 # Config Telegram
-# TELEGRAM_TOKEN loaded from _paths (.env)
-TELEGRAM_CHAT_ID = TELEGRAM_CHAT
+TELEGRAM_TOKEN = "TELEGRAM_TOKEN_REDACTED"
+TELEGRAM_CHAT_ID = "2010747443"
 
 # Voix par defaut — Edge TTS Neural (femme, francais)
 DEFAULT_VOICE = "fr-FR-DeniseNeural"
