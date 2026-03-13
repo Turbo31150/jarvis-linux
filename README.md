@@ -9,25 +9,27 @@
 ## Table des matieres
 
 1. [Architecture globale](#architecture-globale)
-2. [Environnement Linux & Modifications OS](#environnement-linux--modifications-os)
-3. [Hardware & Cluster](#hardware--cluster)
-4. [Installation rapide (1 commande)](#installation-rapide)
-5. [Installation detaillee](#installation-detaillee)
-6. [Cluster IA — Noeuds & Routage](#cluster-ia--noeuds--routage)
-7. [Conteneurs Docker (10 services)](#conteneurs-docker)
-8. [Services Systemd (24 unites)](#services-systemd)
-9. [MCP — Model Context Protocol (609 handlers)](#mcp--model-context-protocol)
-10. [Pipeline Vocal](#pipeline-vocal)
-11. [COWORK — 559 scripts autonomes](#cowork--559-scripts-autonomes)
-12. [Monitoring & Dashboard](#monitoring--dashboard)
-13. [Trading Pipeline](#trading-pipeline)
-14. [ZRAM & Optimisation memoire](#zram--optimisation-memoire)
-15. [Structure du projet](#structure-du-projet)
-16. [Ports reseau](#ports-reseau)
-17. [Variables d'environnement](#variables-denvironnement)
-18. [Commandes & Aliases](#commandes--aliases)
-19. [Troubleshooting](#troubleshooting)
-20. [Dependances completes](#dependances-completes)
+2. [Schemas & Workflows detailles](#schemas--workflows-detailles)
+3. [Environnement Linux & Modifications OS](#environnement-linux--modifications-os)
+4. [Hardware & Cluster](#hardware--cluster)
+5. [Installation rapide (1 commande)](#installation-rapide)
+6. [Installation detaillee](#installation-detaillee)
+7. [Cluster IA — Noeuds & Routage](#cluster-ia--noeuds--routage)
+8. [Conteneurs Docker (10 services)](#conteneurs-docker)
+9. [Services Systemd (24 unites)](#services-systemd)
+10. [MCP — Model Context Protocol (609 handlers)](#mcp--model-context-protocol)
+11. [Pipeline Vocal](#pipeline-vocal)
+12. [COWORK — 559 scripts autonomes](#cowork--559-scripts-autonomes)
+13. [Monitoring & Dashboard](#monitoring--dashboard)
+14. [Trading Pipeline](#trading-pipeline)
+15. [ZRAM & Optimisation memoire](#zram--optimisation-memoire)
+16. [Structure du projet](#structure-du-projet)
+17. [Ports reseau](#ports-reseau)
+18. [Variables d'environnement](#variables-denvironnement)
+19. [Commandes & Aliases](#commandes--aliases)
+20. [Troubleshooting](#troubleshooting)
+21. [Dependances completes](#dependances-completes)
+22. [Suggestions & Roadmap](#suggestions--roadmap)
 
 ---
 
@@ -82,6 +84,612 @@ Utilisateur (voix/texte/telegram)
     |
     v
 [TTS edge-tts/Piper] --> Utilisateur
+```
+
+---
+
+## Schemas & Workflows detailles
+
+### Schema 1 — Interconnexion Docker (10 conteneurs)
+
+```
+                          ┌─────────────────────────────────────────┐
+                          │           HOST (M1 La Creatrice)        │
+                          │                                         │
+                          │  LM Studio :1234    Ollama :11434       │
+                          │  Flask MCP :8080     Voice MCP :8083    │
+                          │  WhisperFlow :8082                      │
+                          └────────────┬──────────────┬─────────────┘
+                                       │ host.docker  │
+                ┌──────────────────────┼──────────────┼──────────────────────┐
+                │                DOCKER NETWORK (jarvis-net)                 │
+                │                                                            │
+                │  ┌──────────────┐     ┌──────────────┐                     │
+                │  │  jarvis-ws   │◄────│ vocal-engine │                     │
+                │  │  :9742 (hub) │     │  (pipeline)  │                     │
+                │  │  FastAPI+WS  │     │  wake+STT    │                     │
+                │  └──────┬───────┘     └──────────────┘                     │
+                │         │                                                  │
+                │    ┌────┴────┬──────────┬──────────┬──────────┐            │
+                │    │         │          │          │          │            │
+                │    ▼         ▼          ▼          ▼          ▼            │
+                │ ┌────────┐┌────────┐┌────────┐┌─────────┐┌──────────┐     │
+                │ │pipeline││domino  ││openclaw││cowork   ││cowork    │     │
+                │ │engine  ││(444    ││node    ││engine   ││dispatcher│     │
+                │ │dispatch││actions)││:28789  ││(559 py) ││(router)  │     │
+                │ └────────┘└────────┘└────┬───┘└─────────┘└──────────┘     │
+                │                          │                                 │
+                │ ┌──────────┐  ┌──────────┴──┐  ┌──────────────┐           │
+                │ │vocal-    │  │ domino-mcp  │  │ jarvis-      │           │
+                │ │whisper   │  │ :8901 (SSE) │  │ telegram     │           │
+                │ │:18001 GPU│  │ bridge MCP  │  │ (bot remote) │           │
+                │ └──────────┘  └─────────────┘  └──────────────┘           │
+                │                                                            │
+                └────────────────────────────────────────────────────────────┘
+
+    Flux WS:  vocal-engine ──ws──► jarvis-ws ◄──ws── pipeline/domino/openclaw
+    Flux HTTP: conteneurs ──http──► host.docker.internal:1234 (LM Studio)
+                            ──http──► host.docker.internal:11434 (Ollama)
+```
+
+### Schema 2 — Dispatch Engine : Pipeline 9 etapes
+
+```
+    Requete utilisateur (pattern + prompt)
+                │
+                ▼
+    ┌───────────────────────┐
+    │  CACHE CHECK (MD5)    │──── HIT ──► Retour immediat (< 1ms)
+    │  TTL: 5 min, max: 200 │
+    └───────────┬───────────┘
+                │ MISS
+                ▼
+    ┌───────────────────────┐
+    │  ETAPE 1: HEALTH      │  Circuit breaker (adaptive_router)
+    │  CHECK (Guardian)     │  + Ping M1 LM Studio (:1234)
+    │                       │──► Nodes DOWN → liste bypass
+    └───────────┬───────────┘
+                ▼
+    ┌───────────────────────┐
+    │  ETAPE 1b: AUTO-LOAD  │  Patterns lourds → charger modele
+    │  MODEL (si necessaire)│  architecture → gpt-oss-20b
+    │                       │  reasoning → qwq-32b
+    └───────────┬───────────┘  consensus → deepseek-r1
+                ▼
+    ┌───────────────────────┐
+    │  ETAPE 2: ROUTE       │  1. Blacklist (M3 exclu de 7 patterns)
+    │  SELECTION             │  2. Benchmark preferences (16 patterns)
+    │  (adaptive_router)    │  3. Adaptive router (latence/score)
+    │                       │  4. Fallback: pattern_agents registry
+    └───────────┬───────────┘
+                ▼
+    ┌───────────────────────┐
+    │  ETAPE 3: ENRICHMENT  │  Episodic memory recall (etoile.db)
+    │  MEMOIRE EPISODIQUE   │  Ajoute contexte similaire au prompt
+    └───────────┬───────────┘
+                ▼
+    ┌───────────────────────┐
+    │  ETAPE 3b: PROMPT     │  Optimisation du prompt
+    │  OPTIMIZATION         │  (prefix /nothink, think:false, etc.)
+    └───────────┬───────────┘
+                ▼
+    ┌───────────────────────┐
+    │  ETAPE 4: DISPATCH    │  Appel LLM via HTTP
+    │  (pattern_agents)     │──► M1/M2/M3/OL1/GEMINI/CLAUDE
+    │  timeout: 12s/60s     │
+    └───────────┬───────────┘
+                │
+         ┌──────┴──────┐
+         │ ECHEC?      │
+         ▼             ▼
+    ┌─────────┐   ┌──────────────┐
+    │ SUCCESS │   │ ETAPE 4b:    │
+    │         │   │ FALLBACK     │  Retry sur noeud alternatif
+    └────┬────┘   │ auto_fallback│  (max_retries: 1)
+         │        └──────┬───────┘
+         │               │
+         └───────┬───────┘
+                 ▼
+    ┌───────────────────────┐
+    │  ETAPE 5: QUALITY     │  6 GATES:
+    │  GATES (6 axes)       │  ├─ Longueur (min tokens)
+    │                       │  ├─ Structure (format attendu)
+    │  threshold: 0.3       │  ├─ Pertinence (vs prompt)
+    │                       │  ├─ Confiance (auto-eval)
+    │                       │  ├─ Latence (vs seuil)
+    │                       │  └─ Hallucination (detection)
+    └───────────┬───────────┘
+                │
+         ┌──────┴──────┐
+         │ GATE FAIL?  │
+         ▼             ▼
+    ┌─────────┐   ┌──────────────┐
+    │ PASSED  │   │ ETAPE 5b:    │
+    │         │   │ QUALITY      │  Re-dispatch sur meilleur noeud
+    └────┬────┘   │ RETRY        │  Compare scores, garde le meilleur
+         │        └──────┬───────┘
+         │               │
+         └───────┬───────┘
+                 ▼
+    ┌───────────────────────┐
+    │  ETAPE 6: FEEDBACK    │  Enregistrement dans etoile.db
+    │  RECORDING            │  (pattern, node, quality, latency)
+    └───────────┬───────────┘
+                ▼
+    ┌───────────────────────┐
+    │  ETAPE 7: EPISODIC    │  Stockage pour recall futur
+    │  STORAGE              │  (enrichira les futures requetes)
+    └───────────┬───────────┘
+                ▼
+    ┌───────────────────────┐
+    │  ETAPE 8: POST-       │
+    │  PROCESSING           │
+    │  8a. Log pipeline     │  → dispatch_pipeline_log (SQLite)
+    │  8b. Drift detection  │  → orchestrator_v2 (auto-tune)
+    │  8c. Router affinity  │  → adaptive_router (mise a jour)
+    │  8d. Cache store      │  → cache MD5 (si success)
+    │  8e. Event SSE emit   │  → Server-Sent Events (temps reel)
+    └───────────┬───────────┘
+                ▼
+         DispatchResult
+    (content, quality, latency, node, gates...)
+```
+
+### Schema 3 — Sequence de boot systemd
+
+```
+    systemctl --user start jarvis-master.service
+                │
+                ▼
+    ┌───────────────────────┐
+    │  jarvis-master        │  jarvis_unified_boot.py --watch
+    │  (Boot daemon + WD)   │  60K lignes, orchestration complete
+    └───────────┬───────────┘
+                │ lance en parallele:
+         ┌──────┼──────┬──────┬──────┬──────┐
+         ▼      ▼      ▼      ▼      ▼      ▼
+    ┌────────┐┌─────┐┌─────┐┌─────┐┌─────┐┌──────────┐
+    │jarvis  ││jarv-││jarv-││jarv-││lmstu││jarvis    │
+    │-ws     ││is-  ││is-  ││is-  ││dio- ││-gpu-     │
+    │:9742   ││mcp  ││voice││proxy││bridg││monitor   │
+    │        ││:8080││     ││:1880││:2234││          │
+    └───┬────┘└──┬──┘└──┬──┘└─────┘└──┬──┘└──────────┘
+        │        │      │             │
+        ▼        ▼      ▼             ▼
+    ┌────────────────────────────────────────┐
+    │  HEALTH TIMERS (apres boot)            │
+    │                                        │
+    │  jarvis-health.timer    → toutes 30min │
+    │  jarvis-wave@1.timer    → toutes 4h    │
+    │  jarvis-wave@2.timer    → +10min       │
+    │  jarvis-wave@3.timer    → +20min       │
+    │  jarvis-wave@4.timer    → +30min       │
+    │  jarvis-wave@5.timer    → +40min       │
+    │  jarvis-wave@6.timer    → +50min       │
+    │  jarvis-cowork@1.timer  → toutes 6h    │
+    └────────────────────────────────────────┘
+                │
+                ▼
+    ┌────────────────────────────────────────┐
+    │  WATCHDOG (jarvis-master --watch)      │
+    │                                        │
+    │  Boucle infinie:                       │
+    │  1. Verifier que tous les services UP  │
+    │  2. Si service DOWN → restart          │
+    │  3. Si 3 restarts fails → alerte       │
+    │  4. Verifier GPU temperatures          │
+    │  5. Verifier RAM/VRAM usage            │
+    │  6. Log dans pipeline.db               │
+    │  7. Sleep 60s → recommencer            │
+    └────────────────────────────────────────┘
+```
+
+### Schema 4 — Self-Healing Loop
+
+```
+    ┌─────────────────────────────────────────────────────┐
+    │                SELF-HEALING ENGINE                   │
+    │              (auto_heal_daemon.py 39K L)             │
+    └────────────────────────┬────────────────────────────┘
+                             │
+         ┌───────────────────┼───────────────────┐
+         ▼                   ▼                   ▼
+    ┌──────────┐       ┌──────────┐       ┌──────────┐
+    │ DETECTER │       │ DETECTER │       │ DETECTER │
+    │ Service  │       │ GPU      │       │ LM Studio│
+    │ down     │       │ temp >85C│       │ crash    │
+    └────┬─────┘       └────┬─────┘       └────┬─────┘
+         │                  │                   │
+         ▼                  ▼                   ▼
+    ┌──────────┐       ┌──────────┐       ┌──────────┐
+    │DIAGNOSTIQ│       │DIAGNOSTIQ│       │DIAGNOSTIQ│
+    │ logs/    │       │ nvidia-  │       │ port     │
+    │ journal  │       │ smi      │       │ 1234     │
+    └────┬─────┘       └────┬─────┘       └────┬─────┘
+         │                  │                   │
+         ▼                  ▼                   ▼
+    ┌──────────┐       ┌──────────┐       ┌──────────┐
+    │ REPARER  │       │ REPARER  │       │ REPARER  │
+    │ systemctl│       │ unload   │       │ kill PID │
+    │ restart  │       │ models   │       │ + restart│
+    │          │       │ re-route │       │ lms_guard│
+    └────┬─────┘       └────┬─────┘       └────┬─────┘
+         │                  │                   │
+         └──────────────────┼───────────────────┘
+                            ▼
+    ┌─────────────────────────────────────────────────────┐
+    │ VERIFIER                                            │
+    │ 1. Re-tester le composant repare                    │
+    │ 2. Si OK → log succes dans auto_heal.db             │
+    │ 3. Si ECHEC → escalade (alerte + tentative #2)      │
+    │ 4. Si 3 echecs → circuit breaker OPEN               │
+    │ 5. Notification (Telegram si configure)              │
+    └─────────────────────────────────────────────────────┘
+         │
+         ▼
+    ┌─────────────────────────────────────────────────────┐
+    │ BOUCLE CONTINUE                                     │
+    │ Sleep 60s → recommencer (24/7 autonome)             │
+    │ Backoff exponentiel: 15s → 30s → 60s → 120s        │
+    │ Max 5 restarts par fenetre de 5 min (RestartSec=15) │
+    └─────────────────────────────────────────────────────┘
+```
+
+### Schema 5 — Pipeline Vocal complet
+
+```
+    ┌──────────┐
+    │MICROPHONE│ sounddevice 16kHz mono
+    └────┬─────┘
+         │ flux audio continu
+         ▼
+    ┌────────────────────────┐
+    │  PORCUPINE WAKE WORD   │  pvporcupine, sensibilite 0.6-0.7
+    │  Mot-cle: "Jarvis"     │  Modele .ppn personnalise
+    │  (wakeword_porcupine)  │
+    └────────────┬───────────┘
+                 │ detection!
+                 ▼
+    ┌────────────────────────┐
+    │  ENREGISTREMENT 5s     │  Buffer audio PCM
+    │  sounddevice record    │  16kHz, 16-bit, mono
+    └────────────┬───────────┘
+                 │ .wav
+                 ▼
+    ┌────────────────────────┐
+    │  WHISPERFLOW STT       │  faster-whisper large-v3-turbo
+    │  (GPU CUDA, conteneur  │  ou local via whisperflow/
+    │   vocal-whisper :18001)│
+    └────────────┬───────────┘
+                 │ texte brut
+                 ▼
+    ┌────────────────────────┐
+    │  VOICE CORRECTION      │  2 628 alias dans etoile.db
+    │  (voice_correction.py) │  "met la musique" → "play_music"
+    │  2 415 lignes          │  "quel temps" → "weather_check"
+    └────────────┬───────────┘
+                 │ texte corrige
+                 ▼
+    ┌────────────────────────┐
+    │  COMMAND FILTER        │  Securite 3 niveaux:
+    │  (command_filter.py)   │  ├─ WHITELIST: exec directe
+    │                        │  ├─ GREYLIST: confirmation user
+    │                        │  └─ BLACKLIST: refuse (rm -rf, etc)
+    └────────┬──────┬────────┘
+             │      │
+      commande   prompt libre
+      directe        │
+         │           ▼
+         │    ┌────────────────┐
+         │    │ INTENT CLASSIFY│  commander.py
+         │    │ → pattern IA   │  (code/trading/web/simple...)
+         │    └───────┬────────┘
+         │            │
+         └──────┬─────┘
+                ▼
+    ┌────────────────────────┐
+    │  DISPATCH ENGINE       │  9 etapes (voir Schema 2)
+    │  Route vers M1/M2/    │  Selection optimale du noeud
+    │  M3/OL1/GEMINI/CLAUDE │
+    └────────────┬───────────┘
+                 │ reponse texte
+                 ▼
+    ┌────────────────────────┐
+    │  TTS (Text-to-Speech)  │  Priorite:
+    │  (tts_engine.py)       │  1. edge-tts fr-FR-DeniseNeural +10%
+    │                        │  2. espeak-ng (fallback offline)
+    │                        │  3. Piper (si installe)
+    └────────────┬───────────┘
+                 │ audio .mp3/.wav
+                 ▼
+    ┌──────────┐
+    │HAUT-     │  mpv/aplay/ffplay
+    │PARLEUR   │
+    └──────────┘
+```
+
+### Schema 6 — Trading Pipeline
+
+```
+    ┌─────────────────────────────────────────────────────┐
+    │          TRADING PIPELINE v2 (MEXC Futures)          │
+    └────────────────────────┬────────────────────────────┘
+                             │
+                             ▼
+    ┌────────────────────────────────────────────────────┐
+    │  PHASE 1: DATA COLLECTION (data_fetcher.py)        │
+    │                                                    │
+    │  10 paires: BTC ETH SOL SUI PEPE DOGE XRP ADA     │
+    │             AVAX LINK (tous /USDT)                 │
+    │                                                    │
+    │  Sources:                                          │
+    │  ├─ MEXC API (OHLCV 1m/5m/15m/1h/4h)             │
+    │  ├─ Orderbook (depth 20 niveaux)                   │
+    │  ├─ Funding rates                                  │
+    │  └─ Open Interest                                  │
+    └────────────────────────┬───────────────────────────┘
+                             ▼
+    ┌────────────────────────────────────────────────────┐
+    │  PHASE 2: ANALYSE TECHNIQUE (strategies.py)        │
+    │                                                    │
+    │  Indicateurs:                                      │
+    │  ├─ RSI (14), MACD (12,26,9), Bollinger (20,2)    │
+    │  ├─ Volume Profile, VWAP                           │
+    │  ├─ Support/Resistance (auto-detection)            │
+    │  ├─ Patterns (breakout, reversal, continuation)    │
+    │  └─ Momentum scoring (multi-timeframe)             │
+    └────────────────────────┬───────────────────────────┘
+                             ▼
+    ┌────────────────────────────────────────────────────┐
+    │  PHASE 3: GPU PIPELINE (gpu_pipeline.py)           │
+    │                                                    │
+    │  Scan parallele sur 6 GPU:                         │
+    │  ├─ GPU 0 (RTX 2060): BTC + ETH                   │
+    │  ├─ GPU 1-4 (1660S): SOL SUI PEPE DOGE            │
+    │  └─ GPU 5 (RTX 3080): XRP ADA AVAX LINK           │
+    │                                                    │
+    │  scan_sniper.py (106K lignes) — scanner principal  │
+    └────────────────────────┬───────────────────────────┘
+                             ▼
+    ┌────────────────────────────────────────────────────┐
+    │  PHASE 4: AI CONSENSUS (ai_consensus.py)           │
+    │                                                    │
+    │  Vote multi-IA sur chaque signal:                  │
+    │  ├─ M1 (qwen3-8b)     → BUY/SELL/HOLD + confiance│
+    │  ├─ OL1 (gpt-oss:120b)→ BUY/SELL/HOLD + confiance│
+    │  ├─ GEMINI (flash)     → BUY/SELL/HOLD + confiance│
+    │  ├─ M2 (deepseek-r1)  → BUY/SELL/HOLD + confiance│
+    │  └─ CLAUDE (si actif)  → BUY/SELL/HOLD + confiance│
+    │                                                    │
+    │  Consensus = vote majoritaire pondere              │
+    │  Seuil: >= 3 noeuds d'accord + confiance > 0.7    │
+    └────────────────────────┬───────────────────────────┘
+                             ▼
+    ┌────────────────────────────────────────────────────┐
+    │  PHASE 5: EXECUTION (DRY_RUN par defaut)           │
+    │                                                    │
+    │  Si DRY_RUN=true:                                  │
+    │  └─ Log signal + skip execution                    │
+    │                                                    │
+    │  Si DRY_RUN=false:                                 │
+    │  ├─ Ouvrir position MEXC Futures (10x leverage)    │
+    │  ├─ Take Profit: +0.4%                             │
+    │  ├─ Stop Loss: -0.25%                              │
+    │  └─ Position tracker (suivi temps reel)             │
+    │                                                    │
+    │  trading_sentinel.py — surveillance 24/7            │
+    └────────────────────────────────────────────────────┘
+```
+
+### Schema 7 — Cycle autonome COWORK
+
+```
+    ┌─────────────────────────────────────────────────────┐
+    │        COWORK AUTONOMOUS CYCLE (toutes les 6h)      │
+    │          Timer: jarvis-cowork@1.timer                │
+    └────────────────────────┬────────────────────────────┘
+                             │
+                             ▼
+    ┌────────────────────────────────────────────────────┐
+    │  PHASE 1: TEST-ALL                                 │
+    │  cowork_engine.py --mode test-all                  │
+    │                                                    │
+    │  Pour chaque script dans cowork/dev/ (559):        │
+    │  ├─ Importer le module                             │
+    │  ├─ Executer main() ou run()                       │
+    │  ├─ Verifier exit code (0 = OK, 1 = fail)         │
+    │  ├─ Capturer stdout/stderr                         │
+    │  └─ Log resultat dans etoile.db                    │
+    └────────────────────────┬───────────────────────────┘
+                             ▼
+    ┌────────────────────────────────────────────────────┐
+    │  PHASE 2: GAPS (detection de manques)              │
+    │  cowork_engine.py --mode gaps                      │
+    │                                                    │
+    │  Analyse le code JARVIS pour trouver:              │
+    │  ├─ Fonctions sans tests                           │
+    │  ├─ Modules sans monitoring                        │
+    │  ├─ Endpoints sans validation                      │
+    │  ├─ Patterns de dispatch sans benchmark            │
+    │  └─ Genere une liste de scripts a creer            │
+    └────────────────────────┬───────────────────────────┘
+                             ▼
+    ┌────────────────────────────────────────────────────┐
+    │  PHASE 3: ANTICIPATE                               │
+    │  cowork_engine.py --mode anticipate                │
+    │                                                    │
+    │  Utilise l'IA (M1/OL1) pour predire:              │
+    │  ├─ Quels composants vont avoir besoin de MAJ     │
+    │  ├─ Quels bugs sont probables (drift detection)   │
+    │  ├─ Quelles optimisations sont possibles          │
+    │  └─ Priorise les actions par impact               │
+    └────────────────────────┬───────────────────────────┘
+                             ▼
+    ┌────────────────────────────────────────────────────┐
+    │  PHASE 4: IMPROVE                                  │
+    │  cowork_engine.py --mode improve                   │
+    │                                                    │
+    │  Execute les ameliorations identifiees:            │
+    │  ├─ Genere de nouveaux scripts cowork              │
+    │  ├─ Ameliore les scripts existants                 │
+    │  ├─ Met a jour les benchmarks                      │
+    │  ├─ Optimise les routes dispatch                   │
+    │  └─ Commit les changements (si auto_commit=true)   │
+    └────────────────────────┬───────────────────────────┘
+                             │
+                             ▼
+    ┌────────────────────────────────────────────────────┐
+    │  BOUCLE: recommence dans 6h                        │
+    │                                                    │
+    │  Contraintes:                                      │
+    │  ├─ Chaque script DOIT etre stdlib-only (no pip)   │
+    │  ├─ Chaque script DOIT avoir self-test             │
+    │  ├─ Timeout par script: 30s                        │
+    │  └─ Max 559 scripts actifs (auto-prune si > 600)   │
+    └────────────────────────────────────────────────────┘
+```
+
+### Schema 8 — Consensus multi-IA (vote)
+
+```
+                    Requete (pattern: "consensus")
+                              │
+                              ▼
+    ┌─────────────────────────────────────────────────────┐
+    │  DISPATCH PARALLELE vers tous les noeuds actifs     │
+    │  asyncio.gather(*tasks)                             │
+    └────────┬──────┬──────┬──────┬──────┬───────────────┘
+             │      │      │      │      │
+             ▼      ▼      ▼      ▼      ▼
+          ┌────┐ ┌────┐ ┌────┐ ┌────┐ ┌──────┐
+          │ M1 │ │ M2 │ │ OL1│ │ M3 │ │GEMINI│
+          │qwen│ │deep│ │gpt-│ │deep│ │flash │
+          │3-8b│ │seek│ │oss │ │seek│ │      │
+          └──┬─┘ └──┬─┘ └──┬─┘ └──┬─┘ └──┬───┘
+             │      │      │      │      │
+             ▼      ▼      ▼      ▼      ▼
+    ┌─────────────────────────────────────────────────────┐
+    │  COLLECTE DES REPONSES                              │
+    │                                                    │
+    │  M1:     {"answer": "X", "confidence": 0.85}       │
+    │  M2:     {"answer": "X", "confidence": 0.72}       │
+    │  OL1:    {"answer": "Y", "confidence": 0.91}       │
+    │  M3:     {"answer": "X", "confidence": 0.60}  (*)  │
+    │  GEMINI: {"answer": "X", "confidence": 0.88}       │
+    │                                                    │
+    │  (*) Timeout M3 → poids reduit ou exclu            │
+    └────────────────────────┬───────────────────────────┘
+                             ▼
+    ┌─────────────────────────────────────────────────────┐
+    │  VOTE PONDERE                                       │
+    │                                                    │
+    │  Score(X) = (0.85×1.8)+(0.72×1.4)+(0.60×1.0)      │
+    │           + (0.88×1.5) = 1.53+1.01+0.60+1.32 = 4.46│
+    │  Score(Y) = (0.91×1.3) = 1.18                      │
+    │                                                    │
+    │  Poids: M1=1.8, GEMINI=1.5, M2=1.4, OL1=1.3, M3=1│
+    │  WINNER: X (4.46 vs 1.18)                          │
+    │  Consensus: 4/5 noeuds (80%)                       │
+    └────────────────────────┬───────────────────────────┘
+                             ▼
+    ┌─────────────────────────────────────────────────────┐
+    │  RESULT                                             │
+    │  answer: "X"                                       │
+    │  consensus_rate: 0.80                               │
+    │  weighted_score: 4.46                               │
+    │  dissenting: ["OL1"]                                │
+    │  total_latency: max(latencies) ≈ 5.7s              │
+    └─────────────────────────────────────────────────────┘
+```
+
+### Schema 9 — Carte des ports reseau
+
+```
+    M1 — La Creatrice (127.0.0.1)
+    ═══════════════════════════════════════════════════
+
+    PORT    SERVICE              PROTO   AUTH
+    ────    ───────              ─────   ────
+    1234    LM Studio API        HTTP    -
+    2234    LM Studio Bridge     TCP     - (Docker→Host)
+    8080    Flask MCP Server     HTTP    Bearer 1202
+    8082    WhisperFlow MCP      HTTP    Bearer wf-jarvis-2026
+    8083    Voice MCP            HTTP    Bearer jarvis-voice-2026
+    8901    Domino MCP (SSE)     HTTP    -
+    9742    JARVIS WS + REST     WS/HTTP -
+    11434   Ollama API           HTTP    -
+    18001   Whisper STT (Docker) HTTP    -
+    18789   OpenClaw (Docker)    HTTP    -
+    18790   OpenClaw (systemd)   HTTP    -
+    18800   Canvas Proxy UI      HTTP    -
+    18901   Domino MCP (Docker)  HTTP    -
+    19742   JARVIS WS (Docker)   WS/HTTP -
+    28789   OpenClaw (Docker→H)  HTTP    -
+
+    ═══════════════════════════════════════════════════
+    CLUSTER LAN (192.168.1.0/24)
+    ═══════════════════════════════════════════════════
+
+    192.168.1.26:1234    M2 — LM Studio API
+    192.168.1.113:1234   M3 — LM Studio API
+
+    ═══════════════════════════════════════════════════
+    CLOUD (HTTPS sortant)
+    ═══════════════════════════════════════════════════
+
+    api.anthropic.com          Claude API (Anthropic)
+    generativelanguage.google  Gemini API (Google)
+    futures.mexc.com           MEXC Futures (Trading)
+    api.telegram.org           Telegram Bot API
+```
+
+### Schema 10 — Flux de donnees et bases SQLite
+
+```
+    ┌────────────────────────────────────────────────────────────────┐
+    │                   FLUX DE DONNEES JARVIS                      │
+    └────────────────────────────────────────────────────────────────┘
+
+    ENTREES                    TRAITEMENT                 STOCKAGE
+    ───────                    ──────────                 ────────
+
+    Voix (micro)──────►Voice Engine──────────►┐
+                                              │
+    Texte (CLI)───────►Orchestrator───────────┤
+                                              │
+    Telegram──────────►telegram-bot.js────────┤
+                                              ▼
+    API REST──────────►jarvis-ws :9742───► etoile.db (42 tables)
+                                          │  ├─ conversations
+                                          │  ├─ dispatch_log
+                                          │  ├─ voice_aliases (2628)
+                                          │  ├─ quality_gates
+                                          │  ├─ agent_patterns (40)
+                                          │  ├─ cowork_mappings
+                                          │  └─ episodic_memory
+                                          │
+    GPU sensors───────►gpu_monitor────────► jarvis.db
+    CPU/RAM sensors───►health.py──────────│  ├─ health_metrics
+    Docker stats──────►dashboard──────────│  ├─ gpu_temperatures
+                                          │  └─ system_events
+                                          │
+    MEXC API──────────►scan_sniper────────► trading.db
+    Orderbook─────────►data_fetcher───────│  ├─ signals
+    Funding rates─────►strategies─────────│  ├─ positions
+                                          │  └─ backtest_results
+                                          │
+    Cowork scripts────►cowork_engine──────► auto_heal.db
+    Self-healing──────►auto_heal_daemon───│  ├─ heal_attempts
+                                          │  └─ component_status
+                                          │
+    Decisions─────────►brain.py───────────► decisions.db
+    Audit─────────────►system_audit.py────► audit_trail.db
+    Browser───────────►browser tools──────► browser_memory.db
+    Scheduler─────────►task pipeline──────► scheduler.db
+    Sessions──────────►orchestrator───────► sessions.db
+
+    TOTAL: 35+ fichiers SQLite, ~160 MB combines
+    SYMLINK: data/ → core/memory/ (acces unifie)
 ```
 
 ---
@@ -996,6 +1604,98 @@ Toutes les bases sont en SQLite3 (aucun serveur DB externe).
 - **IA** : Claude Agent SDK (Anthropic) + LM Studio + Ollama + Gemini
 - **GPU** : 6x NVIDIA (RTX 3080 + RTX 2060 12GB + 4x GTX 1660 SUPER) — 46GB VRAM
 - **Driver** : NVIDIA 590.48.01, CUDA, nvidia_drm modeset=1
+
+---
+
+## Suggestions & Roadmap
+
+### Ce qui reste a faire
+
+| Priorite | Tache | Statut | Description |
+|----------|-------|--------|-------------|
+| **P0** | Documentation API REST | A faire | Documenter les 517 endpoints REST de jarvis-ws (Swagger/OpenAPI) |
+| **P0** | `.env.example` complet | A faire | Creer un fichier `.env.example` avec toutes les variables documentees |
+| **P1** | Tests CI/CD | A faire | GitHub Actions : lint + pytest + build Docker sur chaque push |
+| **P1** | Docker multi-arch | A faire | Build ARM64 pour portabilite (Raspberry Pi, Mac M-series) |
+| **P1** | Requirements freeze | A faire | Generer `requirements.lock` avec versions exactes (reproductibilite) |
+| **P1** | Health endpoint unifie | A faire | `/health` sur jarvis-ws qui agrege tous les composants |
+| **P2** | Securite tokens | A faire | Remplacer les Bearer hardcodes (1202, wf-jarvis-2026) par variables .env |
+| **P2** | HTTPS/TLS | A faire | Certificats Let's Encrypt si expose sur internet |
+| **P2** | Rate limiting | A faire | Limiter les appels MCP/API (protection contre abus) |
+| **P2** | Logs centralises | A faire | ELK/Loki/Grafana au lieu de journalctl + fichiers epars |
+| **P3** | Dashboard Web | A faire | Remplacer le dashboard CLI par une UI web (React/Svelte) |
+| **P3** | Metriques Prometheus | A faire | Exporter les metriques GPU/CPU/latence vers Prometheus |
+| **P3** | Backup cloud | A faire | Backup automatique des .db vers S3/B2 (pas seulement local) |
+| **P3** | Multi-utilisateur | A faire | Authentification + roles (admin/viewer) |
+
+### Suggestions d'amelioration
+
+#### Securite
+- [ ] **Rotation des tokens MCP** — Les Bearer tokens sont statiques ; implementer une rotation automatique ou utiliser JWT avec expiration
+- [ ] **Chiffrement des .db** — Les bases SQLite contiennent des conversations et decisions ; envisager SQLCipher
+- [ ] **Audit des permissions** — `NOPASSWD:ALL` est pratique mais risque ; restreindre aux commandes JARVIS necessaires
+- [ ] **Network isolation Docker** — Creer des sous-reseaux Docker separes (monitoring, trading, voice) au lieu d'un seul `jarvis-net`
+- [ ] **Secrets management** — Migrer les cles API de `.env` vers un vault (HashiCorp Vault, SOPS, age)
+
+#### Performance
+- [ ] **Connection pooling LM Studio** — Reutiliser les connexions HTTP au lieu d'en creer a chaque dispatch
+- [ ] **Cache distribue** — Redis/Valkey au lieu du cache Python in-memory (persistance entre restarts)
+- [ ] **Batch inference** — Grouper les requetes LM Studio quand plusieurs arrivent simultanement
+- [ ] **GPU memory management** — Prevoir l'auto-unload des modeles inactifs pour liberer VRAM
+- [ ] **ZRAM auto-resize** — Adapter la taille ZRAM dynamiquement selon la charge
+
+#### Fiabilite
+- [ ] **Chaos testing** — Scripts pour simuler des pannes (kill GPU, couper M2, saturer RAM) et valider le self-healing
+- [ ] **Canary deployments** — Deployer les nouveaux modeles sur 1 GPU avant de propager au cluster
+- [ ] **Circuit breaker tuning** — Les seuils actuels sont fixes ; implementer des seuils adaptatifs bases sur les percentiles
+- [ ] **Backup verification** — Tester la restauration des backups periodiquement (pas seulement creer)
+- [ ] **Graceful shutdown** — S'assurer que tous les services sauvegardent leur etat avant arret
+
+#### Fonctionnalites
+- [ ] **Plugin marketplace** — Permettre a la communaute de contribuer des skills OpenClaw et scripts cowork
+- [ ] **Multi-langue voice** — Support anglais/espagnol en plus du francais (wake word + STT + TTS)
+- [ ] **Mobile app** — Application Android/iOS pour controler JARVIS a distance (au-dela de Telegram)
+- [ ] **Webhook integrations** — Discord, Slack, ntfy.sh en plus de Telegram
+- [ ] **Visual workflow editor** — Interface drag-and-drop pour creer des pipelines Domino (au lieu de code)
+- [ ] **RAG pipeline** — Retrieval-Augmented Generation avec les documents locaux (PDF, notes, code)
+
+#### Documentation
+- [ ] **Tutoriel video** — Screencast de l'installation complete de 0 a operationnel
+- [ ] **Architecture Decision Records** — Documenter les choix techniques (pourquoi ZRAM 180 swappiness, pourquoi pas Redis, etc.)
+- [ ] **Contribution guide** — CONTRIBUTING.md avec conventions, process de PR, style guide
+- [ ] **Changelog** — CHANGELOG.md avec historique des versions et breaking changes
+- [ ] **API reference** — Documentation auto-generee des 609 handlers MCP
+
+### Contribuer
+
+```bash
+# 1. Fork le repo
+git clone https://github.com/VOTRE_USER/jarvis-linux.git
+cd jarvis-linux
+
+# 2. Creer une branche
+git checkout -b feature/ma-feature
+
+# 3. Installer l'environnement de dev
+uv venv .venv && source .venv/bin/activate
+uv pip install -e ".[dev]"
+
+# 4. Lancer les tests
+uv run pytest tests/ -v
+
+# 5. Soumettre une PR
+git push origin feature/ma-feature
+# Ouvrir une Pull Request sur GitHub
+```
+
+### Architecture de reference
+
+Pour comprendre les choix architecturaux :
+- **Pourquoi 6 GPU heterogenes ?** — Cout/performance optimal : la RTX 3080 gere les modeles lourds, les 1660S font du compute distribue a moindre cout
+- **Pourquoi SQLite et pas PostgreSQL ?** — Zero config, zero serveur, backup = copier un fichier, suffisant pour un seul utilisateur
+- **Pourquoi ZRAM 180 swappiness ?** — Avec ZRAM, le swap est en RAM compressee (pas sur disque), donc swappiness eleve = utiliser la compression plutot que flusher le cache
+- **Pourquoi pas Kubernetes ?** — Over-engineering pour 1 machine ; systemd + Docker Compose couvre tous les besoins
+- **Pourquoi 4 moteurs IA ?** — Redundance + specialisation : chaque modele excelle dans un domaine different
 
 ---
 
